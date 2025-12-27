@@ -6,6 +6,29 @@
 \usepackage{blindtext}
 \usepackage{pdfpages}
 
+%% --- TABLE AND GRAPHICS SUPPORT ---
+\usepackage{booktabs}    % REQUIRED: For professional table lines (\toprule, \midrule)
+\usepackage{longtable}   % REQUIRED: For your literature gap table that spans pages
+\usepackage{pdflscape}   % Optional: If you have wide tables you want to rotate
+\usepackage{array}       % REQUIRED: For better column formatting
+\usepackage{ragged2e}    % REQUIRED: For text wrapping inside tables
+\usepackage{microtype}
+\usepackage{amssymb}     % REQUIRED: Provides the \checkmark symbol
+\usepackage{xcolor}      % REQUIRED: For the green/red colors
+\usepackage{amsmath}     % Standard math package
+
+%% --- CUSTOM DEFINITIONS FOR CHAPTER 2 ---
+% This allows you to use \cmark and \xmark in your table
+\newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
+\newcommand{\xmark}{\textcolor{red}{$\times$}}
+
+%% --- CITATION FORMATTING (SAFE METHOD) ---
+% DO NOT use \usepackage{natbib} here. It is already loaded by the class.
+% The line below forces the (Author, Year) format you want:
+\bibpunct{(}{)}{;}{a}{,}{,} 
+\setlength{\bibsep}{1em}            % Adds spacing between references
+\renewcommand{\bibname}{References} % Renames "Bibliography" to "References"
+
 %% **************** (Your) Data ******************
 \title{Optimizing the Household\\
        Waste Segregation Policy in\\
