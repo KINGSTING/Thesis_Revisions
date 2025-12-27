@@ -1,0 +1,87 @@
+\RequirePackage[l2tabu, orthodox]{nag} 
+
+\documentclass[oneside]{um}
+
+%% **************** (Your) Packages ******************
+\usepackage{blindtext}
+\usepackage{pdfpages}
+
+%% **************** (Your) Data ******************
+\title{Optimizing the Household\\
+       Waste Segregation Policy in\\
+       the Municipality of Bacolod:\\
+       An Agent-Based Modeling and\\
+       Deep Reinforcement Learning Approach}
+       
+\tagline{Advancing Smart Governance in Bacolod through Adaptive AI Simulation}
+
+\author{Hussam M. Bansao\\
+        Jemar John J. Lumingkit}
+        
+\supervisor{Dante D. Dinawanao, M.Sc.}
+
+\department{Department of Computer Science}     
+\faculty{College of Computer Studies}        
+\degree{B.S. in Computer Science}                   
+\doctype{undergraduate thesis}                   
+\degreedate{December, 2025}                      
+
+%% ******** (Your) Document Settings *************
+\graphicspath{{./images/}{./chap1/images/}}   
+\makeindex
+\usepackage[none]{hyphenat}
+\sloppy
+\parskip 7.2pt
+
+%% !!!
+%% CRITICAL FIX !!!
+\makeatletter
+
+\begin{document}
+\frontmatter 
+    \maketitle
+    \input{frontmatter/copyright}          
+    %\input{frontmatter/originality}       
+    \input{frontmatter/dedication}         
+    \input{frontmatter/acknowledgements}   
+    
+    \input{frontmatter/abstract}
+    \if@openright\cleardoublepage\else\clearpage\fi
+    
+    \tableofcontents*
+    \if@openright\cleardoublepage\else\clearpage\fi
+    
+    \listoffigures*
+    \if@openright\cleardoublepage\else\clearpage\fi
+    
+    \listoftables*
+    \if@openright\cleardoublepage\else\clearpage\fi
+    
+    \input{frontmatter/abbreviations}
+    \if@openright\cleardoublepage\else\clearpage\fi
+
+%% !!! FIX ENDS HERE !!!
+\makeatother
+%% !!!!!!!!!!!!!!!!!!!!!
+
+\pagestyle{umpage}
+\mainmatter 
+    \input{chap1/introduction_main} 
+    \input{chap2/lit_overview_main}
+    \input{chap3/materials_and_methods_main}
+    \input{chap4/results_and_discussion_main}
+    \input{chap5/evaluation_main}
+    \input{chap6/conclusions_main}
+    \appendix
+        \input{appA/appendix_a_main}     
+        \input{appB/appendix_b_main}     
+        \input{appC/appendix_c_main} 
+
+{\backmatter
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \bibliographystyle{um-plainnat} 
+    {\footnotesize\bibliography{bibliography}}
+    \printindex
+}
+
+\end{document}

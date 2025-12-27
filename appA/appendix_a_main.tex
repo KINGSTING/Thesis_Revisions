@@ -1,0 +1,23 @@
+\chapter{Municipal Ordinances}
+
+These municipal ordinances serve as the empirical foundation for this study, grounding the simulation in the specific legal and fiscal realities of the Municipality of Bacolod. Municipal Ordinance No. 2018-05 defines the behavioral rules for the agent-based model, specifically mandating the segregation categories and penalty structures that household agents must follow. Concurrently, the Appropriation Ordinance establishes the financial constraints for the Reinforcement Learning agent, ensuring that any optimized policy remains within the municipality's actual budgetary limits. By encoding these legislative provisions directly into the model's parameters, the resulting system optimizes waste management strategies that are not only theoretically efficient but also legally compliant and practically implementable.
+
+\vspace{1.5cm} 
+
+% Section 1: ESWM Ordinance
+\section{Municipal Ordinance No. 2018-05}
+The Municipal Ordinance No. 2018-05, enacted by the Sangguniang Bayan of Bacolod, Lanao del Norte on August 22, 2018, officially titled the "Ecological Solid Waste Management of 2018". The ordinance establishes a comprehensive framework for local waste management by mandating waste segregation using a color-coded bin system (Green, Black, Blue, and Red) and setting specific collection schedules for biodegradable, residual, recyclable, and toxic waste.
+
+% FIX: Ensure the file in your folder is named "ESWM_ORDINANCE.pdf" (no spaces)
+\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/ESWM ORDINANCE.pdf}
+\label{appendix:esw_ordinance}
+
+% Section 2: Appropriation Ordinance
+\section{Appropriation Ordinance No. 2024-01}
+Appropriation Ordinance No. 2024-01 serves as the primary legislative enactment authorizing the Annual Budget of the Municipality of Bacolod, Lanao del Norte for the fiscal year 2024. This document outlines the projected income and approved expenditures for the operation of the local government, ensuring that financial resources are legally distributed across various sectors such as general administration, social services, and economic development. As the municipality's financial roadmap, it aligns public spending with the priority programs identified by the Sangguniang Bayan, providing the legal authority for the release and utilization of public funds.
+
+In the context of this study, the ordinance establishes the critical financial constraints for the waste management simulation. It specifies the actual budgetary allocations for the Municipal Environment and Natural Resources Office (MENRO) and General Services, covering essential line items such as fuel for collection trucks, salaries for waste collectors, and facility maintenance costs. By defining these hard fiscal limits, the ordinance provides the necessary data to constrain the Reinforcement Learning agent, ensuring that the model optimizes for a policy that is not only logistically efficient but also financially feasible within the municipality's current economic capacity.
+
+% FIX: Added "appA/" so the compiler knows where to look
+\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appropriation-Ordinance.pdf}
+\label{appendix:appro_ordinance}
