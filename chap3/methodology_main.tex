@@ -25,12 +25,22 @@ Crucially, the agents are not instantiated as tabula rasa entities; rather, the 
     \label{tab:initialization_parameters}
     \vspace{0.2cm}
     \small
-    \begin{tabular}{p{3cm} p{3.5cm} c c p{4cm}}
+    \renewcommand{\arraystretch}{1.4} % Adds vertical space between rows
+    
+    % The X column fills the remaining space. 
+    % We use >{\raggedright\arraybackslash} to ensure the text wraps neatly.
+    \begin{tabularx}{\textwidth}{ 
+        >{\raggedright\arraybackslash}p{2.8cm} 
+        >{\raggedright\arraybackslash}p{3.2cm} 
+        c 
+        c 
+        >{\raggedright\arraybackslash}X 
+    }
         \toprule
         \textbf{ABM Parameter} & 
         \textbf{Source Variable} & 
-        \textbf{Mean} \newline (1-5) & 
-        \textbf{Norm.} \newline (0-1) & 
+        \makecell{\textbf{Mean} \\ (1-5)} & 
+        \makecell{\textbf{Norm.} \\ (0-1)} & 
         \textbf{Contextual Justification} \\
         \midrule
         
@@ -62,7 +72,7 @@ Crucially, the agents are not instantiated as tabula rasa entities; rather, the 
         Agents are highly responsive to IEC interventions, as residents explicitly agreed on the need for more training. \\
         
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 \subsection{Socio-demographic and Operational Parameters}
