@@ -2,41 +2,41 @@
 
 \documentclass[oneside]{um}
 
-%% **************** (Your) Packages ******************
+%% **************** PACKAGES ******************
 \usepackage{blindtext}
-\usepackage{pdfpages}
+\usepackage{pdfpages}  % This causes the error if not installed in MiKTeX
 
 %% --- TABLE AND GRAPHICS SUPPORT ---
-\usepackage{booktabs}    % REQUIRED: For professional table lines (\toprule, \midrule)
-\usepackage{longtable}   % REQUIRED: For your literature gap table that spans pages
-\usepackage{pdflscape}   % Optional: If you have wide tables you want to rotate
-\usepackage{array}       % REQUIRED: For better column formatting
-\usepackage{ragged2e}    % REQUIRED: For text wrapping inside tables
-\usepackage{microtype}
-\usepackage{amssymb}     % REQUIRED: Provides the \checkmark symbol
-\usepackage{xcolor}      % REQUIRED: For the green/red colors
+\usepackage{booktabs}    % For professional table lines (\toprule, \midrule)
+\usepackage{longtable}   % For tables that span multiple pages
+\usepackage{pdflscape}   % For rotating wide tables
+\usepackage{array}       % For better column formatting
+\usepackage{ragged2e}    % For text wrapping inside tables
+\usepackage{tabularx}    % For auto-width tables
+\usepackage{makecell}    % For multi-line headers
+\usepackage{microtype}   % Improves font spacing
+\usepackage{amssymb}     % Provides the \checkmark symbol
+\usepackage{xcolor}      % For green/red colors
 \usepackage{amsmath}     % Standard math package
 
-%% --- CUSTOM DEFINITIONS FOR CHAPTER 2 ---
+%% --- CUSTOM DEFINITIONS ---
 % This allows you to use \cmark and \xmark in your table
 \newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
 \newcommand{\xmark}{\textcolor{red}{$\times$}}
 
-%% --- CITATION FORMATTING (SAFE METHOD) ---
-% DO NOT use \usepackage{natbib} here. It is already loaded by the class.
-% The line below forces the (Author, Year) format you want:
+%% --- CITATION FORMATTING ---
 \bibpunct{(}{)}{;}{a}{,}{,} 
 \setlength{\bibsep}{1em}            % Adds spacing between references
 \renewcommand{\bibname}{References} % Renames "Bibliography" to "References"
 
-%% **************** (Your) Data ******************
+%% **************** THESIS DATA ******************
 \title{Optimizing the Household\\
        Waste Segregation Policy in\\
        the Municipality of Bacolod:\\
        An Agent-Based Modeling and\\
        Deep Reinforcement Learning Approach}
        
-\tagline{Advancing Smart Governance in Bacolod through Adaptive AI Simulation}
+\tagline{\small Advancing Smart Governance in Bacolod through Adaptive AI Simulation}
 
 \author{Hussam M. Bansao\\
         Jemar John J. Lumingkit}
@@ -47,19 +47,18 @@
 \faculty{College of Computer Studies}        
 \degree{B.S. in Computer Science}                   
 \doctype{undergraduate thesis}                   
-\degreedate{December, 2025}                      
+\degreedate{December, 2025}                  
 
-%% ******** (Your) Document Settings *************
+%% ******** DOCUMENT SETTINGS *************
 \graphicspath{{./images/}{./chap1/images/}}   
 \makeindex
-\usepackage[none]{hyphenat}
+\usepackage[none]{hyphenat} % Disables hyphenation (optional)
 \sloppy
 \parskip 7.2pt
 
-%% !!!
-%% CRITICAL FIX !!!
+%% !!! CRITICAL FIX FOR TEMPLATE !!!
 \makeatletter
-
+% This block enables the \if@openright commands to work inside the document
 \begin{document}
 \frontmatter 
     \maketitle
@@ -83,9 +82,8 @@
     \input{frontmatter/abbreviations}
     \if@openright\cleardoublepage\else\clearpage\fi
 
-%% !!! FIX ENDS HERE !!!
 \makeatother
-%% !!!!!!!!!!!!!!!!!!!!!
+%% !!! FIX ENDS HERE !!!
 
 \pagestyle{umpage}
 \mainmatter 
