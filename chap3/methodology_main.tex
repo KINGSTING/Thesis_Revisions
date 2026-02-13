@@ -214,6 +214,32 @@ The dynamic updates to the internal TPB constructs ensure the \texttt{HouseholdA
     \item \textbf{Perceived Behavioral Control ($PBC$)} is increased by barangay-level actions (e.g., providing sacks, functional MRF) and decreased by infrastructure failures, acknowledging that technical constraints are primary drivers of non-compliance in developing countries.
 \end{itemize}
 
+\subsection{The Household Agent: Norm Internalization and Cultural Inertia}
+While the baseline Household Agent operates on the Theory of Planned Behavior (TPB), initial simulations indicated that agents were prone to unrealistic behavioral decay. In standard TPB models, an agent's \textit{Attitude} ($A$) towards a behavior naturally degrades over time due to apathy or ``enforcement fatigue'' when external stimuli are removed.
+
+To model the real-world stability of established habits, this study integrated a \textbf{Norm Internalization Mechanism} (or ``Social Norm Shield''). This logic postulates that when the local social norm ($SN$) exceeds a critical threshold, the behavior transitions from a calculated decision to an internalized habit, shielding the agent from attitude decay \cite{household_agent}.
+
+The standard attitude update function:
+\begin{equation}
+    A_{t+1} = A_t - \delta
+\end{equation}
+was modified to include a dynamic damping factor ($D_{factor}$):
+\begin{equation}
+    A_{t+1} = A_t - (\delta \times D_{factor})
+\end{equation}
+
+Where $D_{factor}$ is defined by the strength of the local social norm:
+\begin{equation}
+    D_{factor} = 
+    \begin{cases} 
+        0.1 & \text{if } SN > 0.70 \text{ (Strong Norms / Internalized)} \\
+        0.5 & \text{if } SN > 0.50 \text{ (Moderate Norms)} \\
+        1.0 & \text{otherwise (Weak Norms)}
+    \end{cases}
+\end{equation}
+
+This refinement simulates \textbf{Cultural Inertia}, ensuring that once a barangay achieves high compliance, the behavior becomes self-sustaining. This addresses the ``Sustainability'' objective of the thesis, preventing compliance from collapsing the moment LGU funding is withdrawn.
+
 \subsection{Barangay Agent Design}
 
 This agent represents the intermediate implementation layer. The model will initialize 7 unique instances of this agent class (Liangan East, Poblacion, etc.), each with its own parameters from Section 3.2.2. The use of ABM for dynamically modeling the effectiveness of such public policies and the interactions between governance and neighborhood units is well-established \citep{Ceschi2021}. Its function is to:
@@ -314,13 +340,49 @@ The Deep RL agent learns the optimal policy by maximizing a Composite Reward Fun
 
 The weighting coefficients ($w_1, w_2, w_3$) are calibrated to reflect the specific operational reality of a 4th Class Municipality, where fiscal survival ($w_2$) is often as critical as environmental performance ($w_1$).
 
+\section{Deep Reinforcement Learning Implementation}
+
+\subsection{Heuristic-Guided Action Space (Targeted Amplification)}
+The problem of allocating a finite budget across 21 continuous variables (IEC, Enforcement, and Incentives for 7 barangays) presents a high-dimensional search space for standard Reinforcement Learning algorithms. Early experiments with standard Proximal Policy Optimization (PPO) resulted in the agent converging on sub-optimal ``Status Quo'' strategies due to the \textbf{sparse reward problem}—the agent rarely stumbled upon the precise combination of high-intensity enforcement needed to trigger a behavioral change.
+
+To overcome this, a \textbf{Heuristic-Guided Action Mechanism} (termed ``Targeted Amplification'') was embedded in the environment's decision logic \cite{bacolod_model}. This hybrid approach simplifies the exploration process by pre-processing the agent's raw action vector ($a_t$) before execution:
+
+\begin{enumerate}
+    \item \textbf{State Assessment:} At each step, the environment identifies the ``Critical Barangay'' ($B_{crit}$) with the lowest current compliance rate.
+    \item \textbf{Signal Amplification:} If the agent's raw output assigns a non-zero weight to $B_{crit}$, the environment amplifies this specific signal by a factor of $\alpha = 100$.
+    \item \textbf{Normalization:} The resulting vector is re-normalized to sum to the total quarterly budget ($Q_{budget}$).
+\end{enumerate}
+
+The allocation formula for the $i$-th barangay is given by:
+\begin{equation}
+    \text{Alloc}_{i} = \frac{e^{\text{logit}_i} \times \mathbb{I}(i=B_{crit}) \cdot \alpha}{\sum_{j} e^{\text{logit}_j}} \times Q_{budget}
+\end{equation}
+
+This mechanism acts as a ``training wheel,'' allowing the agent to discover the efficacy of \textbf{Sequential Saturation} (focusing resources on one problem at a time) rather than spreading resources thinly, which is a known failure mode of the Status Quo policy.
+
+\subsection{Reward Shaping and Intensity Thresholds}
+To further guide the agent out of local optima, the reward function was ``shaped'' to provide denser feedback signals. The objective function $J(\pi)$ maximizes the total reward $R_t$, which is composed of three terms:
+
+\begin{equation}
+    R_t = R_{compliance} + R_{allocation} + R_{intensity}
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $R_{compliance}$: The primary objective, defined as the sum of compliance rates across all barangays.
+    \item $R_{allocation}$ (``Focus Bonus''): A progressive reward for allocating $>40\%$ of the budget to the identified non-compliant barangays. This incentivizes the agent to be decisive \cite{bacolod_gym}.
+    \item $R_{intensity}$ (``Threshold Jackpot''): A significant bonus (+20,000) awarded if the Enforcement Intensity in a target barangay exceeds the physics threshold of \textbf{0.80}.
+\end{itemize}
+
+This shaped reward structure explicitly teaches the agent the causal link between \textbf{High Intensity} (Action) and \textbf{Behavior Change} (Result), ensuring it learns to breach the resistance threshold of stubborn barangays like Poblacion.
+
 \section{Simulation and Analysis Framework}
 
 This section details the experimental design for the study, outlining the complete process of operationalizing the coupled ABM-RL model to answer the core research questions. This framework is the "experimental" phase of the research, defining how the simulation will be run and how the results will be measured. It is divided into four key stages: (1) the protocol for initializing, calibrating, and training the model; (2) the design of the specific policy scenarios to be tested; (3) the performance metrics that will be used to evaluate and compare the outcomes of each scenario; and (4) the sensitivity analysis to validate the model's robustness.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{abm-drl framework.png}
+    \includegraphics[width=0.9\linewidth]{abm-drl_framework.png}
     \caption{Process Flow of Proposed Methodology}
     \label{fig:process_flow}
 \end{figure}
@@ -371,6 +433,19 @@ To evaluate the outcomes of the simulations and compare the success of each poli
 
 \subsection{Sensitivity Analysis}
 To validate the robustness of the model, a Global Sensitivity Analysis (GSA) using Sobol indices will be conducted. This is particularly critical given that the baseline behavioral parameters (Knowledge, Attitude, Practices) are initialized using proxy data from riverside barangays \citep{Paigalan2025} rather than primary survey data from the coastal study site. To account for potential contextual differences between riverside and coastal communities, the simulation will explicitly widen the variance of these specific behavioral parameters by 20\% during the sensitivity testing phase. This stress-testing ensures that the policy recommendations generated by the DRL agent remain valid even if the specific behavioral profile of Bacolod’s population deviates slightly from the synthesized dataset used for initializations \citep{TianReview2024, Taraghi2025}.
+
+\subsection{Global Sensitivity Analysis (Sobol Method)}
+To validate the structural integrity of the model and ensure its findings are not artifacts of specific initialization values, a Global Sensitivity Analysis (GSA) was conducted using the \textbf{Sobol Method} \cite{sobol}.
+
+This rigorous validation technique decomposes the variance of the model's output (Global Compliance) into fractions attributable to specific input parameters. The analysis stress-tested the model by varying the five core behavioral parameters ($w_a, w_{sn}, w_{pbc}, c_{effort}, decay$) by $\pm 20\%$.
+
+Two indices were calculated for each parameter:
+\begin{itemize}
+    \item \textbf{First-Order Index ($S_1$):} Measures the direct contribution of the parameter to the output variance.
+    \item \textbf{Total-Order Index ($S_T$):} Measures the contribution including interactions with other parameters.
+\end{itemize}
+
+This procedure confirms the robustness of the ``Convenience Hypothesis'' (Chapter 4), proving that the model's sensitivity to Cost of Effort ($c_{effort}$) is a structural feature of the system, not a random anomaly.
 
 \section{Ethical Considerations and Limitations}
 This study ensures the confidentiality of all associated entities by strictly adhering to ethical data use standards and the provisions of the Data Privacy Act of 2012 (Republic Act No. 10173). Consistent with the Act’s mandate on the protection of personal information, no private individual or household data will be collected or utilized. The model is predicated upon synthesized socio-demographic data derived exclusively from public aggregates, such as official figures from the Philippine Statistics Authority \citep{PSA2024}, and anonymized operational details obtained from LGU and barangay officials. This approach allows the model to capture the necessary geographic and demographic complexity \citep{Jimenez2025} while fully protecting the privacy of citizens and local officials.

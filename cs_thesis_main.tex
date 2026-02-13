@@ -1,33 +1,44 @@
+% Replace the top of cs_thesis_main.tex with this:
 \RequirePackage[l2tabu, orthodox]{nag} 
 
-\documentclass[oneside]{um}
+\documentclass[oneside,authoryear,round]{um} % Pass APA options here
 
+% DELETE OR COMMENT OUT THIS LINE:
+% \usepackage[authoryear]{natbib}
+% Pass APA options directly to the class to resolve the Option Clash
 %% **************** PACKAGES ******************
 \usepackage{blindtext}
-\usepackage{pdfpages}  % This causes the error if not installed in MiKTeX
+\usepackage{pdfpages}  
 
 %% --- TABLE AND GRAPHICS SUPPORT ---
-\usepackage{booktabs}    % For professional table lines (\toprule, \midrule)
-\usepackage{longtable}   % For tables that span multiple pages
-\usepackage{pdflscape}   % For rotating wide tables
-\usepackage{array}       % For better column formatting
-\usepackage{ragged2e}    % For text wrapping inside tables
-\usepackage{tabularx}    % For auto-width tables
-\usepackage{makecell}    % For multi-line headers
-\usepackage{microtype}   % Improves font spacing
-\usepackage{amssymb}     % Provides the \checkmark symbol
-\usepackage{xcolor}      % For green/red colors
-\usepackage{amsmath}     % Standard math package
+\usepackage{booktabs}    
+\usepackage{longtable}   
+\usepackage{pdflscape}   
+\usepackage{array}       
+\usepackage{ragged2e}    
+\usepackage{tabularx}    
+\usepackage{makecell}    
+\usepackage{microtype}   
+\usepackage{amssymb}     
+\usepackage{xcolor}      
+\usepackage{amsmath}     
+
+% CRITICAL: REMOVE OR COMMENT OUT THE LINE BELOW
+% \usepackage[authoryear]{natbib} 
 
 %% --- CUSTOM DEFINITIONS ---
-% This allows you to use \cmark and \xmark in your table
 \newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
 \newcommand{\xmark}{\textcolor{red}{$\times$}}
 
-%% --- CITATION FORMATTING ---
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}}
+
+%% --- APA CITATION FORMATTING ---
+% 'a' forces Author-Year style in the natbib engine
 \bibpunct{(}{)}{;}{a}{,}{,} 
-\setlength{\bibsep}{1em}            % Adds spacing between references
-\renewcommand{\bibname}{References} % Renames "Bibliography" to "References"
+\setlength{\bibsep}{1em}            
+\renewcommand{\bibname}{References}
 
 %% **************** THESIS DATA ******************
 \title{Optimizing the Household\\
@@ -47,23 +58,21 @@
 \faculty{College of Computer Studies}        
 \degree{B.S. in Computer Science}                   
 \doctype{undergraduate thesis}                   
-\degreedate{January, 2025}                  
+\degreedate{January, 2025}                   
 
 %% ******** DOCUMENT SETTINGS *************
 \graphicspath{{./images/}{./chap1/images/}}   
 \makeindex
-\usepackage[none]{hyphenat} % Disables hyphenation (optional)
+\usepackage[none]{hyphenat} 
 \sloppy
 \parskip 7.2pt
 
 %% !!! CRITICAL FIX FOR TEMPLATE !!!
 \makeatletter
-% This block enables the \if@openright commands to work inside the document
 \begin{document}
 \frontmatter 
     \maketitle
     \input{frontmatter/copyright}          
-    %\input{frontmatter/originality}       
     \input{frontmatter/dedication}         
     \input{frontmatter/acknowledgements}   
     
@@ -83,7 +92,6 @@
     \if@openright\cleardoublepage\else\clearpage\fi
 
 \makeatother
-%% !!! FIX ENDS HERE !!!
 
 \pagestyle{umpage}
 \mainmatter 
@@ -100,7 +108,8 @@
 
 {\backmatter
     \if@openright\cleardoublepage\else\clearpage\fi
-    \bibliographystyle{um-plainnat} 
+    % Using apa or apalike style
+    \bibliographystyle{apa} 
     {\footnotesize\bibliography{bibliography}}
     \printindex
 }

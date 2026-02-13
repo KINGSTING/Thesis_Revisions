@@ -6,21 +6,21 @@ This chapter synthesizes the body of scholarly work that forms the foundation fo
 \section{Solid Waste Management in the Philippines}
 \setlength{\parindent}{2em}
 
-The national framework for waste management is defined by the Ecological Solid Waste Management Act of 2000 \citep{RA9003}, which mandates source segregation, recycling, and the establishment of Materials Recovery Facilities (MRFs). However, \citet{Coracero2021, Salsabila2021} confirm that the implementation of R.A. 9003 remains sub-optimal and unsustainable across Philippine LGUs, necessitating a strategic, computational approach to bridge the gap between policy and practice. This context defines the structural and behavioral challenges the proposed ABM-DRL framework must address:
+The national framework for waste management is defined by the Ecological Solid Waste Management Act of 2000 \citep{RA9003}, which mandates source segregation, recycling, and the establishment of Materials Recovery Facilities (MRFs). However, \citet{Coracero2021} and \citet{Salsabila2021} confirm that the implementation of R.A. 9003 remains sub-optimal and unsustainable across Philippine LGUs, necessitating a strategic, computational approach to bridge the gap between policy and practice.
 
 \subsection{Systemic and Budgetary Constraints on LGUs}
 \setlength{\parindent}{2em}
 
 The primary challenge in implementing R.A. 9003 lies in the significant operational and institutional burden placed on Local Government Units (LGUs), which function as the chief implementers of the law \citep{Nishimura2022}. This burden is most evident in the financial and technical overload that municipalities face. Solid Waste Management (SWM) consistently constitutes a high financial drain on municipal budgets. This cost is compounded by systemic deficiencies, such as a scarcity of compliant sanitary landfills and a chronic lack of funding for local initiatives. Together, these issues often lead to a form of institutional failure that fundamentally weakens the law's effectiveness \citep{Ibanez2022, Santos2025}. Overcoming these deep-seated structural and financial constraints requires LGU officials to demonstrate considerable political initiative to improve performance \citep{Nishimura2022}.
 
-Beyond financial hurdles, volatile enforcement undermines policy credibility. Assessments across the Philippines consistently report that while local ordinances are enacted, their enforcement on the ground is inconsistent, weak, or flagging \citep{Dalugdog2021, Sagodaquil2023}. \citet{Yazawa2025} characterize this as the critical ``Act vs. Reality'' gap, where barangay-level practices deviate significantly from the text of RA 9003. This observation is corroborated by \citet{Villanueva2021, ApostolJamoralin2024}, whose assessments confirm that without strict monitoring mechanisms and political will, the ``status quo'' of non-compliance persists despite clear legal frameworks. This lack of strict, sustained implementation erodes the punitive element of the policy, decreasing its credibility and, consequently, its effectiveness as a deterrent \citep{Badua2022}. This creates a critical optimization problem: a model must learn the most cost-effective threshold of enforcement required to build and maintain policy credibility, all while operating within a realistic and fixed budget constraint.
+Beyond financial hurdles, volatile enforcement undermines policy credibility. Assessments across the Philippines consistently report that while local ordinances are enacted, their enforcement on the ground is inconsistent, weak, or flagging \citep{Dalugdog2021, Sagodaquil2023}. \citet{Yazawa2025} characterize this as the critical ``Act vs. Reality'' gap, where barangay-level practices deviate significantly from the text of RA 9003. This observation is corroborated by \citet{Villanueva2021} and \citet{ApostolJamoralin2024}, whose assessments confirm that without strict monitoring mechanisms and political will, the ``status quo'' of non-compliance persists despite clear legal frameworks. This lack of strict, sustained implementation erodes the punitive element of the policy, decreasing its credibility and, consequently, its effectiveness as a deterrent \citep{Badua2022}. This creates a critical optimization problem: a model must learn the most cost-effective threshold of enforcement required to build and maintain policy credibility, all while operating within a realistic and fixed budget constraint.
 
 Finally, the governance structure of the Philippines complicates policy implementation. The Barangay, the basic political unit, serves as the primary level for both planning and implementing R.A. 9003 \citep{Delena2025}. This multi-level structure necessitates a modeling approach, such as an Agent-Based Model (ABM), that can accurately simulate the flow of policy mandates from the Municipal LGU down to the Barangay level. \citet{Florida2023} emphasize that the performance rating of these barangays is heavily dependent on localized administrative capability, which varies significantly. Furthermore, specific geographical contexts exacerbate these governance challenges. \citet{DelRosario2023} highlights that coastal municipalities—similar to the Municipality of Bacolod—face distinct logistical burdens in preventing marine debris that inland models often fail to address. Such a model must therefore account for the significant demographic differences and resource variations that exist between individual barangays \citep{Brugiere2022}.
 
 \subsection{Behavioral and Policy Intervention}
 \setlength{\parindent}{2em}
 
-A persistent gap between household awareness and actual practice highlights the limitations of simple mandates, underscoring the need for sophisticated behavioral interventions \citep{Catiil2025}. Studies across various Philippine cities demonstrate that a high level of resident awareness of R.A. 9003 often fails to translate into consistent, proper segregation \citep{Abordo2025}. This dissonance is quantified by \citet{Paigalan2025}, who observed that while residents in Northern Mindanao exhibited positive attitudes toward waste separation (Mean=3.17), improper practices such as open waste burning remained prevalent (Mean=2.90). This widespread phenomenon justifies the application of the Theory of Planned Behavior (TPB), which posits that external factors—mainly Subjective Norms (community perceptions) and Perceived Behavioral Control (the perceived ease or difficulty of segregating)—can override an individual's positive intentions.
+A persistent gap between household awareness and actual practice highlights the limitations of simple mandates, underscoring the need for sophisticated behavioral interventions \citep{Catiil2025}. Studies across various Philippine cities demonstrate that a high level of resident awareness of R.A. 9003 often fails to translate into consistent, proper segregation \citep{Abordo2025}. This dissonance is quantified by \citet{Paigalan2025}, who observed that while residents in Northern Mindanao exhibited positive attitudes toward waste separation, improper practices such as open waste burning remained prevalent. This widespread phenomenon justifies the application of the Theory of Planned Behavior (TPB), which posits that external factors—mainly Subjective Norms (community perceptions) and Perceived Behavioral Control (the perceived ease or difficulty of segregating)—can override an individual's positive intentions.
 
 To address this, the literature strongly validates the need for multi-pronged interventions that combine informational and community-based tools \citep{Trushna2024}. Qualitative inquiries by \citet{Espino2025} reveal that resident non-compliance is often driven by genuine frustration with irregular collection services, while \citet{Carpio2025} frame this negligence through a green criminology perspective, highlighting the normalization of minor environmental offenses. To counter this, \citet{Camarillo2021} emphasize the need for participatory governance to build trust. Furthermore, \citet{Collado2024} demonstrate through the SURWEM project that targeted educational interventions can significantly raise awareness, though they note that awareness alone does not guarantee sustained behavioral change without structural support. This evidence directly supports modeling Educational Campaigns as a dynamic LGU expenditure within the ABM, specifically designed to increase the Attitude and Subjective Norms scores of household agents over time.
 
@@ -57,173 +57,93 @@ Understanding household decision-making is the foundational requirement for desi
 \subsection{The TPB Framework and the Utility Function}
 \setlength{\parindent}{2em}
 
-The foundational ``brain'' of each household agent in the model is built upon the Theory of Planned Behavior (TPB), which serves as the dominant psychological framework for explaining and predicting pro-environmental behaviors (PEB), such as waste segregation. Drawing from the study of \citet{Ceschi2021}, this theory posits that an individual's intention to perform a behavior—and consequently the likelihood of the behavior itself—is determined by four core cognitive constructs:
-\begin{itemize}
-    \item \textbf{Attitude (A):} The agent's personal positive or negative evaluation of segregation (e.g., ``I believe segregation is important for the environment'').
-    \item \textbf{Subjective Norms (SN):} The perceived social pressure from the community, family, and neighbors to either perform or not perform the behavior (e.g., ``My neighbors are segregating, and I am expected to as well'').
-    \item \textbf{Perceived Behavioral Control (PBC):} The perceived ease or difficulty of the action, heavily influenced by practical factors such as skills, resources, and infrastructure availability (e.g., adequate LGU collection services).
-\end{itemize}
+The foundational ``brain'' of each household agent in the model is built upon the Theory of Planned Behavior (TPB), which serves as the dominant psychological framework for explaining and predicting pro-environmental behaviors (PEB), such as waste segregation. Drawing from the study of \citet{Ceschi2021}, this theory posits that an individual's intention to perform a behavior—and consequently the likelihood of the behavior itself—is determined by four core cognitive constructs: Attitude, Subjective Norms, and Perceived Behavioral Control.
 
-The validity of utilizing the TPB as the psychological core of the utility function is well-supported in recent literature. A systematic review by \citet{Taraghi2025} found that Agent-Based Modeling (ABM) researchers frequently adopt the TPB to simulate pro-environmental behaviors, employing internal and external control variables to operationalize the theory's concepts. This is further supported by \citet{Ceschi2021}, who confirmed the validity of operationalizing these constructs—Attitude, Subjective Norms, and PBC—as weighted internal decision drivers.
-
-While \citet{Liao2024} identifies that social determinants and digital social influence are critical predictors of intent, intent does not always translate to action. \citet{Meng2018} addressed this gap using multi-agent simulation, demonstrating that recycling behavior is heavily dependent on neighborhood-level interactions, which validates the necessity of modeling specific 'Subjective Norm' pressures. Furthermore, \citet{Ma2023, Ceschi2021} demonstrated that combining these weighted TPB factors with objective policy utility components (external levers) is an effective method for analyzing the interaction between internal psychological drivers and policy interventions.
+The validity of utilizing the TPB as the psychological core of the utility function is well-supported in recent literature. A systematic review by \citet{Taraghi2025} found that Agent-Based Modeling (ABM) researchers frequently adopt the TPB to simulate pro-environmental behaviors, employing internal and external control variables to operationalize the theory's concepts. This is further supported by \citet{Ceschi2021}, who confirmed the validity of operationalizing these constructs---Attitude, Subjective Norms, and PBC---as weighted internal decision drivers.
 
 To mathematically represent this decision-making process, the model employs a linear utility function where the agent's utility to segregate ($U_{\mathrm{segregate}}$) is the sum of these weighted psychological factors and a stochastic term:
 \begin{equation}
     U_{\mathrm{segregate}} = (w_A A + w_{SN} SN + w_{PBC} PBC) + \epsilon
     \label{eq:behavior_equation}
 \end{equation}
-In this equation, the coefficients (\textit{w}) represent the relative weight or importance the agent assigns to each psychological factor. Crucially, the $\epsilon$ (epsilon) term accounts for the inherent stochasticity (randomness) and unobserved factors present in all human decision-making \citep{Chen2023, Zheng2022}. As individuals do not always act with perfect rationality, $\epsilon$ represents ``noise''—such as haste, forgetfulness, or momentary influences not captured by the primary variables. This stochastic element is essential for model realism, as real-world Solid Waste Management (SWM) systems are characterized by deep uncertainty. Therefore, embracing this randomness is required to produce valid insights into system behavior \citep{Akbarpour2021, Subedi2025}.
-
-\subsection{Extending TPB for Policy and Complexity}
-
-To adapt the classic Theory of Planned Behavior (TPB) for dynamic policy simulation, this model extends the framework in three critical dimensions. 
-
-First, it integrates economic utility and socio-economic heterogeneity, transcending purely psychological constructs. Policy analysis requires quantifying the trade-off between subjective preferences and objective costs; studies confirm that economic instruments are effective drivers of segregation because they directly modify an agent’s final utility calculation ($U_{\mathrm{Policy}}$) \citep{Rathore2021}. The model addresses heterogeneity by initializing agents with diverse income and education levels, which modulate the weights of this utility term. This reflects real-world observations where, for instance, low-income households exhibit higher sensitivity to punitive fines compared to high-income households \citep{Chen2023, Zheng2022}. The inclusion of these external economic factors is validated by Social Cost-Benefit Analysis (SCBA), which advocates for their incorporation into the agent’s decision-making process \citep{MedinaMijangos2020}.
-
-Second, the model captures dynamic social influence by allowing Subjective Norms ($SN$) to evolve. In contrast to static econometric models, the Agent-Based Model (ABM) structure enables an agent’s $SN$ to update based on the compliance rate observed within their immediate neighborhood \citep{Bire2025}. This capacity for adaptive social learning is a distinct advantage of ABM and is vital for understanding community-based Solid Waste Management (SWM) programs in the Philippines \citep{Brugiere2022}. 
-
-Third, the model translates non-monetary interventions—such as educational campaigns—into direct inputs for psychological constructs. When the Local Government Unit (LGU) agent allocates a budget for awareness, it directly increases the initial values and sensitivities of Attitude ($A$) and Perceived Behavioral Control ($PBC$) across the population, explicitly linking budgetary actions to behavioral outcomes.
-
-By grounding agent behavior in TPB and extending it with these dynamic influences, the ABM creates a robust environment necessary for Deep the Reinforcement Learning (DRL) agent to discover optimal, sustainable policies. Contemporary literature validates this integration by framing the simulation as a Markov Decision Process (MDP). In this framework, the ABM functions not merely as a simulator, but as a stochastic environment generating state transitions ($S_t \rightarrow S_{t+1}$) based on agent interactions \citep{Kompella2020}. Studies in urban resource management \citep{Rajesh2025} and smart city logistics \citep{HaMinh2025} demonstrate that this approach provides the ``experience replay'' data required to train Deep RL agents in the absence of pre-existing datasets. Furthermore, recent applications of Proximal Policy Optimization (PPO) in socio-environmental systems suggest that Deep RL outperforms traditional discrete methods in optimizing continuous control variables, such as specific budget allocations \citep{Jimenez2025, Rajesh2025}.
+In this equation, the coefficients (\textit{w}) represent the relative weight or importance the agent assigns to each psychological factor. Crucially, the $\epsilon$ (epsilon) term accounts for the inherent stochasticity (randomness) and unobserved factors present in all human decision-making \citep{Chen2023, Zheng2022}. As individuals do not always act with perfect rationality, $\epsilon$ represents ``noise''---such as haste, forgetfulness, or momentary influences not captured by the primary variables. This stochastic element is essential for model realism, as real-world Solid Waste Management (SWM) systems are characterized by deep uncertainty. Therefore, embracing this randomness is required to produce valid insights into system behavior \citep{Akbarpour2021, Subedi2025}.
 
 \section{ABM in Environmental Management}
 \setlength{\parindent}{2em}
 
 Agent-Based Modeling (ABM) is a powerful computational method for simulating the actions and interactions of autonomous agents within a defined environment. Serving as a ``virtual laboratory'' \citep{deSouza2021}, ABM is uniquely suited for modeling complex socio-environmental systems (SES) where macro-level outcomes, such as community compliance, emerge from micro-level behaviors and interactions \citep{Brugiere2022}. This capacity is paramount for analyzing municipal solid waste (MSW), where system-wide compliance results directly from the cumulative decisions made at the household level \citep{Fontaine2024}.
 
-The necessity of ABM in this research is rooted in its ability to model heterogeneity and adaptive behavior. While other methodologies like System Dynamics (SD) are effective for analyzing aggregate stocks and flows of plastic waste \citep{Dhanshyam2021}, and systematic reviews link macro-population growth to generation rates \citep{Eltanal2025}, these approaches fail to capture individual decision-making. Unlike traditional system dynamics models, ABM captures the diversity of households, representing them as agents with distinct socio-demographic factors and psychological profiles, as defined by the Theory of Planned Behavior (TPB) \citep{Fontaine2024}. This allows the simulation of non-linear and adaptable responses to policy changes—a critical feature since household behaviors are not static. Furthermore, ABM's capacity to integrate advanced computational techniques, such as incorporating machine learning (ML) classifiers into agent decision logic, enhances behavioral realism beyond static heuristics and improves the accuracy of predicted policy outcomes \citep{Jimenez2025}.
-
-Effective municipal SWM also requires modeling the multi-level complexity of governance structures. ABM facilitates Multi-Level Agent-Based Modeling (ML-ABM), which is essential for capturing the hierarchical relationships between different governing bodies. A comprehensive review by \citet{TianReview2024} confirms that while ABM is increasingly utilized in solid waste management to simulate these complexities, existing models largely focus on logistics or technology, often neglecting the dynamic optimization of policy parameters. This framework can simulate the interactions between the Municipal LGU (as the policy setter), the Barangays (as local implementers), and the Households (as the behavioral units) \citep{Brugiere2022}.
+The necessity of ABM in this research is rooted in its ability to model heterogeneity and adaptive behavior. While other methodologies like System Dynamics (SD) are effective for analyzing aggregate stocks and flows of plastic waste \citep{Dhanshyam2021}, and systematic reviews link macro-population growth to generation rates \citep{Eltanal2025}, these approaches fail to capture individual decision-making. Unlike traditional system dynamics models, ABM captures the diversity of households, representing them as agents with distinct socio-demographic factors and psychological profiles, as defined by the Theory of Planned Behavior (TPB) \citep{Fontaine2024}. This allows the simulation of non-linear and adaptable responses to policy changes---a critical feature since household behaviors are not static. Furthermore, ABM's capacity to integrate advanced computational techniques, such as incorporating machine learning (ML) classifiers into agent decision logic, enhances behavioral realism beyond static heuristics and improves the accuracy of predicted policy outcomes \citep{Jimenez2025}.
 
 \section{Deep Reinforcement Learning for Optimization}
 \setlength{\parindent}{2em}
 
-While the Agent-Based Model (ABM) serves as the simulation environment, Deep Reinforcement Learning (DRL) is the critical methodology required to autonomously discover optimal, budget-constrained policies within that complex system \citep{ZhengAI2022}. DRL integrates the decision-making framework of Reinforcement Learning with the representation learning capabilities of Deep Neural Networks (DNNs). In this setup, the Municipal LGU agent utilizes a neural network to approximate the optimal policy, learning to map high-dimensional state inputs—such as the heterogeneous psychological states of thousands of households—to precise adaptive decisions \citep{Hertweck2023}. This integration is essential because traditional tabular RL methods cannot scale to the massive, continuous state spaces generated by complex socio-environmental models \citep{Mousavi2021}.
+While the Agent-Based Model (ABM) serves as the simulation environment, Deep Reinforcement Learning (DRL) is the critical methodology required to autonomously discover optimal, budget-constrained policies within that complex system \citep{ZhengAI2022}. DRL integrates the decision-making framework of Reinforcement Learning with the representation learning capabilities of Deep Neural Networks (DNNs). In this setup, the Municipal LGU agent utilizes a neural network to approximate the optimal policy, learning to map high-dimensional state inputs---such as the heterogeneous psychological states of thousands of households---to precise adaptive decisions \citep{Hertweck2023}. This integration is essential because traditional tabular RL methods cannot scale to the massive, continuous state spaces generated by complex socio-environmental models \citep{Mousavi2021}.
 
-To enable this autonomous optimization, the literature supports framing the ABM simulation not merely as a model, but as a stochastic environment formally defined as a Markov Decision Process (MDP). In this hybrid architecture, the ABM functions as a high-fidelity data generator, providing the state representation ($S_t$)—encapsulating household compliance levels and budget statuses—and processing the policy agent's actions ($A_t$) to generate the next state ($S_{t+1}$) and a corresponding reward signal ($R_t$). Studies in urban resource management \citep{Rajesh2025} and smart city logistics \citep{HaMinh2025} demonstrate that this approach provides the ``experience replay'' data required to train Deep RL agents in the absence of pre-existing datasets \citep{Kompella2020}.
+To enable this autonomous optimization, the literature supports framing the ABM simulation not merely as a model, but as a stochastic environment formally defined as a Markov Decision Process (MDP). In this hybrid architecture, the ABM functions as a high-fidelity data generator, providing the state representation ($S_t$)---encapsulating household compliance levels and budget statuses---and processing the policy agent's actions ($A_t$) to generate the next state ($S_{t+1}$) and a corresponding reward signal ($R_t$). Studies in urban resource management \citep{Rajesh2025} and smart city logistics \citep{HaMinh2025} demonstrate that this approach provides the ``experience replay'' data required to train Deep RL agents in the absence of pre-existing datasets \citep{Kompella2020}.
 
 Current applications of DRL in waste management remain predominantly focused on technical, industrial, or hardware-based optimization. For instance, recent advancements have extensively demonstrated the efficacy of DRL in automating waste classification and detection. \citet{Duhayyim2022, Khan2024} utilized Deep Q-Networks (DQN) and Mask R-CNN to automate the complex visual task of waste object detection, achieving high accuracy in segregating recyclables at the processing stage. Similarly, \citet{Udayakumar2023} integrated Improved Particle Swarm Optimization (IPSO) with MobileNetV2 to enhance the precision of waste categorization in smart city frameworks. Beyond classification, DRL has been applied to control industrial processes, such as waste biorefining \citep{Gao2024} and plant machinery optimization \citep{Kumar2022}. In logistics, stochastic optimization has been used for vehicle routing \citep{Khallaf2024, Akbarpour2021} and reverse logistics \citep{Karagoz2022}.
-
-However, these existing studies generally prioritize infrastructural efficiency and rely on discrete action spaces (e.g., choose Route A or B). In contrast, this study leverages DRL for governance, using algorithms like Proximal Policy Optimization (PPO) to allow the LGU agent to operate in a continuous action space. This enables the precise modulation of budgetary allocations (e.g., allocating exactly 12.5\% of funds to education) rather than selecting from pre-defined, rigid brackets.
-
-The methodological feasibility of using DRL to learn optimal strategies from simulated or fixed data is well-supported by theoretical literature. \citet{Agarwal2020} demonstrated that off-policy DRL algorithms, such as Random Ensemble Mixture (REM) and QR-DQN, can successfully generalize and outperform baseline policies even when trained on fixed, offline datasets—analogous to the constraints of learning from a simulated agent environment. This reliability is further facilitated by the maturation of the field, evidenced by the development of standardized offline RL libraries that validate the use of DRL for extracting strategies from historical or simulated data \citep{Seno2022}.
-
-Furthermore, DRL is uniquely adept at handling the stochasticity and uncertainty inherent in SWM systems, which feature unpredictable waste generation rates and heterogeneous household responses \citep{Akbarpour2021, Zhang2021}. By leveraging deep neural networks as function approximators, the DRL agent can generalize across millions of simulated states, identifying robust patterns amidst noise. This allows for the generation of resilient policies that remain effective even when facing the random fluctuations of agent behavior, a feature proven superior to deterministic planning \citep{PichardoZarate2025}. This robustness is particularly vital when relying on synthesized behavioral parameters derived from literature \citep{Jimenez2025}.
-
-Finally, DRL facilitates the optimization of complex, multi-objective reward functions. The neural network can be trained to maximize a composite reward signal that integrates conflicting municipal interests: maximizing waste diversion rates, minimizing financial costs, and ensuring social equity through educational spending \citep{Jimenez2025}. This approach aligns with sustainability-focused Multi-Objective Optimization (MOO) frameworks, allowing the agent to navigate the trade-offs between economic efficiency and environmental impact to find a Pareto optimal policy \citep{Torkayesh2021, Saif2022}.
 
 \section{Synthesis and Identification of the Research Gap}
 \setlength{\parindent}{2em}
 
 A comprehensive review of the literature indicates a critical implementation deficit in the Philippine Solid Waste Management (SWM) system. This paralysis, centered on Republic Act 9003, is consistently attributed to weak, inconsistent enforcement and chronic budgetary constraints within Local Government Units (LGUs) \citep{Santos2025, Sagodaquil2023}. Furthermore, studies highlight a significant gap between high public awareness of SWM and low actual compliance. This suggests that effective policy must move beyond simple enforcement, requiring a strategic blend of hybrid reward-penalty schemes and investments in non-monetary levers, such as education, to address core behavioral flaws \citep{Catiil2025, Chen2023}.
 
-Addressing this behavioral component is complicated by the highly heterogeneous and non-linear nature of household decision-making. \citet{Olawade2024} identify this integration of Artificial Intelligence into waste management as a necessary ``paradigm shift,'' moving from reactive systems to smart, predictive management. The literature shows that traditional utility models, often focused solely on attitude ($A$), are insufficient. A more robust model is required, one that integrates the dynamic influence of Subjective Norms ($SN$) and Perceived Behavioral Control ($PBC$) \citep{Zheng2022}. Crucially, such a model must also explicitly account for the moderation effect of socio-economic factors, like income and education, which directly impact a household's financial sensitivity to policy interventions. The sheer complexity of these interacting variables strongly indicates that an agent-based approach is necessary to capture this dynamic behavior accurately.
+Addressing this behavioral component is complicated by the highly heterogeneous and non-linear nature of household decision-making. \citet{Olawade2024} identify this integration of Artificial Intelligence into waste management as a necessary ``paradigm shift,'' moving from reactive systems to smart, predictive management. The sheer complexity of these interacting variables strongly indicates that an agent-based approach is necessary to capture this dynamic behavior accurately.
 
-The computational feasibility of this two-pronged approach is well-established in separate but related fields. First, Agent-Based Modeling (ABM) is consistently identified as the preferred method for simulating complex, multi-level governance structures and capturing the behavioral heterogeneity detailed above \citep{Brugiere2022, deSouza2021}. Second, Deep Reinforcement Learning (DRL) has proven to be the necessary tool for performing stochastic, multi-objective optimization, particularly in discovering robust, cost-minimized solutions within complex systems analogous to SWM, such as supply chain networks \citep{Akbarpour2021, Torkayesh2021}.
-
-\begin{longtable}{p{4cm} c c c p{6cm}}
+\begin{longtable}{L{3.5cm} c c c L{5cm}}
     \caption{Thematic Comparison of Related Literature} \label{tab:lit_gap_analysis} \\
-    
     \toprule
-    \textbf{Theme / Category} & 
-    \textbf{ABM?} & 
-    \textbf{DRL?} & 
-    \textbf{Policy?} & 
-    \textbf{Gap / Limitation} \\
+    \textbf{Category} & \textbf{ABM} & \textbf{DRL} & \textbf{Policy} & \textbf{Gap / Limitation} \\
     \midrule
     \endfirsthead
-    
     \multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
     \toprule
-    \textbf{Theme / Category} & 
-    \textbf{ABM?} & 
-    \textbf{DRL?} & 
-    \textbf{Policy?} & 
-    \textbf{Gap / Limitation} \\
+    \textbf{Category} & \textbf{ABM} & \textbf{DRL} & \textbf{Policy} & \textbf{Gap / Limitation} \\
     \midrule
     \endhead
-    
     \bottomrule
     \multicolumn{5}{r}{{Continued on next page}} \\ 
     \endfoot
-    
     \bottomrule
     \endlastfoot
 
-    %--- Row 1 ---%
-    \textbf{Descriptive \& Assessment Studies (Philippines)} \newline
-    \citep{Abordo2025, Catiil2025, Yazawa2025} & 
-    \xmark & 
-    \xmark & 
-    \xmark & 
-    These studies audit past compliance or describe current habits. They lack a computational tool to predict future outcomes of new policies before implementation. \\ 
+    % ROW 1
+    Descriptive Studies \par (Abordo et al., 2025) & \xmark & \xmark & \xmark & Audits past compliance but cannot predict future policy outcomes. \\ 
     \midrule
 
-    %--- Row 2 ---%
-    \textbf{Traditional Agent-Based Modeling (Social)} \newline
-    \citep{Bire2025, Ceschi2021, Meng2018} & 
-    \cmark & 
-    \xmark & 
-    \cmark & 
-     Uses ABM to test policies, but relies on manual scenarios (e.g., "Test A vs. B"). Lacks an AI agent to automatically "search" for the mathematical optimum. \\ 
+    % ROW 2
+    Traditional ABM \par (Bire et al., 2025) & \cmark & \xmark & \cmark & Relies on manual scenario testing; lacks autonomous AI optimization. \\ 
     \midrule
 
-    %--- Row 3 ---%
-    \textbf{Supply Chain \& Logistics Optimization} \newline
-    \citep{Akbarpour2021, Karagoz2022, Saif2022} & 
-    \xmark & 
-    \xmark & 
-    \xmark & 
-     Optimizes truck routes, facility locations, or machinery. Ignores the complex, irrational segregation behavior of households (the source). \\ 
+    % ROW 3
+    Logistics Optimization \par (Akbarpour et al., 2021) & \xmark & \xmark & \xmark & Optimizes fleet routes, ignoring complex household behavior. \\ 
     \midrule
 
-    %--- Row 4 ---%
-    \textbf{AI \& Reinforcement Learning (Hardware)} \newline
-    \citep{Dey2025, Gao2024, Olawade2024} & 
-    \xmark & 
-    \cmark & 
-    \xmark & 
-     Uses DRL for "Smart Bins" or robotics. High cost and hardware-dependent. The proposed study uses DRL for "Smart Policy" (laws), which is cheaper to implement. \\ 
+    % ROW 4
+    AI \& RL (Hardware) \par (\citet{Dey2025}) & \xmark & \cmark & \xmark & Focuses on smart bins and robotics rather than governance policy. \\ 
     \midrule
 
-    %--- Row 5 ---%
-    \textbf{Qualitative, Legal \& Theoretical Reviews} \newline
-    \citep{Santos2025, Liao2024, Espino2025} & 
-    \xmark & 
-    \xmark & 
-    \xmark & 
-    Explains "why" people fail to segregate (psychology/law) but offers no quantitative mechanism to translate these insights into specific policy parameters (fines/rewards). \\ 
+    % ROW 5
+    Qualitative Reviews \par (Santos et al., 2025) & \xmark & \xmark & \xmark & Offers no quantitative mechanism to optimize specific policy parameters. \\ 
     \midrule
 
-    %--- Row 6 ---%
-    \textbf{Closest Benchmark (National/Equity Focus)} \newline
-    \citep{Jimenez2025} & 
-    \cmark & 
-    \cmark & 
-    \cmark & 
-    While methodologically similar, it is calibrated for national equity. The proposed study is the first calibrated specifically for Philippine LGU compliance. \\ 
-    \midrule
+    % ROW 6
+    Proposed Study \par (Bansao \& Lumingkit) & \cmark & \cmark & \cmark & First study to use ABM-DRL to optimize Philippine LGU ordinance parameters. \\ 
 
-    %--- Row 7 ---%
-    \textbf{Proposed Study (Bansao \& Lumingkit)} \newline
-    (Philippines - Bacolod) & 
-    \cmark & 
-    \cmark & 
-    \cmark & 
-    First study to combine ABM and DRL to mathematically optimize local ordinance parameters (fines/rewards) for a Philippine Municipality. \\ 
-    
 \end{longtable}
 
 \noindent{\textbf{The Critical Research Gap}}
 
-While the academic literature validates the individual utility of Agent-Based Modeling (ABM) for simulating social systems and Deep Reinforcement Learning (DRL) for optimization, a critical research gap persists at their intersection, specifically within the domain of adaptive public policy. To date, no existing study has developed an integrated framework where a governing agent, such as a Local Government Unit (LGU), operates under a strict municipal budget to autonomously learn the optimal dynamic allocation of funds. This gap is particularly evident in the context of Philippine solid waste management, where the allocation of resources across three distinct strategic instruments—punitive enforcement, monetary incentives, and behavioral education—has not been mathematically optimized to maximize long-term household segregation compliance in a resource-constrained environment.
+While the academic literature validates the individual utility of Agent-Based Modeling (ABM) for simulating social systems and Deep Reinforcement Learning (DRL) for optimization, a critical research gap persists at their intersection, specifically within the domain of adaptive public policy. To date, no existing study has developed an integrated framework where a governing agent, such as a Local Government Unit (LGU), operates under a strict municipal budget to autonomously learn the optimal dynamic allocation of funds. This gap is particularly evident in the context of Philippine solid waste management, where the allocation of resources across three distinct strategic instruments---punitive enforcement, monetary incentives, and behavioral education---has not been mathematically optimized to maximize long-term household segregation compliance in a resource-constrained environment.
 
-Current research in this domain remains bifurcated. On one hand, existing ABM studies in waste management primarily engage in static scenario testing. This approach typically involves comparing the outcomes of a few pre-defined policy mixes, such as a "pure fine" versus a "pure incentive" scenario, rather than allowing the governing agent to autonomously discover the optimal, and potentially evolving, combination of interventions. On the other hand, optimization studies using DRL or multi-objective frameworks tend to focus exclusively on technical or logistical networks, such as optimizing vehicle routing or biorefining control to minimize costs. These technical models generally fail to incorporate the dynamic social feedback loops necessary for understanding behavioral compliance and often neglect the LGU's strategic choice to allocate finite resources toward non-financial levers, such as educational campaigns, which are critical for influencing the complex psychological factors driving behavioral change.
+Current research in this domain remains bifurcated. On one hand, existing ABM studies in waste management primarily engage in static scenario testing. This approach typically involves comparing the outcomes of a few pre-defined policy mixes, rather than allowing the governing agent to autonomously discover the optimal, and potentially evolving, combination of interventions. On the other hand, optimization studies using DRL tend to focus exclusively on technical or logistical networks. These technical models generally fail to incorporate the dynamic social feedback loops necessary for understanding behavioral compliance and often neglect the LGU's strategic choice to allocate finite resources toward non-financial levers, such as educational campaigns.
+
 \begin{equation}
     U_{\mathrm{segregate}} = (w_A(t) A) + (w_{SN}(t) SN_{\mathrm{local}}) + (w_{PBC}(t) PBC_{\mathrm{infra}}) - C_{\mathrm{Net}} + \epsilon
     \label{eq:proposed_utility_function}
 \end{equation}
-This study proposes a structural modification to the conventional Theory of Planned Behavior (TPB) framework, advancing beyond the static behavioral models typified by \citet{Ceschi2021} by introducing a dynamic, time-variant architecture. Central to this design is the integration of an explicit external policy term, $C_{\mathrm{Net}}$ (representing the net disutility of compliance), alongside the standard internal psychological constructs of Attitude, Subjective Norms, and Perceived Behavioral Control. Unlike state-of-the-art models that treat government interventions as fixed background variables, this framework renders the utility function dynamic through time-variant weights ($w(t)$). Specifically, the model simulates non-linear behavioral evolution: the weight of Attitude ($w_A(t)$) follows a decay model to simulate "public forgetting" in the absence of reinforcement, requiring continuous IEC investment to maintain. Furthermore, the model incorporates "psychological reactance," where excessive enforcement pressure inversely affects the agent’s attitude, acknowledging the resistance to coercion often overlooked in standard waste management simulations.
 
-The novelty of this approach lies in the strategic decoupling of the agent's internal psychological state from external policy levers. By isolating the policy term within the utility equation, this research transforms the TPB from a purely descriptive tool into a computational interface for a Deep Reinforcement Learning (DRL) agent. This modification addresses a critical gap in current literature by modeling the Local Government Unit (LGU) not merely as a static administrator, but as a "strategic learner." Consequently, the RL agent can mathematically manipulate the external utility derived from compliance—balancing incentives ($I$), enforcement ($E$), and information \& educational campaign ($IEC$) against budget constraints—without invalidating the agent's internal psychological nature. This coupled ABM-DRL framework moves beyond describing why agents segregate to dynamically optimizing how an LGU can induce segregation, offering a cost-effective decision-support tool for implementing R.A. 9003.
+This study proposes a structural modification to the conventional Theory of Planned Behavior (TPB) framework, advancing beyond the static behavioral models typified by \citet{Ceschi2021} by introducing a dynamic, time-variant architecture. Central to this design is the integration of an explicit external policy term, $C_{\mathrm{Net}}$, alongside the standard internal psychological constructs. Unlike state-of-the-art models that treat government interventions as fixed background variables, this framework renders the utility function dynamic through time-variant weights ($w(t)$). Specifically, the model simulates non-linear behavioral evolution: the weight of Attitude ($w_A(t)$) follows a decay model to simulate ``public forgetting'' in the absence of reinforcement, requiring continuous IEC investment to maintain. Furthermore, the model incorporates ``psychological reactance,'' where excessive enforcement pressure inversely affects the agent's attitude, acknowledging the resistance to coercion often overlooked in standard simulations.
+
+The novelty of this approach lies in the strategic decoupling of the agent's internal psychological state from external policy levers. By isolating the policy term within the utility equation, this research transforms the TPB from a purely descriptive tool into a computational interface for a Deep Reinforcement Learning (DRL) agent. This modification addresses a critical gap in current literature by modeling the LGU not merely as a static administrator, but as a ``strategic learner.'' Consequently, the RL agent can mathematically manipulate the external utility derived from compliance---balancing incentives, enforcement, and information \& educational campaigns ($IEC$) against budget constraints---without invalidating the agent's internal psychological nature. This coupled ABM-DRL framework moves beyond describing why agents segregate to dynamically optimizing how an LGU can induce segregation, offering a cost-effective decision-support tool for implementing R.A. 9003.

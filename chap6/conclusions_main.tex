@@ -1,15 +1,55 @@
 % !TeX root = ../cs_thesis_main.tex
 \chapter{Conclusions}
-\textbf{This section should have a summary of the whole project.  The original aims and objective and whether these have been met should be discussed. It should include a section with a critique and a list of limitations of your proposed solutions.  Future work should be described, and this should not be marginal or silly (e.g.\ add machine learning models).  It is always good to end on a positive note (i.e.\ `Final Remarks').}
+
+This study set out to address the persistent gap between policy formulation and on-the-ground reality in the implementation of the Ecological Solid Waste Management Act (R.A. 9003) within the Municipality of Bacolod, Lanao del Norte. By departing from traditional static policy analysis and adopting a computational approach, this research successfully developed a coupled Agent-Based Modeling (ABM) and Deep Reinforcement Learning (DRL) framework. This novel system did not merely simulate waste generation; it simulated the complex behavioral dynamics of 3,923 household agents across seven heterogeneous barangays, allowing a governing AI agent to autonomously discover optimal resource allocation strategies under strict budgetary constraints.
+
+The project concludes that the primary driver of non-compliance in the municipality is not a lack of awareness, but the high ``Cost of Effort'' associated with segregation. The DRL agent's discovery of the ``Sequential Saturation'' strategy—prioritizing the reduction of logistical friction and targeted enforcement over broad educational campaigns—provides a data-driven refutation of the current ``Status Quo'' and offers a replicable roadmap for adaptive local governance.
 
 \section{Achieved Objectives}
-\blindtext
+
+The study has successfully met its defined research objectives, providing both theoretical contributions to computational social science and practical policy instruments for the Local Government Unit (LGU).
+
+\begin{itemize}
+    \item \textbf{Parameterization through Synthesis:} The first objective was achieved by rigorously synthesizing demographic data from the Philippine Statistics Authority, financial constraints from the Municipal Environment and Natural Resources Office (MENRO), and behavioral parameters from regional literature (e.g., Paigalan et al., 2025). This created a high-fidelity simulation environment that accurately reflects the socio-economic heterogeneity of Bacolod’s coastal and urban barangays.
+    
+    \item \textbf{Development of Multi-Level ABM:} The study successfully constructed a multi-level Agent-Based Model where household decisions are governed by a dynamic Theory of Planned Behavior (TPB) utility function. The model accurately simulated the non-linear emergence of ``Cultural Inertia'' and validated the influence of social norms, demonstrating how individual household decisions aggregate into barangay-level compliance rates.
+    
+    \item \textbf{Integration of Deep Reinforcement Learning:} The core technical objective was met by integrating a Proximal Policy Optimization (PPO) agent into the ABM environment. The agent successfully learned to navigate the continuous action space of budget allocation, balancing three distinct policy levers (IEC, Incentives, and Enforcement) to maximize compliance without exceeding the \textpeso 1.5 million annual budget cap.
+    
+    \item \textbf{Validation of Adaptive Strategies:} Through extensive simulation and Global Sensitivity Analysis (GSA), the study validated the efficacy of the AI-derived ``Sequential Saturation'' strategy. The analysis confirmed that this adaptive approach, which targets the ``Convenience Barrier'' ($S_1 \approx 0.83$), significantly outperforms the static ``Pure Penalty'' or ``Pure Incentive'' regimes, offering a statistically robust solution to the municipality's compliance stagnation.
+\end{itemize}
 
 \section{Critique and Limitations}
-\blindtext
+
+While the proposed framework offers significant advancements in policy optimization, it is subject to specific limitations inherent to its design and scope.
+
+\begin{itemize}
+    \item \textbf{Reliance on Synthesized Behavioral Parameters:} The primary critique of the model is its reliance on synthesized behavioral weights (e.g., sensitivity to fines) derived from regional proxy data rather than primary household surveys specific to Bacolod. While sensitivity analysis confirms the model's robustness to parameter variance, the absence of direct empirical behavioral calibration means the "tipping points" identified are probabilistic estimates rather than exact predictions.
+    
+    \item \textbf{Exclusion of Inland Barangays:} The simulation is operationally limited to the seven barangays currently covered by the municipal waste collection system. The nine inland barangays, which face distinct logistical challenges such as lack of road access, were excluded. Consequently, the optimal policies identified may not be directly transferable to these geographically isolated areas where the "Cost of Effort" is likely significantly higher.
+    
+    \item \textbf{Assumption of Enforcement Integrity:} The model assumes that enforcement agents (Eco-warriors) operate with perfect integrity. It does not account for the real-world friction of corruption, "tipping," or the social hesitancy of barangay officials to penalize their own constituents. By excluding these informal transactions, the model likely represents an "optimistic" upper bound of enforcement efficacy.
+    
+    \item \textbf{Operational Abstraction:} The study focuses on the \textit{policy} layer of waste management. It abstracts the physical logistics of waste collection (e.g., truck routing, fuel costs, bin capacity) into a generalized "Infrastructure Score." It does not optimize the physical movement of waste, meaning the "convenience" improvements are modeled as financial investments rather than specific engineering solutions.
+\end{itemize}
 
 \section{Future Work}
-\blindtext
+
+To further bridge the gap between simulation and implementation, future research should expand the model's complexity to encompass the "hidden" dynamics of local governance.
+
+\begin{itemize}
+    \item \textbf{Modeling Informal Economies and Corruption:} Future iterations should introduce "Dishonest Enforcers" or "Bribable Agents" into the simulation. By using Game Theory to model the interactions between non-compliant households and corruptible officials, researchers can test the resilience of the AI's policies against systemic corruption and identify mechanisms to disincentivize informal tipping.
+    
+    \item \textbf{Expansion to Inland Logistics:} The model should be expanded to include the nine inland barangays, integrating a "Logistics Agent" responsible for optimizing the physical collection routes. This would transform the study into a dual-optimization problem: simultaneously optimizing the \textit{behavioral policy} for residents and the \textit{operational logistics} for the LGU trucks.
+    
+    \item \textbf{Longitudinal Pilot Validation:} The most significant future work would be a real-world A/B test. The "Sequential Saturation" strategy should be piloted in a single test barangay (e.g., Liangan East) for a period of six months. Comparing the real-world compliance data from this pilot against the simulation's predictions would provide the ultimate validation of the ABM-DRL framework.
+\end{itemize}
 
 \section{Final Remarks}
-\blindtext
+
+This thesis demonstrates that the challenge of Solid Waste Management in the Philippines is not merely a logistical engineering problem, but a complex behavioral one. The findings reveal that well-intentioned policies often fail not because of a lack of funding, but because of a misalignment between the policy instruments and the behavioral drivers of the population.
+
+The Deep Reinforcement Learning agent did not simply find a "better number"; it discovered a fundamental truth about the local context: that residents are rational actors constrained by the "Convenience Barrier." By proving that reducing the friction of compliance is far more effective than punishing non-compliance or preaching awareness, this study offers the Municipality of Bacolod a scientifically grounded path forward. It signifies a shift from "hit-and-miss" governance to evidence-based policy design, ensuring that every peso of the municipal budget is invested where it will yield the highest return for the environment and the community.
+
+\subsection{Usage of Generative AI}
+During the preparation of this work, the authors utilized Google Gemini 3 Pro primarily for the purpose of linguistic refinement and grammatical error correction. The generative AI tool was employed to enhance the clarity, coherence, and readability of the manuscript. No scientific content, data generation, or conceptual analysis was performed by the AI; all intellectual contributions, research design, and conclusions remain the sole work of the authors.
