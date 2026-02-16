@@ -146,6 +146,62 @@ The simulation utilized a single, discrete ABM environment to contain its operat
     \label{fig:multi_level_abm}
 \end{figure}
 
+% Define a custom bullet for tables to save space and look cleaner
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Agent Role Mapping and Architecture}
+    \label{tab:agent_roles_v2}
+    \renewcommand{\arraystretch}{1.5} 
+    
+    % UPDATED COLUMN WIDTHS:
+    % Col 1 (Agent): Increased to 0.15 (gives "Enforcement" room)
+    % Col 2 (Type): Kept at 0.12
+    % Col 3 (Input): Reduced slightly to 0.29 (text wraps anyway)
+    % Col 4 & 5: Reduced slightly to 0.22
+    \begin{tabularx}{\textwidth}{ 
+        >{\RaggedRight\hsize=0.15\hsize}X 
+        >{\RaggedRight\hsize=0.12\hsize}X 
+        >{\RaggedRight\hsize=0.29\hsize}X 
+        >{\RaggedRight\hsize=0.22\hsize}X 
+        >{\RaggedRight\hsize=0.22\hsize}X 
+    }
+        \toprule
+        \textbf{Agent} & \textbf{Type} & \textbf{Input / Observation} & \textbf{Action Space} & \textbf{Objective} \\
+        \midrule
+        
+        \textbf{Household} & ABM (Env.) & 
+        \tabitem Policy: Incentive \& Fine amounts \newline
+        \tabitem Social: Neighbor compliance \newline
+        \tabitem Infra: Distance to MRF & 
+        Decide: Segregate or Do Not Segregate (Binary) & 
+        Maximize Utility: Minimize ``Cost of Effort'' vs. Fear of Penalty. \\
+        
+        \textbf{Barangay} & ABM (Impl.) & 
+        \tabitem Budget: Quarterly funds \newline
+        \tabitem Population: Count \& income profile & 
+        Execute: Deploy Enforcers or distribute rewards & 
+        Report State: Aggregate data and transmit to LGU. \\
+        
+        \textbf{LGU (Municipal)} & DRL / AI (Brain) & 
+        \tabitem State: Compliance of 7 Barangays \newline
+        \tabitem Fiscal: Remaining Budget \newline
+        \tabitem Political: Political Capital & 
+        Allocate: Distribute budget to (1) IEC, (2) Incentives, (3) Enforcement. & 
+        Maximize Reward: Balance compliance with sustainability. \\
+        
+        \textbf{Enforcement} & ABM (Ops.) & 
+        \tabitem Target: Assigned Barangay \newline
+        \tabitem Constraint: Working hours & 
+        Inspect: Randomly check households & 
+        Detect: Trigger ``Perceived Probability of Detection''. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
 The \textit{BarangayAgents} embodied the Local Government Unit (LGU) implementation layer, responsible for fiscal management (fund allocation), policy formulation and implementation (e.g., establishing waste segregation mandates), and personnel management (deployment of enforcement staff). This aligned with the decentralized governance structure where local units were the primary implementers of environmental law \citep{Nishimura2022}. The \textit{BarangayAgents} were the key recipients of the feedback mechanism, utilizing the aggregated compliance rate as an observational State and a prescriptive Reward signal for its internal Deep Reinforcement Learning (DRL) mechanism \citep{Jimenez2025}.
 
 The \textit{EnforcementAgents} functioned as the operational execution arm of the LGU, tasked with the stochastic monitoring of compliance. Constrained by the budget allocation determined by the \textit{BarangayAgents}, these agents conducted random inspections to verify waste segregation at the source, effectively operationalizing the "No Segregation, No Collection" policy \citep{Badua2022}. Their presence directly manipulated the "perceived intensity of enforcement" variable within the simulation, transforming abstract policy mandates into tangible risks for non-compliant households \citep{Carpio2025}. This agent layer introduced the critical dynamic of detection probability: while higher enforcement density significantly deterred non-compliance ("green criminology"), it incurred higher operational costs, forcing the system to balance fiscal sustainability with strict environmental policing \citep{Chen2023, Ibanez2022}.
@@ -362,6 +418,7 @@ The allocation formula for the $i$-th barangay was given by:
 \end{equation}
 
 It is critical to note that while the heuristic identified the target location, the Reinforcement Learning agent retained full control over the intensity and duration of the intervention. The mechanism acted as a "training wheel" that exposed the agent to the potential efficacy of concentrated spending, specifically "Sequential Saturation". The agent still had to autonomously calculate the precise budgetary volume required to overcome local resistance; if the cost of amplification outweighed the long-term reward (e.g., due to budget depletion), the agent’s value network was free to reject the heuristic in favor of alternative strategies.
+
 \subsection{Reward Shaping and Intensity Thresholds}
 To further guide the agent out of local optima, the reward function was ``shaped'' to provide denser feedback signals. The objective function $J(\pi)$ maximized the total reward $R_t$, which was composed of three terms:
 
@@ -377,6 +434,63 @@ Where:
 \end{itemize}
 
 This shaped reward structure explicitly taught the agent the causal link between \textbf{High Intensity} (Action) and \textbf{Behavior Change} (Result), ensuring it learned to breach the resistance threshold of stubborn barangays like Poblacion.
+
+\subsection{Heuristic-Guided Reinforcement Learning (HuRL) Algorithm}
+
+The \textbf{Heuristic-Guided Reinforcement Learning (HuRL)} algorithm was developed to address the ``Sparse Reward Problem'' inherent in complex governance simulations. In a standard RL approach, the agent effectively wanders randomly, rarely discovering that concentrating massive resources on a single barangay is the key to breaking behavioral inertia. To accelerate learning, this study introduces three domain-specific modifications to the standard loop.
+
+\begin{algorithm}[H]
+\caption{Heuristic-Guided Action Selection \& Reward Shaping (HuDRL)}
+\label{alg:hudrl}
+\begin{algorithmic}[1]
+
+\Require $S_t$ (State Vector), $\mathcal{B}_{list}$ (Barangay Agents), $B_{cap}$ (Quarterly Budget)
+\Ensure $A_{final}$ (Optimized Budget Allocation)
+
+\State \textbf{Step 1: Observation}
+\State $S_t \gets$ GetCurrentState()
+
+\State \textbf{Step 2: Identify Critical Node}
+\State $B_{crit} \gets \min_{b \in \mathcal{B}_{list}} (b.compliance\_rate)$ \Comment{Identify weakest performing barangay}
+
+\State \textbf{Step 3: Initial Policy Prediction}
+\State $A_{raw} \gets \pi_\theta(S_t)$ \Comment{Neural Network prediction}
+
+\State \textbf{Step 4: Heuristic Targeted Amplification}
+\If{$A_{raw}[B_{crit}] > \delta_{intent}$} \Comment{If agent shows intent to fund critical node}
+    \State $A_{raw}[B_{crit}] \gets A_{raw}[B_{crit}] \times \alpha$ \Comment{Amplify signal (e.g., $\alpha=100$)}
+    \State Decrease other allocations to balance
+\EndIf
+
+\State \textbf{Step 5: Budget Normalization (Softmax-style)}
+\State $Total_{desire} \gets \sum A_{raw}$
+\State $\eta \gets B_{cap} / Total_{desire}$ \Comment{Calculate scaling factor}
+\State $A_{final} \gets A_{raw} \times \eta$
+
+\State \textbf{Step 6: Execution}
+\State Apply $A_{final}$ to ABM Environment
+\State Update Households (IEC, Enforcement, Incentives)
+
+\State \textbf{Step 7: Reward Shaping}
+\State $R_{base} \gets \sum \text{Compliance}(\mathcal{B}_{list})$
+\If{$A_{final}[B_{crit}] > 0.40 \times B_{cap}$} \Comment{Check for Saturation Strategy}
+    \State $R_{bonus} \gets +20,000$ \Comment{Jackpot Reward}
+\Else
+    \State $R_{bonus} \gets 0$
+\EndIf
+\State $R_{total} \gets R_{base} + R_{bonus}$
+
+\State \textbf{Step 8: Network Update}
+\State PPO.Update($S_t, A_{final}, R_{total}$)
+
+\end{algorithmic}
+\end{algorithm}
+
+First, the algorithm employs a mechanism of \textit{Targeted Amplification}. The environment functions as a ``saliency filter'' that actively monitors the state of all barangays. At each time step, it identifies the \textit{Critical Barangay} ($B_{crit}$) with the lowest compliance rate. The system then evaluates the agent's raw output ($A_{raw}$); if the agent allocates even a minimal non-zero fraction to $B_{crit}$—indicating a preliminary ``intent'' to address the problem area—the heuristic multiplies this signal by a factor of $\alpha=100$. This amplification forces the agent to explore the ``saturation'' strategy of overwhelming a single area with resources, allowing it to discover high-impact policies without requiring millions of random trials.
+
+Second, the model imposes strict \textit{Budget Normalization}. Unlike standard continuous control tasks where outputs are often independent, municipal budgeting is a zero-sum game. The algorithm enforces a strict ``Softmax-style'' normalization across the action vector, ensuring that the sum of all allocations never exceeds the quarterly budget constraint ($Budget_Q$). This step mathematically guarantees that all generated policies remain fiscally feasible, regardless of the neural network's raw output intensity.
+
+Finally, the learning process is reinforced through \textit{Reward Shaping}. To encourage the agent to adopt the ``Sequential Saturation'' behavior, the reward function includes a discrete ``Jackpot Bonus.'' Beyond the standard reward for aggregate compliance, the agent receives an additional $+20,000$ reward specifically for allocating more than 40\% of the quarterly budget to the \textit{Critical Barangay}. This artificial feedback signal bridges the temporal gap between the immediate action of spending money and the delayed result of behavioral change, effectively teaching the agent that focused intervention yields higher long-term returns than equitable distribution.
 
 \section{Simulation and Analysis Framework}
 
