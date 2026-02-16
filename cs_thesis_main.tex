@@ -1,12 +1,8 @@
-% Replace the top of cs_thesis_main.tex with this:
 \RequirePackage[l2tabu, orthodox]{nag} 
 
 \documentclass[oneside,authoryear,round]{um} % Pass APA options here
 
-% DELETE OR COMMENT OUT THIS LINE:
-% \usepackage[authoryear]{natbib}
-% Pass APA options directly to the class to resolve the Option Clash
-%% **************** PACKAGES ******************
+% **************** PACKAGES ******************
 \usepackage{blindtext}
 \usepackage{pdfpages}  
 
@@ -23,8 +19,10 @@
 \usepackage{xcolor}      
 \usepackage{amsmath}     
 
-% CRITICAL: REMOVE OR COMMENT OUT THE LINE BELOW
-% \usepackage[authoryear]{natbib} 
+%% !!! MISSING PACKAGE ADDED HERE !!!
+% We use 'nolist' to prevent compiling errors if you haven't used \ac{} in text yet
+% but we want the list to print ALL defined acronyms for now.
+\usepackage{acronym} 
 
 %% --- CUSTOM DEFINITIONS ---
 \newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
@@ -35,7 +33,6 @@
 \newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}}
 
 %% --- APA CITATION FORMATTING ---
-% 'a' forces Author-Year style in the natbib engine
 \bibpunct{(}{)}{;}{a}{,}{,} 
 \setlength{\bibsep}{1em}            
 \renewcommand{\bibname}{References}
@@ -57,8 +54,8 @@
 \department{Department of Computer Science}     
 \faculty{College of Computer Studies}        
 \degree{B.S. in Computer Science}                   
-\doctype{undergraduate thesis}                   
-\degreedate{January, 2025}                   
+\doctype{An Undergraduate Thesis}                   
+\degreedate{May 2026}                   
 
 %% ******** DOCUMENT SETTINGS *************
 \graphicspath{{./images/}{./chap1/images/}}   
@@ -67,7 +64,6 @@
 \sloppy
 \parskip 7.2pt
 
-%% !!! CRITICAL FIX FOR TEMPLATE !!!
 \makeatletter
 \begin{document}
 \frontmatter 
@@ -88,6 +84,7 @@
     \listoftables*
     \if@openright\cleardoublepage\else\clearpage\fi
     
+    % Inputs the abbreviations file
     \input{frontmatter/abbreviations}
     \if@openright\cleardoublepage\else\clearpage\fi
 
@@ -104,11 +101,9 @@
     \appendix
         \input{appA/appendix_a_main}     
         \input{appB/appendix_b_main}     
-        \input{appC/appendix_c_main} 
 
 {\backmatter
     \if@openright\cleardoublepage\else\clearpage\fi
-    % Using apa or apalike style
     \bibliographystyle{apa} 
     {\footnotesize\bibliography{bibliography}}
     \printindex
