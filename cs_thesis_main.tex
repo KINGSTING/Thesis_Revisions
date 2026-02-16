@@ -1,12 +1,9 @@
 \RequirePackage[l2tabu, orthodox]{nag} 
-
-\documentclass[oneside,authoryear,round]{um} % Pass APA options here
+\documentclass[oneside,authoryear,round]{um} 
 
 % **************** PACKAGES ******************
 \usepackage{blindtext}
 \usepackage{pdfpages}  
-
-%% --- TABLE AND GRAPHICS SUPPORT ---
 \usepackage{booktabs}    
 \usepackage{longtable}   
 \usepackage{pdflscape}   
@@ -19,10 +16,8 @@
 \usepackage{xcolor}      
 \usepackage{amsmath}     
 
-%% !!! MISSING PACKAGE ADDED HERE !!!
-% We use 'nolist' to prevent compiling errors if you haven't used \ac{} in text yet
-% but we want the list to print ALL defined acronyms for now.
-\usepackage{acronym} 
+% Make sure this is in the preamble
+\usepackage{acronym}
 
 %% --- CUSTOM DEFINITIONS ---
 \newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
@@ -65,12 +60,14 @@
 \parskip 7.2pt
 
 \makeatletter
-\begin{document}
+\begin{document} % The document starts here
+
 \frontmatter 
     \maketitle
     \input{frontmatter/copyright}          
     \input{frontmatter/dedication}         
-    \input{frontmatter/acknowledgements}   
+    \input{frontmatter/acknowledgements}
+       
     
     \input{frontmatter/abstract}
     \if@openright\cleardoublepage\else\clearpage\fi
@@ -84,7 +81,7 @@
     \listoftables*
     \if@openright\cleardoublepage\else\clearpage\fi
     
-    % Inputs the abbreviations file
+    % THIS COMMAND CALLS THE FILE FROM STEP 1
     \input{frontmatter/abbreviations}
     \if@openright\cleardoublepage\else\clearpage\fi
 

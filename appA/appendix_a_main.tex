@@ -8,51 +8,112 @@ Pursuant to the mandates of the Local Government Code of 1991 (Republic Act No. 
 
 These municipal ordinances serve as the empirical foundation for this study, grounding the simulation in the specific legal and fiscal realities of the Municipality of Bacolod. Municipal Ordinance No. 2018-05 defines the behavioral rules for the agent-based model, specifically mandating the segregation categories and penalty structures that household agents must follow. Concurrently, the Appropriation Ordinance establishes the financial constraints for the Reinforcement Learning agent, ensuring that any optimized policy remains within the municipality's actual budgetary limits. By encoding these legislative provisions directly into the model's parameters, the resulting system optimizes waste management strategies that are not only theoretically efficient but also legally compliant and practically implementable.
 
-% subsection 1: ESWM Ordinance
-\subsection{Municipal Ordinance No. 2018-05}
-\label{appendix:esw_ordinance}
-Municipal Ordinance No. 2018-05, enacted by the Sangguniang Bayan of Bacolod, Lanao del Norte on August 22, 2018, is officially titled the "Ecological Solid Waste Management Ordinance of 2018." This ordinance establishes a comprehensive framework for local waste management by mandating waste segregation using a color-coded bin system (Green, Black, Blue, and Red) and setting specific collection schedules for biodegradable, residual, recyclable, and toxic waste.
+% --- ESWM ORDINANCE ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, % Pushes PDF down to make room for Title
+    pagecommand={
+        \subsection{Municipal Ordinance No. 2018-05}
+        \label{appendix:esw_ordinance}
+    }
+]{appA/ESWM ORDINANCE.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/ESWM ORDINANCE.pdf}
 
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/ESWM ORDINANCE.pdf}
+% --- APPROPRIATION ORDINANCE ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Municipal Appropriation Ordinance No. 2024-01}
+        \label{appendix:appro_ordinance}
+    }
+]{appA/Appropriation-Ordinance.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appropriation-Ordinance.pdf}
 
-% subsection 2: Appropriation Ordinance
-\subsection{Municipal Appropriation Ordinance No. 2024-01}
-\label{appendix:appro_ordinance}
-Appropriation Ordinance No. 2024-01 serves as the primary legislative enactment authorizing the Annual Budget of the Municipality of Bacolod, Lanao del Norte for the fiscal year 2024. This document outlines the projected income and approved expenditures for the operation of the local government, ensuring that financial resources are legally distributed across various sectors such as general administration, social services, and economic development. As the municipality's financial roadmap, it aligns public spending with the priority programs identified by the Sangguniang Bayan, providing the legal authority for the release and utilization of public funds.
+% --- BABALAYA (First one includes the Section Title) ---
+\includepdf[
+    pages=1, 
+    scale=0.80, 
+    offset=0 -2.5cm, % Push PDF down more to fit Section + Subsection
+    pagecommand={
+        \section{Barangay Appropriation Ordinances for CY 2025}
+        \label{sec:barangay_ordinances}
+        \subsection{Barangay Babalaya Appropriation Ordinance No. 02 Series OF 2024}
+        \label{appendix:appro_ord_babalaya}
+    }
+]{appA/Appro_Ord_Babalaya.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Babalaya.pdf}
 
-In the context of this study, the ordinance establishes the critical financial constraints for the waste management simulation. It specifies the actual budgetary allocations for the Municipal Environment and Natural Resources Office (MENRO) and General Services, covering essential line items such as fuel for collection trucks, salaries for waste collectors, and facility maintenance costs. By defining these hard fiscal limits, the ordinance provides the necessary data to constrain the Reinforcement Learning agent, ensuring that the model optimizes for a policy that is not only logistically efficient but also financially feasible within the municipality's current economic capacity.
+% --- BINUNI ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Binuni Reolution No. 06 S-2025}
+        \label{appendix:appro_ord_binuni}
+    }
+]{appA/Appro_Ord_Binuni.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Binuni.pdf}
 
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appropriation-Ordinance.pdf}
+% --- EZPERANZA ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Ezperanza Appropriation Ordinance No. 01 Series of 2025}
+        \label{appendix:appro_ord_ezperanza}
+    }
+]{appA/Appro_Ord_Ezperanza.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Ezperanza.pdf}
 
-\section{Barangay Appropriation Ordinances for CY 2025}
-\label{sec:barangay_ordinances}
+% --- DEMOLOGAN ---
+% Since this file is only 1 PAGE, do NOT use the "pages=2-" command.
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Demologan Approrriation Resolution No. 1 S.2025}
+        \label{appendix:appro_ord_demologan}
+    }
+]{appA/Appro_Ord_Demologan.pdf}
 
-This section presents the Appropriation Ordinances for the component barangays included in the study. These documents provide the granular financial data necessary to model localized budget constraints. By incorporating barangay-level appropriations, the simulation accounts for the heterogeneity in financial resources available for Solid Waste Management (SWM) support at the community level, allowing the agents to adapt to specific local funding capabilities.
+% --- LIANGAN EAST ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Liangan East Appropriation Ordinance No. 01-2024}
+        \label{appendix:appro_ord_liangan-east}
+    }
+]{appA/Appro_Ord_Liangan-East.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Liangan-East.pdf}
 
-\subsection{Barangay Babalaya Appropriation Ordinance No. 01-2024}
-\label{appendix:appro_ord_babalaya}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Babalaya.pdf}
+% --- MATI ---
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Mati Appropriation Resolution No. 12-2024}
+        \label{appendix:appro_ord_mati}
+    }
+]{appA/Appro_Ord_Mati.pdf}
+\includepdf[pages=2-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Mati.pdf}
 
-\subsection{Barangay Binuni Appropriation Ordinance No. 02-2025}
-\label{appendix:appro_ord_binuni}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Binuni.pdf}
-
-\subsection{Barangay Ezperanza Appropriation Ordinance No. 01-2025}
-\label{appendix:appro_ord_ezperanza}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Ezperanza.pdf}
-
-\subsection{Barangay Demologan Appropriation Ordinance No. 01-2025}
-\label{appendix:appro_ord_demologan}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Demologan.pdf}
-
-\subsection{Barangay Liangan East Appropriation Ordinance No. 01-2024}
-\label{appendix:appro_ord_liangan-east}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Liangan-East.pdf}
-
-\subsection{Barangay Mati Appropriation Resultion No. 12-2024}
-\label{appendix:appro_ord_mati}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Mati.pdf}
-
-\subsection{Barangay Poblacion Appropriation Ordinance No. 01-2024}
-\label{appendix:appro_ord_poblacion}
-\includepdf[pages=-, scale=0.9, pagecommand={}]{appA/Appro_Ord_Poblacion.pdf}
+% --- POBLACION ---
+% This file is only 1 PAGE. Do NOT use "pages=2-".
+\includepdf[
+    pages=1, 
+    scale=0.85, 
+    offset=0 -1.5cm, 
+    pagecommand={
+        \subsection{Barangay Poblacion Appropriation Resolution No. 07-2024}
+        \label{appendix:appro_ord_poblacion}
+    }
+]{appA/Appro_Ord_Poblacion.pdf}

@@ -217,7 +217,7 @@ The dynamic updates to the internal TPB constructs ensured the \texttt{Household
 \subsection{The Household Agent: Norm Internalization and Cultural Inertia}
 While the baseline Household Agent operated on the Theory of Planned Behavior (TPB), initial simulations indicated that agents were prone to unrealistic behavioral decay. In standard TPB models, an agent's \textit{Attitude} ($A$) towards a behavior naturally degraded over time due to apathy or ``enforcement fatigue'' when external stimuli were removed.
 
-To model the real-world stability of established habits, this study integrated a \textbf{Norm Internalization Mechanism} (or ``Social Norm Shield''). This logic postulated that when the local social norm ($SN$) exceeded a critical threshold, the behavior transitioned from a calculated decision to an internalized habit, shielding the agent from attitude decay \cite{household_agent}.
+To model the real-world stability of established habits, this study integrated a \textbf{Norm Internalization Mechanism} (or ``Social Norm Shield''). This logic postulated that when the local social norm ($SN$) exceeded a critical threshold, the behavior transitioned from a calculated decision to an internalized habit, shielding the agent from attitude decay \textit{household\_agent}.
 
 The standard attitude update function:
 \begin{equation}
@@ -372,7 +372,7 @@ To further guide the agent out of local optima, the reward function was ``shaped
 Where:
 \begin{itemize}
     \item $R_{compliance}$: The primary objective, defined as the sum of compliance rates across all barangays.
-    \item $R_{allocation}$ (``Focus Bonus''): A progressive reward for allocating $>40\%$ of the budget to the identified non-compliant barangays. This incentivized the agent to be decisive \cite{bacolod_gym}.
+    \item $R_{allocation}$ (``Focus Bonus''): A progressive reward for allocating $>40\%$ of the budget to the identified non-compliant barangays. This incentivized the agent to be decisive \textit{bacolod\_gym}.
     \item $R_{intensity}$ (``Threshold Jackpot''): A significant bonus (+20,000) awarded if the Enforcement Intensity in a target barangay exceeded the physics threshold of \textbf{0.80}.
 \end{itemize}
 
