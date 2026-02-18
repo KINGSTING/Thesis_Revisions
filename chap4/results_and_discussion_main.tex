@@ -137,6 +137,47 @@ The only data point where self-reporting matched the MENRO audit was Barangay Po
 
 By calibrating the initial states to this conservative baseline (2\% to 15\%), the simulation stabilized at a Global Average Compliance of $\approx$12.5\% at $t=0$. This provided a valid, non-inflated baseline against which the DRL agent's policy improvements could be accurately measured.
 
+\section{Methodological Refinements and Computational Challenges}
+
+Following the calibration of the environment, the study encountered significant computational and behavioral challenges during the initial training phase of the Deep Reinforcement Learning (DRL) agent. These challenges necessitated deviations from the initial proposal, specifically regarding the optimization algorithm and the behavioral stability of household agents. This section details the transition from a standard PPO approach to the Heuristic-Guided (HuDRL) framework and the integration of a "Social Norm Shield" to address unrealistic compliance volatility.
+
+\subsection{Overcoming the Sparse Reward Problem}
+
+A fundamental hypothesis of this study was that a standard Proximal Policy Optimization (PPO) agent could autonomously discover the ``Sequential Saturation'' strategy given sufficient training episodes. However, preliminary training runs revealed a critical \textit{Sparse Reward Problem} inherent to the high-dimensional action space ($d=21$).
+
+In the initial non-heuristic implementation, the agent was required to simultaneously optimize allocations across three distinct policy levers for seven heterogeneous barangays. The probability of the agent randomly initializing a policy that concentrated massive resources on a single barangay (the saturation strategy) was mathematically negligible. Instead, the agent converged to a local optimum characterized by ``safety-seeking'' behavior—distributing funds equally to minimize the risk of political backlash, resulting in a stagnation of Global Compliance at approximately 12\% to 15\%.
+
+\subsection{Comparative Analysis: Heuristic vs. Non-Heuristic Approaches}
+
+To evaluate the efficacy of the proposed optimization strategy, the simulation compared the Heuristic Approach against a baseline Non-Heuristic approach over a period of 12 Quarters. Figure \ref{fig:heuristic_vs_non_heuristic} illustrates the Global Compliance Rate trajectories for both methods relative to the defined Stability Threshold ($70\%$) and Collapse Zone ($40\%$).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/non-heuristic_vs_heuristic.png}
+    \caption{Comparison of Global Compliance Rates between Non-Heuristic and Heuristic Approaches.}
+    \label{fig:heuristic_vs_non_heuristic}
+\end{figure}
+
+The \textbf{Non-Heuristic Approach} (represented by the dashed grey line) exhibited significant stagnation. Throughout the entire simulation timeline, the compliance rate remained nearly constant at approximately $20\%$. This performance consistently fell within the ``Collapse Zone'' ($<40\%$), indicating that without guided decision-making or adaptive policy adjustments, the system failed to overcome initial resistance or incentivize behavioral change among household agents.
+
+In stark contrast, the \textbf{Heuristic Approach} (represented by the solid blue line) demonstrated rapid convergence toward optimal compliance. Starting at an initial compliance rate of $51.8\%$ in Quarter 1, the heuristic agent successfully navigated the policy space, breaching the $70\%$ Stability Threshold by Quarter 2. The system achieved a near-saturation point by Quarter 6, reaching approximately $98\%$ compliance, and maintained this asymptotic stability through Quarter 12.
+
+The disparity between the two trajectories underscores the necessity of the heuristic mechanism. While the non-heuristic agent failed to escape the local optima of low compliance, the heuristic approach effectively leveraged state feedback to reinforce high-reward behaviors, ensuring long-term policy sustainability.
+
+\subsection{Addressing Behavioral Volatility}
+
+The second major deviation from the initial proposal involved the behavioral stability of the Household Agents. Early simulation runs exhibited a phenomenon of ``Instantaneous Collapse,'' where compliance rates in a barangay would plummet from 90\% to 0\% within a single quarter immediately after the LGU withdrew financial support.
+
+This behavior, while mathematically consistent with the raw Theory of Planned Behavior (TPB) equation, was sociologically unrealistic. Real-world communities exhibit \textit{Cultural Inertia}, where established habits persist even after the removal of external stimuli. To correct this artifact, the study introduced a **Social Norm Shield** mechanism, governed by two empirically tuned thresholds:
+
+\begin{itemize}
+    \item \textbf{The Tipping Point (76\%):} It was observed that once a barangay achieved a compliance rate of 76\%, the behavior transitioned from ``incentive-driven'' to ``norm-driven.'' Consequently, the model was updated to lock the Subjective Norm ($w_{sn}$) weight at a higher value once this threshold was crossed, simulating the internalization of the practice.
+    \item \textbf{The Social Norm Floor (40\%):} To prevent total behavioral collapse during the DRL agent's exploration phase, a "floor" was implemented. Even if enforcement ceased, the strong social pressure from neighbors prevented compliance from dropping below 40\%, representing the residual collective memory of the community.
+\end{itemize}
+
+This refinement was crucial for the success of the Comparative Analysis, as it allowed the HuDRL agent to execute the ``Sequential Saturation'' strategy—leaving one barangay to tend to another—without the first barangay collapsing behind it.
+
+
 \section{Comparative Analysis of Policy Strategies}
 
 To rigorously evaluate the efficacy of the proposed computational framework, the simulation was subjected to four distinct policy scenarios: (1) the Status Quo, characterized by an equal distribution of funds with a focus on Information, Education, and Communication (IEC); (2) a Pure Enforcement strategy, prioritizing punitive measures; (3) a Pure Incentives strategy, focusing solely on monetary rewards; and (4) the Heuristic-Guided PPO Algorithm, representing the adaptive, AI-driven approach. The results from these simulations unequivocally demonstrated that without the ``Sequential Saturation'' logic discovered by the artificial intelligence, no amount of static rebalancing between Education, Enforcement, or Incentives was sufficient to resolve the municipality-wide non-compliance problem.
@@ -190,7 +231,7 @@ The Deep Reinforcement Learning (PPO) agent, operating under the ``Heuristic-Gui
 \begin{figure}[htbp]
     \centering
     % Ensure the filename matches exactly (case-sensitive on Overleaf/Linux)
-    \includegraphics[width=0.8\textwidth]{PPO.jpg}
+    \includegraphics[width=0.8\textwidth]{ppo_result.png}
     \caption{Compliance evolution under the Heuristic-Guided DRL strategy (Sequential Saturation)}
     \label{fig:PPO_graph}
 \end{figure}
@@ -198,6 +239,35 @@ The Deep Reinforcement Learning (PPO) agent, operating under the ``Heuristic-Gui
 The superior performance of this algorithm was attributed to its abandonment of the ``Equal Distribution'' heuristic. The simulation logs revealed that the AI did not fight on all fronts simultaneously; instead, it concentrated approximately 90\% to 96\% of the total quarterly budget onto specific, single barangays for extended periods. For instance, the agent executed a dedicated ``siege'' on Poblacion from quarters 8 to 11, directing over \textpeso 320,000 per quarter exclusively to this target. This concentration of capital artificially lowered the cost of compliance and raised enforcement visibility to levels that the equal distribution strategy could never mathematically achieve.
 
 This ``Sequential Saturation'' or ``King of the Hill'' logic validated the hypothesis of a social ``tipping point.''  The AI learned that by saturating one community until it reached a self-sustaining level of compliance (driven by social norms), it could then safely withdraw funds and move the ``siege'' to the next non-compliant barangay without causing a collapse in previous gains. This finding fundamentally challenged the prevailing administrative logic of equitable distribution, suggesting instead that effectiveness in resource-constrained environments required the political will to prioritize sequential efficacy over simultaneous but ineffectual fairness. This conclusion provided a robust, data-driven roadmap for the LGU, proving that the binding constraint was not the total amount of money, but the strategy by which it was deployed.
+
+\subsection{Summary of Comparative Analysis}
+
+The comparative analysis unequivocally demonstrates the superior efficacy of the Adaptive (HuDRL) Strategy over all static policy interventions. As detailed in Table \ref{tab:policy_comparison}, while the Status Quo (Mixed) approach achieves a moderate but stagnant terminal compliance of approximately 57.1\%, single-instrument strategies fail to sustain long-term behavioral change. The Pure Incentives regime plateaus early at 34.3\% due to the ``Victim of Success'' phenomenon, where high compliance rapidly drains the budget, leaving insufficient funds for necessary enforcement measures. Conversely, the Pure Enforcement strategy triggers a collapse in compliance to 13.9\%, as the ``Political Backlash'' penalty erodes the social contract, rendering the regime ineffective despite the presence of high penalties.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparative Global Compliance Rates across Policy Regimes ($Q_1$ - $Q_{12}$)}
+    \label{tab:policy_comparison}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{l c c c c}
+        \toprule
+        \textbf{Policy Regime} & \textbf{Q1 (Initial)} & \textbf{Q4 (Year 1)} & \textbf{Q8 (Year 2)} & \textbf{Q12 (Terminal)} \\
+        \midrule
+        Status Quo (Baseline) & 10.7\% & 52.4\% & 55.3\% & 57.1\% \\
+        Pure Incentives & 10.7\% & 34.6\% & 34.2\% & 34.3\% \\
+        Pure Enforcement & 10.7\% & 14.9\% & 14.0\% & 13.9\% \\
+        \textbf{Adaptive (HuDRL)} & \textbf{10.7\%} & \textbf{45.3\%} & \textbf{72.2\%} & \textbf{92.8\%} \\
+        \bottomrule
+    \end{tabular}
+    \vspace{0.2cm}
+    \begin{minipage}{0.9\textwidth}
+        \footnotesize
+        \textit{Note: Global Compliance is calculated as the unweighted arithmetic mean of the segregation rates of the seven constituent barangays (Babalaya, Binuni, Demologan, Ezperanza, Liangan East, Mati, Poblacion). The Adaptive Strategy demonstrates a delayed but exponential learning curve, surpassing the Status Quo by Quarter 6.}
+    \end{minipage}
+\end{table}
+
+In stark contrast, the HuDRL Agent successfully navigates these trade-offs by dynamically shifting resources, achieving a terminal Global Compliance Rate of \textbf{92.8\%} by Quarter 12. This represents a significant deviation from the linear trajectories of the static models; although the adaptive strategy starts slower due to its exploration phase, it surpasses the Status Quo by Quarter 6 and exhibits an exponential learning curve. This success is attributed to the agent's ability to discover and execute the ``Sequential Saturation'' strategy, which prioritizes the sequential dominance of individual barangays over the ineffective, simultaneous dilution of resources characteristic of the baseline approaches.
 
 \section{Mechanisms of Behavior Change and Sustainability}
 

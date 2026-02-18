@@ -1,7 +1,7 @@
 % !TeX root = ../cs_thesis_main.tex
 \chapter{Methodology}
 
-This chapter detailed the methodological framework constructed to address the identified research gap. To operationalize the study's objective—optimizing dynamic policy under budgetary constraints—this research employed a coupled Agent-Based Modeling (ABM) and Deep Reinforcement Learning (DRL) framework. This integrated approach was specifically chosen for its unique capacity to simulate a complex social system of household compliance while simultaneously modeling the Local Government Unit (LGU) as an adaptive, learning agent. Unlike traditional static scenario analysis, this framework allowed the governing agent to autonomously discover optimal resource allocation strategies over time. This chapter first presented the overall research design, followed by a detailed description of the model's components: the ABM environment and the DRL agent. It then outlined the procedures for model parameterization, validation, and the simulation experiments conducted to generate and evaluate the adaptive policies.
+This chapter details the methodological framework constructed to address the identified research gap. To operationalize the study's objective—optimizing dynamic policy under budgetary constraints—this research employed a coupled Agent-Based Modeling (ABM) and Deep Reinforcement Learning (DRL) framework. This integrated approach was specifically chosen for its unique capacity to simulate a complex social system of household compliance while simultaneously modeling the Local Government Unit (LGU) as an adaptive, learning agent. Unlike traditional static scenario analysis, this framework allowed the governing agent to autonomously discover optimal resource allocation strategies over time. This chapter first presents the overall research design, followed by a detailed description of the model's components: the ABM environment and the DRL agent. It then outlines the procedures for model parameterization, validation, and the simulation experiments conducted to generate and evaluate the adaptive policies.
 
 \section{Research Design}
 
@@ -17,7 +17,7 @@ The foundational psychological parameters for the household agents' Theory of Pl
 
 To ensure the simulation possessed high ecological validity, the initialization of Household Agent behavioral parameters was grounded in empirical Knowledge, Attitude, and Practices (KAP) data derived from the recent study by \citet{Paigalan2025}. Although the source study characterized the KAP profile of riverside barangays in Northern Mindanao, this dataset served as a robust and high-fidelity proxy for the coastal Municipality of Bacolod due to the shared socio-economic and cultural context of the region.
 
-Crucially, the agents were not instantiated as tabula rasa entities; rather, the initialization logic was rigorously designed to replicate the ``Intention-Action Gap'' frequently observed in developing economies \citep{Yazawa2025, Catiil2025}. As detailed in Table \ref{tab:initialization_parameters}, agents were initialized with a relatively high Attitude ($A_0 \approx 0.66$) contrasted with a significantly lower Baseline Compliance ($B_0 \approx 0.58$). This specific parameterization compelled the Deep Reinforcement Learning (DRL) agent to discover policy interventions capable of bridging this behavioral dissonance, rather than merely addressing a theoretical lack of awareness \citep{Paigalan2025}.
+Crucially, the agents were not instantiated as \textit{tabula rasa} entities; rather, the initialization logic was rigorously designed to replicate the ``Intention-Action Gap'' frequently observed in developing economies \citep{Yazawa2025, Catiil2025}. As detailed in Table \ref{tab:initialization_parameters}, agents were initialized with a relatively high Attitude ($A_0 \approx 0.66$) contrasted with a significantly lower Baseline Compliance ($B_0 \approx 0.58$). This specific parameterization compelled the Deep Reinforcement Learning (DRL) agent to discover policy interventions capable of bridging this behavioral dissonance, rather than merely addressing a theoretical lack of awareness \citep{Paigalan2025}.
 
 \begin{table}[ht]
     \centering
@@ -25,10 +25,7 @@ Crucially, the agents were not instantiated as tabula rasa entities; rather, the
     \label{tab:initialization_parameters}
     \vspace{0.2cm}
     \small
-    \renewcommand{\arraystretch}{1.4} % Adds vertical space between rows
-    
-    % The X column fills the remaining space. 
-    % We use >{\raggedright\arraybackslash} to ensure the text wraps neatly.
+    \renewcommand{\arraystretch}{1.4} 
     \begin{tabularx}{\textwidth}{ 
         >{\raggedright\arraybackslash}p{2.8cm} 
         >{\raggedright\arraybackslash}p{3.2cm} 
@@ -43,34 +40,29 @@ Crucially, the agents were not instantiated as tabula rasa entities; rather, the
         \makecell{\textbf{Norm.} \\ (0-1)} & 
         \textbf{Contextual Justification} \\
         \midrule
-        
         Agent Knowledge ($K_0$) & 
         Awareness of Programs & 
         3.27 & 
         0.65 & 
         Residents possess moderate awareness of SWM programs but lack technical depth. \\
         \midrule
-        
         Agent Attitude ($A_0$) & 
         Attitude on Labeling & 
         3.32 & 
         0.66 & 
         Agents begin with a generally positive disposition toward segregation rules. \\
         \midrule
-        
         Base Compliance ($B_0$) & 
         Practice (Open Burning) & 
         2.90 & 
         0.58 & 
         The prevalence of open burning serves as a proxy for the existing low compliance rate. \\
         \midrule
-        
         Training Sensitivity ($S_t$) & 
         Need for Training & 
         3.41 & 
         0.68 & 
         Agents are highly responsive to IEC interventions, as residents explicitly agreed on the need for more training. \\
-        
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -83,17 +75,9 @@ The data already secured from Barangay Liangan East (refer to Appendix \ref{appe
 
 \subsection{Policy and Operational Parameters}
 
-The LGU-DRL agent's primary constraint was its \textpeso 1,500,000 annual SWM budget (refer to Appendix \ref{appendix:menro_interview}). The agent's task was to allocate this budget.
+The strategic decision-making process of the LGU-DRL agent is fundamentally governed by the fiscal constraints identified during the institutional audit. Specifically, the agent operates within a fixed annual Solid Waste Management (SWM) budget of \textpeso 1,500,000 (refer to Appendix \ref{appendix:menro_interview}). To simulate realistic administrative cycles and allow for behavioral adaptation among household agents, the simulation employs a quarterly decision-making frequency. Consequently, the annual appropriation is discretized into a quarterly operating budget ($B_q$) of \textpeso 375,000. This temporal structuring allows the Deep Reinforcement Learning (DRL) agent to observe the immediate socio-behavioral shifts resulting from a specific policy mix and adjust the subsequent allocation to maximize long-term compliance rewards.
 
-\begin{itemize}
-    \item \textbf{Decision Timeframe:} The DRL agent made policy adjustments every quarter. The \textpeso 1.5M annual budget was therefore divided into a quarterly operating budget of \textpeso 375,000.
-    \item \textbf{Policy Levers:} The agent allocated this budget across three levers:
-    \begin{itemize}
-        \item \textbf{Monetary Incentives:} (e.g., eco-brick exchange).
-        \item \textbf{Enforcement:} (Funding MENRO "Eco-warriors" to issue citations).
-        \item \textbf{IEC (Awareness) Campaigns:} (Funding radio ads, IEC materials).
-    \end{itemize}
-\end{itemize}
+The LGU agent’s action space is defined by a continuous allocation vector across three primary policy levers, each targeting a different construct of the household utility function. First, Monetary Incentives are modeled as direct subsidies (e.g., material-recovery exchange programs) designed to enhance the economic utility of compliance. Second, Enforcement expenditures facilitate the deployment of "Eco-warriors" and inspectors; this lever functions by increasing the probability of detection and the perceived severity of non-compliance, thereby influencing the agent's normative and calculative behavior. Finally, Information, Education, and Communication (IEC) Campaigns utilize funds for media dissemination and community workshops to improve the household agents' Knowledge, Attitude, and Practice (KAP) scores. By formalizing these levers as competing financial priorities, the model allows the DRL agent to discover the optimal "Policy Mix"—the specific ratio of incentives, penalties, and education—that yields the highest compliance rate while strictly adhering to the municipal budget.
 
 \subsection{Cost Parameter Estimation}
 
@@ -134,7 +118,7 @@ Information, Education, and Communication (IEC) costs were modeled as Tiered Fix
 
 \section{Multi-Level Agent-Based Model Development}
 
-The model was developed in an existing Agent-Based Modelling Software or Python library (e.g., Mesa), a methodological choice strongly supported by recent reviews of computational tools in solid waste management \citep{TianReview2024, Ma2023}. Its architecture consisted of one single ABM environment that contained 7 distinct \texttt{BarangayAgent} objects, which in turn contained their respective populations of \texttt{HouseholdAgent} objects.
+The model was developed in an existing Agent-Based Modelling Software Python library called \textit{MESA} \citep{Mesa2025}, a methodological choice strongly supported by recent reviews of computational tools in solid waste management \citep{TianReview2024, Ma2023}. Its architecture consisted of one single ABM environment that contained 7 distinct \texttt{BarangayAgent} objects, which in turn contained their respective populations of \texttt{HouseholdAgent} objects.
 
 The simulation utilized a single, discrete ABM environment to contain its operational entities and manage its temporal structure. Time progression was segmented into recurring quarterly loops, establishing the fundamental unit of analysis and adaptation for the governance agents. The architecture was strictly hierarchical: it contained seven distinct \texttt{BarangayAgent} objects in the upper layer, which encapsulated their respective populations of \texttt{HouseholdAgent} objects in the lower layer. This multi-level approach was essential for accurately capturing the flow of mandates and the heterogeneity between different governance units in socio-environmental systems \citep{Brugiere2022}.
 
@@ -155,12 +139,6 @@ The simulation utilized a single, discrete ABM environment to contain its operat
     \caption{Agent Role Mapping and Architecture}
     \label{tab:agent_roles_v2}
     \renewcommand{\arraystretch}{1.5} 
-    
-    % UPDATED COLUMN WIDTHS:
-    % Col 1 (Agent): Increased to 0.15 (gives "Enforcement" room)
-    % Col 2 (Type): Kept at 0.12
-    % Col 3 (Input): Reduced slightly to 0.29 (text wraps anyway)
-    % Col 4 & 5: Reduced slightly to 0.22
     \begin{tabularx}{\textwidth}{ 
         >{\RaggedRight\hsize=0.15\hsize}X 
         >{\RaggedRight\hsize=0.12\hsize}X 
@@ -171,33 +149,28 @@ The simulation utilized a single, discrete ABM environment to contain its operat
         \toprule
         \textbf{Agent} & \textbf{Type} & \textbf{Input / Observation} & \textbf{Action Space} & \textbf{Objective} \\
         \midrule
-        
         \textbf{Household} & ABM (Env.) & 
         \tabitem Policy: Incentive \& Fine amounts \newline
         \tabitem Social: Neighbor compliance \newline
         \tabitem Infra: Distance to MRF & 
         Decide: Segregate or Do Not Segregate (Binary) & 
         Maximize Utility: Minimize ``Cost of Effort'' vs. Fear of Penalty. \\
-        
         \textbf{Barangay} & ABM (Impl.) & 
         \tabitem Budget: Quarterly funds \newline
         \tabitem Population: Count \& income profile & 
         Execute: Deploy Enforcers or distribute rewards & 
         Report State: Aggregate data and transmit to LGU. \\
-        
         \textbf{LGU (Municipal)} & DRL / AI (Brain) & 
         \tabitem State: Compliance of 7 Barangays \newline
         \tabitem Fiscal: Remaining Budget \newline
         \tabitem Political: Political Capital & 
         Allocate: Distribute budget to (1) IEC, (2) Incentives, (3) Enforcement. & 
         Maximize Reward: Balance compliance with sustainability. \\
-        
         \textbf{Enforcement} & ABM (Ops.) & 
         \tabitem Target: Assigned Barangay \newline
         \tabitem Constraint: Working hours & 
         Inspect: Randomly check households & 
         Detect: Trigger ``Perceived Probability of Detection''. \\
-        
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -208,85 +181,66 @@ The \textit{EnforcementAgents} functioned as the operational execution arm of th
 
 The \textit{HouseholdAgents} represented the citizenry and were geographically and administratively segregated by their assigned barangay. Household behavior was modeled through a process of rational bounded observation, where agents assessed three primary exogenous factors: the clarity and strictness of LGU policies, the perceived intensity of local enforcement (driven by the \textit{EnforcementAgents}), and the compliance behavior of neighboring households (social norms) \citep{Meng2018, Liao2024}. This assessment culminated in an independent segregation decision, which dictated the agent's contribution to the collective compliance level. The quarterly feedback loop aggregated these decisions into seven discrete \textit{BarangayComplianceRate} values, which were then transmitted back to the LGU-DRL Agent, closing the adaptive system loop and facilitating the study of policy response to citizen behavior \citep{Ceschi2021, Fontaine2024}.
 
+\begin{figure}[h]
+    \centering
+    % Ensure you have uploaded the file 'simulation_ui' to your project
+    \includegraphics[width=0.8\linewidth]{simulation_ui.jpg}
+    \caption{Bacolod Multi-View Simulation UI}
+    \label{fig:simulatio_ui}
+\end{figure}
+
 \subsection{Formalization as a Markov Decision Process}
 
-To enable the LGU agent to learn optimal strategies without relying on historical datasets, the Agent-Based Model was formalized as a finite-horizon Markov Decision Process (MDP). This formulation transformed the simulation into a stochastic environment where the DRL agent perceived states and executed actions to maximize cumulative utility \citep{Kompella2020}. The MDP was defined by the tuple $\mathcal{M} = \langle S, A, P, R, \gamma \rangle$:
+To facilitate the autonomous discovery of optimal strategies in the absence of longitudinal historical data, the interaction between the Local Government Unit (LGU) and the household agents was formalized as a finite-horizon Markov Decision Process (MDP). This mathematical framework transitioned the Agent-Based Model from a descriptive simulation into a prescriptive optimization environment, where the LGU-DRL agent iteratively interacted with a stochastic state space to maximize a cumulative utility function \citep{Kompella2020}. The MDP is formally defined by the quintuple $\mathcal{M} = \langle S, A, P, R, \gamma \rangle$, representing the state space, action space, transition probability, reward signal, and discount factor, respectively.
 
-\begin{description}
-    \item[State Space ($S$):] A continuous, multi-dimensional state vector $S_t \in \mathbb{R}^{10}$ representing the macroscopic condition of the municipality at time $t$. This observation vector included the local compliance rates of the 7 component barangays, the normalized remaining municipal budget, the simulation time index (quarter), and the LGU's current political capital index \citep{HaMinh2025}.
+The State Space ($S$) is characterized as a multi-dimensional, continuous vector $S_t \in \mathbb{R}^{10}$, which provides the agent with a comprehensive snapshot of the municipal environment at each decision epoch. This vector encompasses the mean compliance rates across the seven constituent barangays, the normalized remaining budget for the fiscal year, and the simulation time index to account for seasonal or temporal variations in waste generation. By including these macroscopic variables, the agent can perceive the heterogeneous social landscape of the municipality, allowing for localized rather than monolithic policy responses \citep{HaMinh2025}. Correspondingly, the Action Space ($A$) is defined as a continuous vector $A_t \in \mathbb{R}^{21}$. This high-dimensional space represents the granular allocation of the quarterly budget across the three primary policy levers—Enforcement, Incentives, and Information Education Campaigns (IEC)—for each individual barangay. The choice of a continuous action space over a discrete one is critical for achieving "policy precision," as it enables the Reinforcement Learning agent to fine-tune resource intensity to the specific tipping points of household behavioral change \citep{Rajesh2025}.
 
-    \item[Action Space ($A$):] A continuous action vector $A_t \in \mathbb{R}^{21}$ representing the allocation of the quarterly budget across three distinct policy levers—Enforcement ($E$), Incentives ($I$), and Information Education Campaigns ($IEC$)—for each of the 7 barangays. The use of a continuous action space allowed for granular resource allocation, enabling the agent to fine-tune spending intensity rather than selecting from coarse, discrete interventions \citep{Rajesh2025}.
-    
-    \item[Transition Function ($P$):] Formally defined as $P(S_{t+1} | S_t, A_t)$, this function governed the system dynamics. In this framework, the ABM simulation served as an \textit{implicit} stochastic transition function. Unlike traditional control theory, where $P$ was a known differential equation, the transition here emerged from the complex, non-linear interactions of thousands of heterogeneous household agents updating their internal utility based on the Theory of Planned Behavior (TPB). The ABM acted as a generative model, producing the subsequent state $S_{t+1}$ in response to policy $A_t$ \citep{TianReview2024, Jimenez2025}.
-    
-    \item[Reward Function ($R$):] A scalar feedback signal $R_t(S_t, A_t, S_{t+1})$ calculated at each step to guide learning. The reward was a multi-objective function designed to balance competing governance goals: maximizing aggregate compliance, ensuring fiscal sustainability (budget conservation), and minimizing political backlash from excessive enforcement \citep{Dey2025}.
-    
-    \item[Discount Factor ($\gamma$):] Set to $\gamma = 0.99$, this parameter determined the agent's time horizon, ensuring the optimal policy prioritized long-term sustainable compliance over myopic, short-term improvements \citep{HaMinh2025}.
-\end{description}
+The system dynamics are governed by the Transition Function ($P$), denoted as $P(S_{t+1} | S_t, A_t)$. Within this framework, the ABM serves as the implicit transition engine; unlike classical control problems where transitions are defined by explicit differential equations, the state evolution here emerges from the aggregate, non-linear behaviors of heterogeneous household agents updating their internal utility based on the Theory of Planned Behavior (TPB). Consequently, the simulation acts as a generative model where the subsequent state $S_{t+1}$ is a stochastic manifestation of the community’s collective response to the LGU's policy intervention $A_t$ \citep{TianReview2024, Jimenez2025}. To evaluate the efficacy of these interventions, the Reward Function ($R$) provides a scalar feedback signal $R_t$ that balances the LGU’s multi-objective mandates. This function is designed to reward high aggregate compliance while penalizing fiscal overspending and the social friction associated with excessive punitive enforcement \citep{Dey2025}. Finally, a Discount Factor of $\gamma = 0.99$ is applied to the objective function, ensuring that the DRL agent prioritizes strategies that foster long-term, sustained behavioral shifts rather than pursuing ephemeral, short-term compliance spikes that may deplete the annual budget prematurely.
 
 \subsection{Household Agent Design}
 
-The decision-making architecture of the \texttt{HouseholdAgent} was governed by a Dynamic Utility Function grounded in the Theory of Planned Behavior (TPB) \citep{Ceschi2021}. In contrast to static behavioral models, this framework incorporated time-variant weights ($w(t)$) for psychological constructs, allowing agent behavior to evolve non-linearly in response to LGU interventions \citep{Taraghi2025, Ma2023}.
+The decision-making architecture of the \texttt{HouseholdAgent} is governed by a dynamic utility function grounded in the Theory of Planned Behavior (TPB), which posits that an individual's intention to perform a behavior is a function of their attitude, subjective norms, and perceived behavioral control \citep{Ceschi2021}. In contrast to static behavioral models, this framework incorporates time-variant weights ($w(t)$) for psychological constructs, allowing agent behavior to evolve non-linearly in response to LGU interventions and social feedback loops \citep{Taraghi2025, Ma2023}. The core decision logic is represented by the utility of segregation ($U_{\mathrm{segregate}}$):
 
 \begin{equation}
     U_{\mathrm{segregate}} = (w_A(t) A) + (w_{SN}(t) SN_{\mathrm{local}}) + (w_{PBC}(t) PBC_{\mathrm{infra}}) - C_{\mathrm{Net}} + \epsilon
-    \label{eq:utility_function_repeat}
+    \label{eq:utility_function}
 \end{equation}
 
-\noindent \textbf{Where:}
+In this formulation, $w_A(t)$ represents the temporal evolution of the agent's internal valuation of segregation, functioning as a decay model that increases in response to Information, Education, and Communication (IEC) investment and decays stochastically in the absence of reinforcement to simulate ``public forgetting'' \citep{Trushna2024}. The social component, $SN_{\mathrm{local}}$, is an endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood (radius $r$), capturing the effects of social pressure and observational learning \citep{Meng2018, Liao2024}. To account for the inherent uncertainty in human decision-making, the term $\epsilon$ introduces stochastic noise, ensuring the model reflects real-world behavioral variance \citep{Subedi2025}.
 
-\begin{description}
-    \item[$w_A(t)$ (Dynamic Attitude Weight):] Represents the temporal evolution of the agent's internal valuation of segregation. This weight functioned as a decay model: it increased in response to IEC investment and decayed stochastically over time in the absence of reinforcement, simulating the phenomenon of public forgetting \citep{Trushna2024}.
-    
-    \item[$SN_{\mathrm{local}}$ (Local Subjective Norms):] An endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood (radius $r$), capturing the effect of social pressure and observational learning \citep{Meng2018, Liao2024}.
-    
-    \item[$C_{\mathrm{Net}}$ (Net Disutility):] The net disutility of performing the segregation behavior, defined as:
-\end{description}
+A critical innovation in this model is the calculation of $C_{\mathrm{Net}}$, the net behavioral cost, which characterizes the perceived friction of compliance. This variable is defined as:
 
 \begin{equation}
     C_{\mathrm{Net}} = C_{\mathrm{Effort}} + (\gamma C_{\mathrm{Monetary}}) - (\gamma I) - (\gamma F P_{\mathrm{Detection}})
     \label{eq:net_disutility}
 \end{equation}
 
-\noindent \textbf{Variable Definitions for Equation 3.4:}
+\noindent This cost-benefit sub-model integrates both physical and financial barriers, defined as follows:
 
-\begin{itemize}
-    \item \textbf{$C_{\mathrm{Net}}$ (Net Behavioral Cost):} The total perceived friction to segregate. If this value was high, the agent would not segregate.
-    \item \textbf{$C_{\mathrm{Effort}}$ (Cost of Effort):} The physical hassle of segregating (washing, sorting, storing).
-    \item \textbf{$C_{\mathrm{Monetary}}$ (Monetary Cost):} The tangible financial cost of compliance (e.g., purchasing sacks or segregation bins), which interviews identified as a barrier for low-income residents.
-    \item \textbf{$I$ (Incentive Value):} The objective value of the reward (e.g., \textpeso 50).
-    \item \textbf{$\gamma$ (Gamma - Income Sensitivity):} A weighting factor based on household income. For poor households $\gamma > 1$ (money mattered more); for rich households $\gamma < 1$ (money mattered less).
-    \item \textbf{$F$ (Fine Magnitude):} The objective penalty amount (e.g., \textpeso 1,000).
-    \item \textbf{$P_{\mathrm{Detection}}$ (Probability of Detection):} The likelihood of being caught (0.0 to 1.0), which depended on the number of enforcers.
-    \item \textbf{$\epsilon$ (Epsilon):} A stochastic "noise" term, representing random factors and inherent uncertainty in human decision-making \citep{Subedi2025}.
-\end{itemize}
+\begin{description}
+    \item[$\bm{C_{\mathrm{Effort}}}$:] The physical hassle associated with the washing, sorting, and storage of waste.
+    \item[$\bm{C_{\mathrm{Monetary}}}$:] Tangible financial expenses, such as the procurement of color-coded bins or sacks.
+    \item[$\bm{\gamma}$ (Income Sensitivity):] A weighting factor derived from household income level; for lower-income households, $\gamma > 1$ as financial levers ($I$ and $F$) carry greater psychological weight, whereas $\gamma < 1$ for higher-income households.
+    \item[$\bm{I}$ and $\bm{F}$:] The objective magnitudes of monetary incentives and punitive fines, respectively.
+    \item[$\bm{P_{\mathrm{Detection}}}$:] The likelihood of enforcement detection, which is dynamically linked to the LGU's resource allocation for enforcement personnel.
+\end{description}
 
-The dynamic updates to the internal TPB constructs ensured the \texttt{HouseholdAgent} behavior was adaptive and responsive to both policy and social context, as recommended for ABM waste management simulations \citep{Ceschi2021, Ma2023}.
+Furthermore, the model captures complex psychological feedbacks such as ``psychological reactance.'' While LGU investments in IEC campaigns generally improve Attitude ($A$) and Subjective Norms ($SN$) \citep{Trushna2024}, the model stipulates that if enforcement intensity crosses a specific threshold, Attitude ($A$) may paradoxically decrease. This inverse reaction reflects the tendency of individuals to resist coercive mandates when they perceive a loss of autonomy, a concept central to Nudge Theory applications in waste management \citep{LoanBalanay2023}. Finally, Perceived Behavioral Control ($PBC$) is calibrated by the availability of barangay-level infrastructure, ensuring the simulation acknowledges that even highly motivated agents may fail to comply if functional bins or Materials Recovery Facilities (MRFs) are absent.
 
-\begin{itemize}
-    \item \textbf{Attitude ($A$) and Subjective Norm ($SN$)} were increased by the LGU's investment in IEC Campaigns in that agent's specific barangay, a correlation supported by systematic reviews of household interventions \citep{Trushna2024}.
-    \item \textbf{Subjective Norm ($SN$)} was also updated by the agent observing the compliance rate of its neighbors (social influence). The incorporation of social norms, which influenced agent behavior through observation of neighbors, was a critical element supported by research on pro-environmental nudges and multi-agent simulation \citep{Ceschi2021, Meng2018}.
-    \item \textbf{Attitude ($A$)} was decreased if the perceived enforcement level crossed the "psychological reactance" threshold. This inverse reaction modeled the tendency of individuals to resist coercive mandates when they perceived a loss of autonomy, a concept central to Nudge Theory applications in waste management \citep{LoanBalanay2023}.
-    \item \textbf{Perceived Behavioral Control ($PBC$)} was increased by barangay-level actions (e.g., providing sacks, functional MRF) and decreased by infrastructure failures, acknowledging that technical constraints were primary drivers of non-compliance in developing countries.
-\end{itemize}
+\subsection{Behavioral Hysteresis and the Internalization of Social Norms}
 
-\subsection{The Household Agent: Norm Internalization and Cultural Inertia}
-While the baseline Household Agent operated on the Theory of Planned Behavior (TPB), initial simulations indicated that agents were prone to unrealistic behavioral decay. In standard TPB models, an agent's \textit{Attitude} ($A$) towards a behavior naturally degraded over time due to apathy or ``enforcement fatigue'' when external stimuli were removed.
+While the baseline \texttt{HouseholdAgent} architecture operates on the Theory of Planned Behavior (TPB), standard models often exhibit unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To more accurately simulate the real-world stability of established habits, this study incorporates a \textit{Norm Internalization Mechanism}. This mechanism addresses the phenomenon of ``Cultural Inertia,'' where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit once a critical tipping point is reached \citep{Ceschi2021}.
 
-To model the real-world stability of established habits, this study integrated a \textbf{Norm Internalization Mechanism} (or ``Social Norm Shield''). This logic postulated that when the local social norm ($SN$) exceeded a critical threshold, the behavior transitioned from a calculated decision to an internalized habit, shielding the agent from attitude decay \textit{household\_agent}.
+In this framework, the standard attitude update function, which typically suffers from a decay constant ($\delta$) due to enforcement fatigue or apathy, is refined by a dynamic damping factor ($D_{\mathrm{factor}}$):
 
-The standard attitude update function:
 \begin{equation}
-    A_{t+1} = A_t - \delta
-\end{equation}
-was modified to include a dynamic damping factor ($D_{factor}$):
-\begin{equation}
-    A_{t+1} = A_t - (\delta \times D_{factor})
+    A_{t+1} = A_t - (\delta \times D_{\mathrm{factor}})
 \end{equation}
 
-Where $D_{factor}$ was defined by the strength of the local social norm:
+The damping factor is governed by the strength of local social norms ($SN$), representing the protective effect of community-wide compliance. Specifically, the model identifies a \textit{tipping point at 70\% compliance}, beyond which the behavior is considered internalized:
+
 \begin{equation}
-    D_{factor} = 
+    D_{\mathrm{factor}} = 
     \begin{cases} 
         0.1 & \text{if } SN > 0.70 \text{ (Strong Norms / Internalized)} \\
         0.5 & \text{if } SN > 0.50 \text{ (Moderate Norms)} \\
@@ -294,150 +248,126 @@ Where $D_{factor}$ was defined by the strength of the local social norm:
     \end{cases}
 \end{equation}
 
-This refinement simulated \textbf{Cultural Inertia}, ensuring that once a barangay achieved high compliance, the behavior became self-sustaining. This addressed the ``Sustainability'' objective of the thesis, preventing compliance from collapsing the moment LGU funding was withdrawn.
+Furthermore, to prevent the total erosion of community standards during periods of fiscal austerity or low LGU intervention, the model introduces a \textit{Social Norm Floor set at 40\%}. This floor ensures that once a barangay has achieved a baseline level of awareness, the perceived social pressure does not drop to zero, representing the residual collective memory and existing communal infrastructure of the municipality. This refinement is critical for addressing the sustainability objectives of this research, as it allows the Deep Reinforcement Learning agent to discover strategies that foster self-sustaining compliance rather than perpetual reliance on high-cost monetary incentives.
 
 \subsection{Barangay Agent Design}
 
-This agent represented the intermediate implementation layer. The model initialized 7 unique instances of this agent class (Liangan East, Poblacion, etc.), each with its own parameters from Section 3.2.2. The use of ABM for dynamically modeling the effectiveness of such public policies and the interactions between governance and neighborhood units was well-established \citep{Ceschi2021}. Its function was to:
+The \textit{BarangayAgent} serves as the critical intermediate implementation layer, bridging the gap between municipal-level resource allocation and household-level behavioral shifts. The model initializes seven unique instances of this agent class—representing the geographically and socioeconomically distinct units of Liangan East, Ezperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya—calibrated with parameters derived from municipal institutional audits. The utilization of Agent-Based Modeling to simulate the dynamics between governance units and neighborhood interactions is a robust approach for evaluating public policy efficacy in complex social systems. Within this framework, the \textit{BarangayAgent} functions as an executive entity that manages the "stacking effect" of fiscal resources, combining the quarterly augmentation funds provided by the LGU-DRL agent with its own localized, baseline operating budget, such as the \textpeso 30,000 appropriation for Barangay Liangan East.
 
-\begin{itemize}
-    \item \textbf{Receive and Spend LGU Funds:} Use the quarterly budget allocated to it by the LGU-RL agent for local incentives, enforcement, and IEC.
-    \item \textbf{Manage Local Resources:} Use its own separate, smaller budget (e.g., Liangan East's \textpeso 30,000) for local activities (e.g., "Pulot basura").
-    \item \textbf{Mediate Policy:} Implement the "No Segregation, No Collection" rule using its local staff.
-    \item \textbf{Report Status:} Track and report its local \texttt{BarangayComplianceRate} to the LGU agent at the end of each quarter. The feedback loop based on citizen compliance supported the adaptive policy analysis framework enabled by ABM \citep{Ceschi2021}.
-\end{itemize}
+Beyond fiscal management, the agent serves as the primary mediator of environmental policy by operationalizing the "No Segregation, No Collection" mandate through the deployment of local enforcement staff and "Eco-warriors". This operational capacity is formally linked to the individual household's perceived probability of detection ($P_{\mathrm{Detection}}$), as the intensity of local enforcement is directly proportional to the agent's allocated enforcement fund. At the conclusion of each simulated quarter, the \textit{BarangayAgent} tracks and reports its aggregate \textit{BarangayComplianceRate} to the LGU agent. This creates a high-fidelity feedback loop where local citizen behavior informs subsequent municipal-level policy adjustments, supporting an adaptive policy analysis framework that accounts for the heterogeneity of the municipality’s constituent barangays.
 
-\section{Deep Reinforcement Learning Optimization}
+\section{Heuristic-Guided Deep Reinforcement Learning}
 
-To address the high-dimensional resource allocation problem inherent in municipal budgeting, this study employed Deep Proximal Policy Optimization (Deep PPO), a policy-gradient algorithm specifically optimized for Continuous Action Spaces \citep{Dey2025, Jimenez2025}.
+To address the high-dimensional resource allocation problem inherent in municipal budgeting, this study develops a \textbf{Heuristic-Guided Deep Reinforcement Learning (HuDRL)} framework. This architecture utilizes Deep Proximal Policy Optimization (Deep PPO) to approximate an optimal governance policy $\pi_\theta(a|s)$ within a continuous action space.
 
-While traditional tabular methods (e.g., Q-Learning) were limited to small, discrete state spaces, and value-based algorithms like Deep Q-Networks (DQN) were restricted to discrete decisions, Deep PPO utilized Deep Neural Networks (DNNs) to approximate the optimal policy $\pi_\theta(a|s)$ \citep{Rajesh2025}. This architecture allowed the LGU agent to output precise, continuous budgetary fractions (e.g., allocating exactly 12.5\% of funds to education) rather than relying on coarse, pre-discretized categories, thereby significantly enhancing the granularity of the optimal policy \citep{TianReview2024}.
+\subsection{Addressing Reward Sparsity}
 
-\subsection{Neural Network Architecture}
+A fundamental challenge in applying Deep Reinforcement Learning (DRL) to complex governance systems is the \textit{Sparse Reward Problem}. The resource allocation task involves a high-dimensional continuous action space ($d=21$), representing the simultaneous adjustment of three policy levers (IEC, Enforcement, Incentives) across seven distinct barangays. 
 
-The agent was constructed using an Actor-Critic architecture, which consisted of two separate neural networks working in tandem:
+In a standard, unguided Proximal Policy Optimization (PPO) environment, an agent effectively wanders randomly, rarely discovering that concentrating massive resources on a single barangay (the "Sequential Saturation" strategy) is the key to breaking behavioral inertia. Instead, agents frequently converge to a "Status Quo" local optimum—a safe but sub-optimal strategy characterized by thin, equitable resource distribution that fails to trigger behavioral tipping points. To overcome this, the \textit{HuDRL framework} integrates domain-specific heuristics to guide exploration toward economically and physically viable strategies.
 
-\begin{description}
-    \item[Input Layer:] Accepted a normalized state vector $S_t$ containing compliance rates, budget status, and political capital.
-    \item[Hidden Layers:] Both the Actor and Critic networks utilized two fully connected (dense) layers with 64 neurons each. These layers employed ReLU (Rectified Linear Unit) activation functions to capture the non-linear and complex relationships between enforcement intensity and household behavioral responses \citep{Dey2025}.
-    \item[Output Layer (Actor):] A final layer using a Softmax activation function. This output a probability distribution over the continuous action space, ensuring that all budget allocations summed exactly to 100\% of the available quarterly fund \citep{Jimenez2025}.
-\end{description}
+\subsection{HuDRL Implementation}
+
+To operationalize the proposed framework, the HuDRL agent was implemented as a specialized policy optimization module integrated directly with the MESA-based simulation environment. Unlike off-the-shelf implementations, this study developed a custom Actor-Critic network explicitly designed to process the multi-modal state vector of the municipality—combining fiscal, social, and temporal data—into a unified policy output. The following subsections detail the technical specifications of the agent, including the neural network topology, the mathematical formulation of the state-action spaces, and the specific normalization techniques employed to strictly enforce the municipality's fiscal constraints.
+
+\subsubsection{Neural Network Architecture}
+The agent is constructed using an Actor-Critic architecture, where two separate deep neural networks—the Actor (policy) and the Critic (value)—work in tandem to optimize decision-making. The input layer accepts a normalized state vector $S_t$ containing critical observations, including barangay compliance rates, remaining budget status, and political capital. To process this high-dimensional data, both networks utilize two fully connected (dense) hidden layers with 64 neurons each. These layers employ Rectified Linear Unit (ReLU) activation functions, a specific architectural choice intended to capture the non-linear and complex relationships between enforcement intensity and household behavioral responses \citep{Dey2025}.
+
+The network culminates in a specialized output layer that governs the agent's continuous action space. Unlike standard regression outputs, the Actor network utilizes a Softmax activation function to generate the final policy distribution. This mechanism transforms the raw neural logits into a normalized probability distribution, mathematically guaranteeing that the sum of all budget allocations across the 21 policy levers equals exactly 100\% of the available quarterly fund \citep{Jimenez2025}. This constraint is fundamental to the model's validity, ensuring that every generated policy remains fiscally feasible within the municipality's hard budgetary limits.
 
 \subsection{RL State Representation \texorpdfstring{($S_t$)}{(St)}}
 
-The "state" ($S_t$) represented the complete set of observations available to the LGU agent at the start of each quarter $t$. This context-rich vector allowed the agent to link its fiscal actions to subsequent social outcomes, mirroring the complexity of local governance decisions \citep{Jimenez2025}.
+The state space $S_t$ constitutes the comprehensive observation vector accessible to the LGU agent at the onset of each decision epoch $t$. This high-dimensional vector serves as the cognitive interface between the agent and the environment, enabling the mapping of fiscal actions to longitudinal social outcomes. By encoding the system's socio-economic status, the state representation captures the complexity inherent in decentralized governance \citep{Jimenez2025}.
+
+The state vector is formalized as:
 
 \begin{equation}
-    S_t = [CB_{1...7}, B_{\mathrm{Rem}}, M_{\mathrm{Index}}, P_{\mathrm{Cap}}]
+    S_t = [\mathbf{CB}_{1...7}, B_{\mathrm{Rem}}, M_{\mathrm{Index}}, P_{\mathrm{Cap}}]
     \label{eq:state_vector}
 \end{equation}
 
-\noindent Where each component played a distinct strategic role supported by the literature:
+\noindent Each component plays a distinct strategic role in the optimization process:
 
-\begin{itemize}
-    \item \textbf{$CB_{1...7}$ (Barangay Compliance Vector):} A 7-dimensional sub-vector representing the current segregation compliance rate of each specific barangay. Tracking granular, barangay-level performance allowed the agent to identify spatial disparities and target interventions toward underperforming units rather than applying inefficient blanket policies \citep{Villanueva2021}.
-    \item \textbf{$B_{\mathrm{Rem}}$ (Remaining Budget):} The absolute monetary value remaining in the annual fund. This provided the agent with fiscal context, allowing it to learn "pacing" strategies to solve the multi-objective optimization problem without violating financial constraints \citep{Abdallah2021, Torkayesh2021}.
-    \item \textbf{$M_{\mathrm{Index}}$ (Temporal Index):} An integer representing the current quarter (1-4). This established the time horizon, ensuring the agent did not engage in aggressive spending when the fiscal year was nearing completion \citep{Akbarpour2021}.
-    \item \textbf{$P_{\mathrm{Cap}}$ (Political Capital):} A scalar value (0–1) representing the accumulated trust or tolerance of the populace. This constrained the agent from over-utilizing punitive measures, reflecting the reality that effective decentralization required social acceptability \citep{Nishimura2022}. To model the erosion and recovery of trust, $P_{\mathrm{Cap}}$ updated according to the transition function:
-\end{itemize}
+\begin{description}
+    \item[$\mathbf{CB}_{1...7}$ (Barangay Compliance Vector):] A 7-dimensional continuous sub-vector representing the real-time segregation compliance rate for each constituent barangay. Tracking spatially disaggregated performance allows the agent to identify heterogeneity in household behavior, facilitating targeted interventions toward underperforming units rather than inefficient blanket policies \citep{Villanueva2021}.
+    
+    \item[$B_{\mathrm{Rem}}$ (Fiscal Liquidity):] The scalar value representing the remaining balance of the annual fund. This variable provides the necessary fiscal context for "pacing" strategies, allowing the agent to solve the multi-objective optimization problem without violating hard budgetary constraints \citep{Abdallah2021, Torkayesh2021}.
+    
+    \item[$M_{\mathrm{Index}}$ (Temporal Horizon):] A discrete integer representing the current fiscal quarter ($t \in \{1,2,3,4\}$). This index establishes the finite horizon of the Markov Decision Process (MDP), ensuring the agent optimizes spending relative to the remaining time in the fiscal year \citep{Akbarpour2021}.
+    
+    \item[$P_{\mathrm{Cap}}$ (Political Capital):] A normalized scalar ($0 \le P \le 1$) representing the populace's accumulated trust or tolerance for governance. This variable acts as a dynamic constraint on the admissibility of punitive measures, operationalizing the principle that effective enforcement requires social acceptability \citep{Nishimura2022}.
+\end{description}
+
+The dynamics of Political Capital are modeled to reflect the tension between enforcement intensity and public sentiment. $P_{\mathrm{Cap}}$ evolves according to the following transition function:
 
 \begin{equation}
     P_{\mathrm{Cap}(t+1)} = P_{\mathrm{Cap}(t)} - (\alpha \cdot E_{\mathrm{Intensity}}) + (\beta \cdot T_{\mathrm{Decay}})
     \label{eq:political_capital}
 \end{equation}
 
-\noindent Where $\alpha$ represented the population's sensitivity to punitive measures (depletion rate due to strict enforcement), $E_{\mathrm{Intensity}}$ was the normalized level of enforcement funding, and $\beta$ represented the natural recovery of political capital over time (forgiveness rate) in the absence of harsh measures.
+\noindent where $\alpha$ denotes the \textit{sensitivity coefficient}, representing the rate of trust depletion relative to the normalized enforcement intensity ($E_{\mathrm{Intensity}}$), and $\beta$ represents the \textit{natural recovery rate}, characterizing the restoration of political capital over time in the absence of coercive interventions.
 
-\subsection{RL Action Space \texorpdfstring{($A_t$)}{(At)}}
+\subsection{RL Action Space \texorpdfstring{($A_t$)}{(At)} and Budget Normalization}
 
-The action space defined the set of all possible decisions the LGU agent could execute. Unlike simpler models that chose from a discrete menu of options, this study employed a Continuous Action Space of dimension $d = 21$. This corresponded to three distinct policy levers applied independently across the seven barangays:
+The action space ($A_t$) constitutes the feasible set of governance decisions executable by the LGU agent at any given time step. In contrast to discrete control tasks that select from a finite menu of options, this study employs a high-dimensional \textbf{Continuous Action Space} ($A_t \in \mathbb{R}^{21}$). This vector represents the simultaneous allocation of resources across three distinct policy levers—Information, Education, and Communication (IEC), Enforcement, and Monetary Incentives—independently applied to each of the seven constituent barangays:
 
 \begin{equation}
-    A_t = [Alloc_{\mathrm{IEC}, B1}, ..., Alloc_{\mathrm{Enf}, B1}, ..., Alloc_{\mathrm{Inc}, B1}, ..., Alloc_{\mathrm{Inc}, B7}]
+    A_t = [\mathbf{Alloc}_{\mathrm{IEC}, B_{1..7}}, \mathbf{Alloc}_{\mathrm{Enf}, B_{1..7}}, \mathbf{Alloc}_{\mathrm{Inc}, B_{1..7}}]
     \label{eq:action_space}
 \end{equation}
 
-To ensure fiscal viability, the raw output of the neural network was processed through a Softmax Normalization Layer and scaled to the Quarterly Budget Cap ($B_{\mathrm{Quarterly}}$). Unlike models that might access the entire annual fund at once, this model enforced a strict quarterly spending limit:
+A critical constraint in municipal governance is the finite nature of financial resources. Unlike standard reinforcement learning tasks where action outputs may be independent, municipal budgeting is inherently a zero-sum game. To enforce fiscal viability directly within the model architecture, the raw output of the neural network ($A_{\mathrm{raw}}$) is processed through a \textbf{Softmax Normalization Layer}. This operation transforms the raw logits into a probability distribution, which is subsequently scaled by the Quarterly Budget Cap ($B_{\mathrm{Quarterly}}$):
 
 \begin{equation}
    A_{\mathrm{final}} = \mathrm{Softmax}(A_{\mathrm{raw}}) \cdot B_{\mathrm{Quarterly}}
    \label{eq:softmax_constraint}
 \end{equation}
 
-This mathematical guarantee ensured that the sum of all allocations across all 21 channels would never exceed the available funds, effectively embedding the hard budgetary constraint directly into the model architecture:
+This transformation provides a mathematical guarantee that the summation of all allocated funds across the 21 channels adheres strictly to the hard budgetary constraint:
 
 \begin{equation}
-    \sum A_t \le B_{\mathrm{Quarterly}}
+    \sum_{i=1}^{21} A_{t,i} \le B_{\mathrm{Quarterly}}
     \label{eq:fiscal_constraint}
 \end{equation}
 
-By constraining the action space to $B_{\mathrm{Quarterly}}$ (derived from the \textpeso 1,500,000 annual budget divided by 4 quarters), the model forced the agent to optimize for cost-effectiveness within a sustainable recurring budget \citep{Abdallah2021}.
+By constraining the action space to $B_{\mathrm{Quarterly}}$ (derived from the \textpeso 1,500,000 annual appropriation divided by four quarters), the model compels the agent to optimize for cost-effectiveness within a sustainable, recurring fiscal framework rather than accessing the entirety of the annual fund in a single epoch \citep{Abdallah2021}.
 
-\subsection{The Multi-Objective Reward Function}
+\subsection{Multi-Objective Heuristic Reward Function}
 
-The Deep RL agent learned the optimal policy by maximizing a Composite Reward Function ($R_{\mathrm{total}}$). This function explicitly incorporated the LGU's competing priorities: maximizing compliance while maintaining fiscal responsibility and political stability.
+The learning process of the LGU agent is driven by a Composite Reward Function ($R_{\mathrm{total}}$), designed to balance competing municipal priorities. While the primary goal is environmental compliance, the agent must navigate fiscal constraints and social acceptability to ensure policy longevity. 
+
+To bridge the gap between immediate actions and delayed behavioral outcomes, the study employs \textbf{Reward Shaping}, which provides the agent with denser feedback signals during the training phase. The total reward at each time step $t$ is defined as:
 
 \begin{equation}
-    R_{\mathrm{total}} = w_1 R_{\mathrm{Compliance}} + w_2 R_{\mathrm{Sustainability}} - w_3 P_{\mathrm{Backlash}}
-    \label{eq:reward_function}
+    R_{\mathrm{total}} = w_1 R_{\mathrm{Comp}} + w_2 R_{\mathrm{Sustain}} - w_3 P_{\mathrm{Backlash}} + R_{\mathrm{Shaping}}
+    \label{eq:total_reward}
 \end{equation}
 
-\noindent Where:
-
-\begin{description}
-    \item[Compliance Reward ($R_{\mathrm{Compliance}}$):] The population-weighted average segregation rate across all seven barangays. This served as the primary environmental objective function.
-    \item[Sustainability Reward ($R_{\mathrm{Sustainability}}$):] A regularization term designed to enforce fiscal stability. It penalized the agent for deviating from the ideal burn rate (e.g., spending 50\% of annual funds in the first quarter), ensuring program longevity \citep{MedinaMijangos2020}.
-    \begin{equation}
-    R_{\mathrm{Sustainability}} = - \left| \frac{S_{\mathrm{Actual}}}{B_{\mathrm{Total}}} - \frac{1}{12} \right|
-    \label{eq:sustainability_reward}
-    \end{equation}
-    \item[Political Backlash Penalty ($P_{\mathrm{Backlash}}$):] A non-linear penalty function triggered when Enforcement Intensity was high while Compliance remained low. This modeled the insight that "penalizing all households is unfeasible" (refer to Appendix \ref{appendix:menro_interview}), conditioning the agent to learn that draconian enforcement was only viable as a secondary measure once behavioral norms had shifted \citep{Nishimura2022}.
-\end{description}
-
-The weighting coefficients ($w_1, w_2, w_3$) were calibrated to reflect the specific operational reality of a 4th Class Municipality, where fiscal survival ($w_2$) was often as critical as environmental performance ($w_1$).
-
-To resolve this exploration-exploitation dilemma, the study employed Domain Knowledge Integration. This approach did not hard-code a deterministic solution; rather, it structured the learning environment to focus the agent’s attention on valid governance interventions, thereby narrowing the search space to physically and economically viable strategies.
-
-\section{Deep Reinforcement Learning Implementation}
-
-A fundamental challenge in applying Deep Reinforcement Learning (DRL) to complex governance systems was the Sparse Reward Problem. The resource allocation task involved a high-dimensional continuous action space ($d=21$), representing the simultaneous adjustment of three policy levers (IEC, Enforcement, Incentives) across seven distinct barangays. Early experimental iterations demonstrated that a standard, unguided Proximal Policy Optimization (PPO) agent failed to discover complex, non-linear strategies such as "Sequential Saturation" within a reasonable training horizon. Instead, the agent frequently converged to a "Status Quo" local optimum—a safe but sub-optimal strategy characterized by thin, equitable resource distribution that failed to trigger behavioral tipping points
-
-\subsection{Heuristic-Guided Action Space}
-
-To overcome the inefficiency of random exploration, the environment incorporated a Heuristic-Guided Action Mechanism, formally termed "Targeted Amplification". This mechanism functioned as a saliency filter, guiding the agent toward areas of highest operational urgency without dictating the precise magnitude of intervention.
+The components of the reward function are defined as follows:
 
 \begin{enumerate}
-    \item \textbf{State Assessment:} At each step, the environment identified the ``Critical Barangay'' ($B_{crit}$) with the lowest current compliance rate.
-    \item \textbf{Signal Amplification:} If the agent's raw output assigned a non-zero weight to $B_{crit}$, the environment amplified this specific signal by a factor of $\alpha = 100$.
-    \item \textbf{Normalization:} The resulting vector was re-normalized to sum to the total quarterly budget ($Q_{budget}$).
+    \item \textbf{Compliance Objective ($R_{\mathrm{Comp}}$):} The primary environmental target, calculated as the population-weighted average segregation rate across all seven barangays.
+    
+    \item \textbf{Sustainability Regularization ($R_{\mathrm{Sustain}}$):} This term enforces fiscal stability by penalizing the agent for deviating from an ideal "burn rate." This ensures the annual budget is not prematurely exhausted:
+    \begin{equation}
+        R_{\mathrm{Sustain}} = - \left| \frac{S_{\mathrm{Actual}}}{B_{\mathrm{Total}}} - \frac{1}{12} \right|
+    \end{equation}
+    where $S_{\mathrm{Actual}}$ is the current spending and $B_{\mathrm{Total}}$ is the total annual fund.
+    
+    \item \textbf{Political Backlash Penalty ($P_{\mathrm{Backlash}}$):} A non-linear penalty triggered when Enforcement Intensity is high while compliance remains low. This reflects the reality that "penalizing all households is unfeasible" \citep{Nishimura2022}, forcing the agent to prioritize behavioral shifts over draconian measures.
+    
+    \item \textbf{Heuristic Shaping Rewards ($R_{\mathrm{Shaping}}$):} To overcome the sparse reward problem and guide the agent out of local optima, two specific "Heuristic Bonuses" are integrated:
+    \begin{itemize}
+        \item \textbf{Allocation Focus Bonus ($R_{\mathrm{Alloc}}$):} A progressive reward awarded when the agent allocates $>40\%$ of the quarterly budget to the identified critical barangay ($B_{\mathrm{crit}}$). This incentivizes the "Sequential Saturation" strategy.
+        \item \textbf{Intensity Threshold Jackpot ($R_{\mathrm{Intense}}$):} A significant discrete bonus ($+20,000$) awarded if the Enforcement Intensity in a target barangay exceeds the critical behavioral threshold of $0.80$.
+    \end{itemize}
 \end{enumerate}
 
-The allocation formula for the $i$-th barangay was given by:
-\begin{equation}
-    \text{Alloc}_{i} = \frac{e^{\text{logit}_i} \times \mathbb{I}(i=B_{crit}) \cdot \alpha}{\sum_{j} e^{\text{logit}_j}} \times Q_{budget}
-\end{equation}
+The weighting coefficients ($w_1, w_2, w_3$) are calibrated to reflect the operational reality of a 4th Class Municipality, where fiscal survival and the prevention of social backlash are as critical as environmental performance.
 
-It is critical to note that while the heuristic identified the target location, the Reinforcement Learning agent retained full control over the intensity and duration of the intervention. The mechanism acted as a "training wheel" that exposed the agent to the potential efficacy of concentrated spending, specifically "Sequential Saturation". The agent still had to autonomously calculate the precise budgetary volume required to overcome local resistance; if the cost of amplification outweighed the long-term reward (e.g., due to budget depletion), the agent’s value network was free to reject the heuristic in favor of alternative strategies.
+\subsection{The HuDRL Algorithm}
 
-\subsection{Reward Shaping and Intensity Thresholds}
-To further guide the agent out of local optima, the reward function was ``shaped'' to provide denser feedback signals. The objective function $J(\pi)$ maximized the total reward $R_t$, which was composed of three terms:
-
-\begin{equation}
-    R_t = R_{compliance} + R_{allocation} + R_{intensity}
-\end{equation}
-
-Where:
-\begin{itemize}
-    \item $R_{compliance}$: The primary objective, defined as the sum of compliance rates across all barangays.
-    \item $R_{allocation}$ (``Focus Bonus''): A progressive reward for allocating $>40\%$ of the budget to the identified non-compliant barangays. This incentivized the agent to be decisive \textit{bacolod\_gym}.
-    \item $R_{intensity}$ (``Threshold Jackpot''): A significant bonus (+20,000) awarded if the Enforcement Intensity in a target barangay exceeded the physics threshold of \textbf{0.80}.
-\end{itemize}
-
-This shaped reward structure explicitly taught the agent the causal link between \textbf{High Intensity} (Action) and \textbf{Behavior Change} (Result), ensuring it learned to breach the resistance threshold of stubborn barangays like Poblacion.
-
-\subsection{Heuristic-Guided Reinforcement Learning (HuRL) Algorithm}
-
-The \textbf{Heuristic-Guided Reinforcement Learning (HuRL)} algorithm was developed to address the ``Sparse Reward Problem'' inherent in complex governance simulations. In a standard RL approach, the agent effectively wanders randomly, rarely discovering that concentrating massive resources on a single barangay is the key to breaking behavioral inertia. To accelerate learning, this study introduces three domain-specific modifications to the standard loop.
+The implementation logic is formalized in the \textbf{Heuristic-Guided Action Selection \& Reward Shaping (HuDRL)} algorithm. It utilizes \textbf{Targeted Amplification} as a saliency filter: if the agent expresses an "intent" to fund a critical barangay, the environment multiplies that signal by a factor of $\alpha=100$.
 
 \begin{algorithm}[H]
 \caption{Heuristic-Guided Action Selection \& Reward Shaping (HuDRL)}
@@ -463,22 +393,13 @@ The \textbf{Heuristic-Guided Reinforcement Learning (HuRL)} algorithm was develo
 \EndIf
 
 \State \textbf{Step 5: Budget Normalization (Softmax-style)}
-\State $Total_{desire} \gets \sum A_{raw}$
-\State $\eta \gets B_{cap} / Total_{desire}$ \Comment{Calculate scaling factor}
-\State $A_{final} \gets A_{raw} \times \eta$
+\State $A_{final} \gets \mathrm{Softmax}(A_{raw}) \times B_{cap}$
 
 \State \textbf{Step 6: Execution}
 \State Apply $A_{final}$ to ABM Environment
-\State Update Households (IEC, Enforcement, Incentives)
 
 \State \textbf{Step 7: Reward Shaping}
-\State $R_{base} \gets \sum \text{Compliance}(\mathcal{B}_{list})$
-\If{$A_{final}[B_{crit}] > 0.40 \times B_{cap}$} \Comment{Check for Saturation Strategy}
-    \State $R_{bonus} \gets +20,000$ \Comment{Jackpot Reward}
-\Else
-    \State $R_{bonus} \gets 0$
-\EndIf
-\State $R_{total} \gets R_{base} + R_{bonus}$
+\State $R_{total} \gets R_{base} + R_{bonus}$ \Comment{Includes Jackpot for Saturation Strategy}
 
 \State \textbf{Step 8: Network Update}
 \State PPO.Update($S_t, A_{final}, R_{total}$)
@@ -494,7 +415,7 @@ Finally, the learning process is reinforced through \textit{Reward Shaping}. To 
 
 \section{Simulation and Analysis Framework}
 
-This section detailed the experimental design for the study, outlining the complete process of operationalizing the coupled ABM-RL model to answer the core research questions. This framework was the "experimental" phase of the research, defining how the simulation was run and how the results were measured. It was divided into four key stages: (1) the protocol for initializing, calibrating, and training the model; (2) the design of the specific policy scenarios to be tested; (3) the performance metrics that were used to evaluate and compare the outcomes of each scenario; and (4) the sensitivity analysis to validate the model's robustness.
+This section details the experimental design for the study, outlining the complete process of operationalizing the coupled ABM-RL model to answer the core research questions. This framework was the "experimental" phase of the research, defining how the simulation was run and how the results were measured. It was divided into four key stages: (1) the protocol for initializing, calibrating, and training the model; (2) the design of the specific policy scenarios to be tested; (3) the performance metrics that were used to evaluate and compare the outcomes of each scenario; and (4) the sensitivity analysis to validate the model's robustness.
 
 \begin{figure}[htbp]
     \centering
@@ -512,7 +433,7 @@ First, the model was initialized using baseline data gathered from key-informant
 
 Second, the model underwent a rigorous calibration phase where the synthesized behavioral parameters—such as household sensitivity to fines and the strength of social norms—were systematically adjusted \citep{Taraghi2025, Ceschi2021}. The objective was to tune these unobservable parameters until the model's baseline behavior (when run without any new policy interventions) accurately reproduced the current-day, real-world compliance estimates provided by the LGU (e.g., the sim 10\% municipal rate) \citep{Jimenez2025}. This process of matching model outputs to observed real-world outcomes was essential for validating the ABM as a credible representation of the socio-environmental system before proceeding to policy testing \citep{Ma2023}.
 
-Finally, once the ABM was calibrated, the Deep Reinforcement Learning (DRL) agent's training began. This involved running over 12 simulated episodes, or "lifetimes" (e.g., 10,000 simulated 3-year periods), a high volume of interaction necessary to learn an optimal policy \citep{Dey2025}. By serving as the training environment, the ABM allowed the LGU agent to thoroughly explore the vast and complex 21-dimensional policy space through trial and error—a process that would have been impossible or unethical in the real world—to ultimately converge on a stable and optimal budget allocation strategy that maximized long-term compliance under fiscal constraints \citep{TianReview2024}.
+Finally, once the ABM was calibrated, the Heuristic-Guided Deep Reinforcement Learning (HuDRL) agent's training began. This involved running over 12 simulated episodes, or "lifetimes" (e.g., 10,000 simulated 3-year periods), a high volume of interaction necessary to learn an optimal policy \citep{Dey2025}. By serving as the training environment, the ABM allowed the LGU agent to thoroughly explore the vast and complex 21-dimensional policy space through trial and error—a process that would have been impossible or unethical in the real world—to ultimately converge on a stable and optimal budget allocation strategy that maximized long-term compliance under fiscal constraints \citep{TianReview2024}.
 
 \subsection{Policy Scenario Analysis}
 The approach of testing distinct, constrained policy scenarios was a standard and necessary step in Deep Reinforcement Learning (DRL) studies embedded within Agent-Based Models (ABM), as it allowed researchers to isolate the causal impact of different instruments on system outcomes \citep{Jimenez2025, TianReview2024}. To answer the research questions, three core policy scenarios were simulated by manipulating the DRL agent's available action space, using its core levers: Information, Education, and Communication (IEC), Incentives, and Enforcement (penalties).
@@ -547,11 +468,8 @@ To evaluate the outcomes of the simulations and compare the success of each poli
     \item \textbf{Optimal Resource Allocation:} Analyzed for the comprehensive Hybrid regime as a key output. This metric detailed the final learned budget split, in both percentage (\%) and peso (\textpeso) terms, across the three policy levers (IEC, Enforcement, Incentives) and all 7 barangays. This provided the essential prescriptive, actionable intelligence, revealing the data-driven policy mix deemed optimal for the LGU's specific context \citep{MuZhang2021, Zhao2022}.
 \end{enumerate}
 
-\subsection{Sensitivity Analysis}
-To validate the robustness of the model, a Global Sensitivity Analysis (GSA) using Sobol indices was conducted. This was particularly critical given that the baseline behavioral parameters (Knowledge, Attitude, Practices) were initialized using proxy data from riverside barangays \citep{Paigalan2025} rather than primary survey data from the coastal study site. To account for potential contextual differences between riverside and coastal communities, the simulation explicitly widened the variance of these specific behavioral parameters by 20\% during the sensitivity testing phase. This stress-testing ensured that the policy recommendations generated by the DRL agent remained valid even if the specific behavioral profile of Bacolod’s population deviated slightly from the synthesized dataset used for initializations \citep{TianReview2024, Taraghi2025}.
-
 \subsection{Global Sensitivity Analysis}
-To validate the structural integrity of the model and ensure its findings were not artifacts of specific initialization values, a Global Sensitivity Analysis (GSA) was conducted using the \textbf{Sobol Method} \cite{Sobol2001}.
+To validate the structural integrity of the model and ensure its findings were not artifacts of specific initialization values, a Global Sensitivity Analysis (GSA) was conducted using the method called \cite{Sobol2001}.
 
 This rigorous validation technique decomposed the variance of the model's output (Global Compliance) into fractions attributable to specific input parameters. The analysis stress-tested the model by varying the five core behavioral parameters ($w_a, w_{sn}, w_{pbc}, c_{effort}, decay$) by $\pm 20\%$.
 
@@ -560,8 +478,6 @@ Two indices were calculated for each parameter:
     \item \textbf{First-Order Index ($S_1$):} Measured the direct contribution of the parameter to the output variance.
     \item \textbf{Total-Order Index ($S_T$):} Measured the contribution including interactions with other parameters.
 \end{itemize}
-
-This procedure confirmed the robustness of the ``Convenience Hypothesis'' (Chapter 4), proving that the model's sensitivity to Cost of Effort ($c_{effort}$) was a structural feature of the system, not a random anomaly.
 
 \section{Ethical Considerations and Limitations}
 This study ensured the confidentiality of all associated entities by strictly adhering to ethical data use standards and the provisions of the Data Privacy Act of 2012 (Republic Act No. 10173). Consistent with the Act’s mandate on the protection of personal information, no private individual or household data was collected or utilized. The model was predicated upon synthesized socio-demographic data derived exclusively from public aggregates, such as official figures from the Philippine Statistics Authority \citep{PSA2024}, and anonymized operational details obtained from LGU and barangay officials. This approach allowed the model to capture the necessary geographic and demographic complexity \citep{Jimenez2025} while fully protecting the privacy of citizens and local officials.
