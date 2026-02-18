@@ -1,0 +1,25 @@
+Designing effective and cost-efficient waste segregation policies requires a computational model grounded in established psychological theory. The Agent-Based Model (ABM) developed for this study extends the standard Theory of Planned Behavior (TPB) by integrating contemporary research on social tipping points and habit formation. This section outlines the psychological foundations of the agent architecture and how these constructs were mathematically operationalized.
+
+\subsection{Modeling Intent through the Theory of Planned Behavior}
+The foundational ``brain'' of each household agent was built upon the Theory of Planned Behavior (TPB), recognized as the dominant psychological framework for explaining pro-environmental behaviors (PEB). Drawing from the study of \citet{Ceschi2021}, this theory posits that an individual's intention to perform a behavior is determined by three core cognitive constructs: \textit{Attitude}, \textit{Subjective Norms}, and \textit{Perceived Behavioral Control (PBC)}.
+
+Recent literature supports the validity of utilizing TPB as the computational core of agent decision-making. A systematic review by \citet{Taraghi2025} found that ABM researchers frequently employ internal and external control variables to operationalize TPB concepts. To mathematically represent this decision-making process, the model employed a linear utility function where the agent's utility to segregate ($U_{\mathrm{segregate}}$) was defined as the sum of these weighted psychological factors:
+
+\begin{equation}
+    U_{\mathrm{segregate}} = (w_A A + w_{SN} SN + w_{PBC} PBC) + \epsilon
+    \label{eq:behavior_equation}
+\end{equation}
+
+In this equation, the coefficients ($w$) represent the relative weight the agent assigns to each psychological factor. Crucially, the $\epsilon$ (epsilon) term accounts for the inherent stochasticity (randomness) present in human decision-making \citep{Chen2023, Zheng2022}. Since individuals do not always act with perfect rationality, $\epsilon$ represents ``noise''---such as haste, forgetfulness, or momentary influences. Embracing this randomness was required to produce valid insights, as real-world Solid Waste Management (SWM) systems are characterized by deep uncertainty \citep{Akbarpour2021, Subedi2025}.
+
+\subsection{Critical Mass and Tipping Points}
+While TPB effectively models the \textit{initiation} of compliance at the individual level, this study also incorporated mechanisms to simulate collective behavioral shifts. Contemporary literature suggests that social change is non-linear; it is driven by ``critical mass'' dynamics rather than gradual linear growth.
+
+Experimental studies by \citet{Centola2018} and \citet{Andre2021} demonstrated that overturning established norms does not require majority consensus. Instead, once a committed minority reaches a ``tipping point''---approximated at \textbf{25\% of the population}---they trigger a rapid cascade of adoption across the remaining majority. \citet{Nyborg2024} describe this as a ``virtuous cycle'' of self-reinforcing behavior.
+
+This concept was critical for the modeling of resource-constrained governance. It implies that policy interventions need not fund 100\% of the population indefinitely. Consequently, the model was designed to test if resources could be concentrated to reach this tipping threshold, transitioning the system from a state of forced compliance to a self-sustaining social norm.
+
+\subsection{Normative Shields and Cultural Inertia}
+The final theoretical component addresses the resistance to behavioral decay. In waste management, behavioral stability is often threatened by the asymmetry of incentives: the ``cost'' (effort to segregate) is constant and immediate, while the ``reward'' (environmental health) is abstract. To address this, the model incorporates the concept of ``Cultural Inertia'' or behavioral lock-in.
+
+\citet{Farrow2020} and \citet{Constantino2022} argue that in the absence of constant financial incentives, social norms function as a substitute ``governance mechanism.'' Once a behavior becomes the descriptive norm (``what we do here''), the social cost of deviating—manifesting as peer pressure or shame—exceeds the physical cost of segregating. Furthermore, \citet{Corcoran2020} identified habit strength as a critical moderator; once the ``cognitive script'' of segregation is formed, individuals continue the behavior automatically, independent of fluctuations in motivation.

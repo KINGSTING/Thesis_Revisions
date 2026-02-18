@@ -1,0 +1,38 @@
+
+Following the calibration of the environment, the study encountered significant computational and behavioral challenges during the initial training phase of the Deep Reinforcement Learning (DRL) agent. These challenges necessitated deviations from the initial proposal, specifically regarding the optimization algorithm and the behavioral stability of household agents. This section details the transition from a standard PPO approach to the Heuristic-Guided (HuDRL) framework and the integration of a "Social Norm Shield" to address unrealistic compliance volatility.
+
+\subsection{Overcoming the Sparse Reward Problem}
+
+A fundamental hypothesis of this study was that a standard Proximal Policy Optimization (PPO) agent could autonomously discover the ``Sequential Saturation'' strategy given sufficient training episodes. However, preliminary training runs revealed a critical \textit{Sparse Reward Problem} inherent to the high-dimensional action space ($d=21$).
+
+In the initial non-heuristic implementation, the agent was required to simultaneously optimize allocations across three distinct policy levers for seven heterogeneous barangays. The probability of the agent randomly initializing a policy that concentrated massive resources on a single barangay (the saturation strategy) was mathematically negligible. Instead, the agent converged to a local optimum characterized by "safety-seeking" behavior—distributing funds equally to minimize the risk of political backlash, resulting in "diluted" interventions that failed to overcome behavioral inertia \citep{ZhengAI2022}. This phenomenon mirrors findings in environmental governance where fragmented resource distribution often leads to policy failure \citep{Villanueva2021}.
+
+\subsection{Comparative Analysis: Heuristic vs. Non-Heuristic Approaches}
+
+To evaluate the efficacy of the proposed optimization strategy, the simulation compared the Heuristic Approach against a baseline Non-Heuristic approach over a period of 12 Quarters. Figure \ref{fig:heuristic_vs_non_heuristic} illustrates the Global Compliance Rate trajectories for both methods relative to the defined Stability Threshold ($70\%$) and Collapse Zone ($40\%$).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/non-heuristic_vs_heuristic.png}
+    \caption{Comparison of Global Compliance Rates between Non-Heuristic and Heuristic Approaches.}
+    \label{fig:heuristic_vs_non_heuristic}
+\end{figure}
+
+The \textbf{Non-Heuristic Approach} (represented by the dashed grey line) exhibited significant stagnation. Throughout the entire simulation timeline, the compliance rate remained nearly constant at approximately $20\%$. This performance consistently fell within the ``Collapse Zone'' ($<40\%$), indicating that without guided decision-making or adaptive policy adjustments, the system failed to overcome initial resistance or incentivize behavioral change among household agents.
+
+In stark contrast, the \textbf{Heuristic Approach} (represented by the solid blue line) demonstrated rapid convergence toward optimal compliance. Starting at an initial compliance rate of $51.8\%$ in Quarter 1, the heuristic agent successfully navigated the policy space, breaching the $70\%$ Stability Threshold by Quarter 2. The system achieved a near-saturation point by Quarter 6, reaching approximately $98\%$ compliance, and maintained this asymptotic stability through Quarter 12.
+
+The disparity between the two trajectories underscores the necessity of the heuristic mechanism. While the non-heuristic agent failed to escape the local optima of low compliance, the heuristic approach effectively leveraged state feedback to reinforce high-reward behaviors, ensuring long-term policy sustainability.
+
+\subsection{Addressing Behavioral Volatility}
+
+The second major deviation from the initial proposal involved the behavioral stability of the Household Agents. Early simulation runs exhibited a phenomenon of ``Instantaneous Collapse,'' where compliance rates in a barangay would plummet from 90\% to 0\% within a single quarter immediately after the LGU withdrew financial support.
+
+This behavior, while mathematically consistent with the raw Theory of Planned Behavior (TPB) equation, was sociologically unrealistic. Real-world communities exhibit Cultural Inertia, where established habits persist even after the removal of external stimuli \citep{Nishimura2022}. To correct this artifact and align the model with empirical observations of Philippine community behavior \citep{Yazawa2025}, the study introduced a Social Norm Shield mechanism, governed by two empirically tuned thresholds:
+
+\begin{itemize}
+    \item \textbf{The Tipping Point (70\%):} It was observed that once a barangay achieved a compliance rate of 70\%, the behavior transitioned from ``incentive-driven'' to ``norm-driven.'' This aligns with the \textit{Threshold Hypothesis}, which suggests that once a critical mass of the population adopts a behavior, the subjective norm becomes the primary driver of compliance \citep{Nishimura2022}. Consequently, the model locks the Subjective Norm ($w_{sn}$) weight at a higher value once this threshold is crossed, simulating the internalization of the practice within the community.
+    \item \textbf{The Social Norm Floor (40\%):} To prevent total behavioral collapse during the DRL agent's exploration phase, a ``floor'' was implemented. Even if enforcement ceased, the strong social pressure from neighbors prevented compliance from dropping below 40\%, representing the residual collective memory and the internalized ``moral obligation'' identified in recent waste management studies \citep{Zheng2022}. This mechanism ensures that the model accounts for cultural inertia, preventing sociologically unrealistic swings in household behavior.
+\end{itemize}
+
+This refinement was crucial for the success of the Comparative Analysis, as it allowed the HuDRL agent to execute the "Sequential Saturation" strategy—leaving one barangay to tend to another—without the first barangay collapsing behind it, thereby reflecting a more sustainable governance model \citep{Abdallah2021}.

@@ -1,0 +1,60 @@
+A comprehensive review of the literature indicated a critical implementation deficit in the Philippine Solid Waste Management (SWM) system. This paralysis, centered on Republic Act 9003, was consistently attributed to weak, inconsistent enforcement and chronic budgetary constraints within Local Government Units (LGUs) \citep{Santos2025, Sagodaquil2023}. Furthermore, studies highlighted a significant gap between high public awareness of SWM and low actual compliance. This suggested that effective policy had to move beyond simple enforcement, requiring a strategic blend of hybrid reward-penalty schemes and investments in non-monetary levers, such as education, to address core behavioral flaws \citep{Catiil2025, Chen2023}.
+
+Addressing this behavioral component was complicated by the highly heterogeneous and non-linear nature of household decision-making. \citet{Olawade2024} identified this integration of Artificial Intelligence into waste management as a necessary ``paradigm shift,'' moving from reactive systems to smart, predictive management. The sheer complexity of these interacting variables strongly indicated that an agent-based approach was necessary to capture this dynamic behavior accurately.
+
+\begin{longtable}{L{3.5cm} c c c L{5cm}}
+    \caption{Thematic Comparison of Related Literature} \label{tab:lit_gap_analysis} \\
+    \toprule
+    \textbf{Category} & \textbf{ABM} & \textbf{DRL} & \textbf{Policy} & \textbf{Gap / Limitation} \\
+    \midrule
+    \endfirsthead
+    \multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+    \toprule
+    \textbf{Category} & \textbf{ABM} & \textbf{DRL} & \textbf{Policy} & \textbf{Gap / Limitation} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \multicolumn{5}{r}{{Continued on next page}} \\ 
+    \endfoot
+    \bottomrule
+    \endlastfoot
+
+    % ROW 1
+    Descriptive Studies \par (Abordo et al., 2025) & \xmark & \xmark & \xmark & Audited past compliance but could not predict future policy outcomes. \\ 
+    \midrule
+
+    % ROW 2
+    Traditional ABM \par (Bire et al., 2025) & \cmark & \xmark & \cmark & Relied on manual scenario testing; lacked autonomous AI optimization. \\ 
+    \midrule
+
+    % ROW 3
+    Logistics Optimization \par (Akbarpour et al., 2021) & \xmark & \xmark & \xmark & Optimized fleet routes, ignoring complex household behavior. \\ 
+    \midrule
+
+    % ROW 4
+    AI \& RL (Hardware) \par (\citet{Dey2025}) & \xmark & \cmark & \xmark & Focused on smart bins and robotics rather than governance policy. \\ 
+    \midrule
+
+    % ROW 5
+    Qualitative Reviews \par (Santos et al., 2025) & \xmark & \xmark & \xmark & Offered no quantitative mechanism to optimize specific policy parameters. \\ 
+    \midrule
+
+    % ROW 6
+    Proposed Study \par (Bansao \& Lumingkit) & \cmark & \cmark & \cmark & First study to use ABM-DRL to optimize Philippine LGU ordinance parameters. \\ 
+
+\end{longtable}
+
+\noindent{\textbf{The Critical Research Gap}}
+
+While the academic literature validated the individual utility of Agent-Based Modeling (ABM) for simulating social systems and Deep Reinforcement Learning (DRL) for optimization, a critical research gap persisted at their intersection, specifically within the domain of adaptive public policy. To date, no existing study had developed an integrated framework where a governing agent, such as a Local Government Unit (LGU), operated under a strict municipal budget to autonomously learn the optimal dynamic allocation of funds. This gap was particularly evident in the context of Philippine solid waste management, where the allocation of resources across three distinct strategic instruments---punitive enforcement, monetary incentives, and behavioral education---had not been mathematically optimized to maximize long-term household segregation compliance in a resource-constrained environment.
+
+Current research in this domain remained bifurcated. On one hand, existing ABM studies in waste management primarily engaged in static scenario testing. This approach typically involved comparing the outcomes of a few pre-defined policy mixes, rather than allowing the governing agent to autonomously discover the optimal, and potentially evolving, combination of interventions. On the other hand, optimization studies using DRL tended to focus exclusively on technical or logistical networks. These technical models generally failed to incorporate the dynamic social feedback loops necessary for understanding behavioral compliance and often neglected the LGU's strategic choice to allocate finite resources toward non-financial levers, such as educational campaigns.
+
+\begin{equation}
+    U_{\mathrm{segregate}} = (w_A(t) A) + (w_{SN}(t) SN_{\mathrm{local}}) + (w_{PBC}(t) PBC_{\mathrm{infra}}) - C_{\mathrm{Net}} + \epsilon
+    \label{eq:proposed_utility_function}
+\end{equation}
+
+This study proposed a structural modification to the conventional Theory of Planned Behavior (TPB) framework, advancing beyond the static behavioral models typified by \citet{Ceschi2021} by introducing a dynamic, time-variant architecture. Central to this design was the integration of an explicit external policy term, $C_{\mathrm{Net}}$, alongside the standard internal psychological constructs. Unlike state-of-the-art models that treated government interventions as fixed background variables, this framework rendered the utility function dynamic through time-variant weights ($w(t)$). Specifically, the model simulated non-linear behavioral evolution: the weight of Attitude ($w_A(t)$) followed a decay model to simulate ``public forgetting'' in the absence of reinforcement, requiring continuous IEC investment to maintain. Furthermore, the model incorporated ``psychological reactance,'' where excessive enforcement pressure inversely affected the agent's attitude, acknowledging the resistance to coercion often overlooked in standard simulations.
+
+The novelty of this approach lay in the strategic decoupling of the agent's internal psychological state from external policy levers. By isolating the policy term within the utility equation, this research transformed the TPB from a purely descriptive tool into a computational interface for a Deep Reinforcement Learning (DRL) agent. This modification addressed a critical gap in current literature by modeling the LGU not merely as a static administrator, but as a ``strategic learner.'' Consequently, the RL agent could mathematically manipulate the external utility derived from compliance---balancing incentives, enforcement, and information \& educational campaigns ($IEC$) against budget constraints---without invalidating the agent's internal psychological nature. This coupled ABM-DRL framework moved beyond describing why agents segregated to dynamically optimizing how an LGU could induce segregation, offering a cost-effective decision-support tool for implementing R.A. 9003.

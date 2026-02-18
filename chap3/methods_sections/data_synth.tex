@@ -1,0 +1,106 @@
+This study did not collect new, large-scale primary survey data (such as a household-level census). Instead, it constructed a high-fidelity model by synthesizing data from three key secondary and existing sources: (1) academic literature, (2) public government statistics, (3) operational and qualitative data already gathered from LGU records and the key-informant interviews presented in Appendix \ref{appendix:menro_interview}, and (4) cost parameter estimation.
+
+\subsection{Behavioral Parameters from Literature}
+
+The foundational psychological parameters for the household agents' Theory of Planned Behavior (TPB) utility function—specifically the behavioral weights for Attitude ($w_A$), Subjective Norms ($w_{SN}$), and Perceived Behavioral Control ($w_{PBC}$)—were derived through a systematic review and meta-synthesis of existing academic studies on Solid Waste Management (SWM) and pro-environmental behavior \citep{Taraghi2025, Moeini2023}. This approach ensured the model's behavioral core was grounded in empirical evidence.
+
+To ensure the simulation possessed high ecological validity, the initialization of Household Agent behavioral parameters was grounded in empirical Knowledge, Attitude, and Practices (KAP) data derived from the recent study by \citet{Paigalan2025}. Although the source study characterized the KAP profile of riverside barangays in Northern Mindanao, this dataset served as a robust and high-fidelity proxy for the coastal Municipality of Bacolod due to the shared socio-economic and cultural context of the region.
+
+Crucially, the agents were not instantiated as \textit{tabula rasa} entities; rather, the initialization logic was rigorously designed to replicate the ``Intention-Action Gap'' frequently observed in developing economies \citep{Yazawa2025, Catiil2025}. As detailed in Table \ref{tab:initialization_parameters}, agents were initialized with a relatively high Attitude ($A_0 \approx 0.66$) contrasted with a significantly lower Baseline Compliance ($B_0 \approx 0.58$). This specific parameterization compelled the Deep Reinforcement Learning (DRL) agent to discover policy interventions capable of bridging this behavioral dissonance, rather than merely addressing a theoretical lack of awareness \citep{Paigalan2025}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Initialization Parameters for Household Agents derived from Paigalan et al. (2025)}
+    \label{tab:initialization_parameters}
+    \vspace{0.2cm}
+    \small
+    \renewcommand{\arraystretch}{1.4} 
+    \begin{tabularx}{\textwidth}{ 
+        >{\raggedright\arraybackslash}p{2.8cm} 
+        >{\raggedright\arraybackslash}p{3.2cm} 
+        c 
+        c 
+        >{\raggedright\arraybackslash}X 
+    }
+        \toprule
+        \textbf{ABM Parameter} & 
+        \textbf{Source Variable} & 
+        \makecell{\textbf{Mean} \\ (1-5)} & 
+        \makecell{\textbf{Norm.} \\ (0-1)} & 
+        \textbf{Contextual Justification} \\
+        \midrule
+        Agent Knowledge ($K_0$) & 
+        Awareness of Programs & 
+        3.27 & 
+        0.65 & 
+        Residents possess moderate awareness of SWM programs but lack technical depth. \\
+        \midrule
+        Agent Attitude ($A_0$) & 
+        Attitude on Labeling & 
+        3.32 & 
+        0.66 & 
+        Agents begin with a generally positive disposition toward segregation rules. \\
+        \midrule
+        Base Compliance ($B_0$) & 
+        Practice (Open Burning) & 
+        2.90 & 
+        0.58 & 
+        The prevalence of open burning serves as a proxy for the existing low compliance rate. \\
+        \midrule
+        Training Sensitivity ($S_t$) & 
+        Need for Training & 
+        3.41 & 
+        0.68 & 
+        Agents are highly responsive to IEC interventions, as residents explicitly agreed on the need for more training. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Socio-demographic and Operational Parameters}
+
+The Agent-Based Model (ABM) was explicitly contextualized to the seven barangays from which the Local Government Unit (LGU) collected waste: Liangan East, Esperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya. A crucial methodological step involved rigorously parameterizing each of these seven local communities as a unique, high-fidelity environment within the model \citep{Jimenez2025, Brugiere2022}. Data collection for this parameterization was conducted through key-informant interviews with officials from all seven target barangays, gathering essential operational data that included local population and household counts, the existing local Solid Waste Management (SWM) budget and resource allocation, local staff levels (such as Barangay Officials and BPATs/Tanods) available for implementation, current compliance estimates, and specific local SWM challenges \citep{Villanueva2021, Florida2023}.
+
+The data already secured from Barangay Liangan East (refer to Appendix \ref{appendix:liangan_interview}), detailing its 608 households, 32 staff, and \textpeso 30,000 local SWM budget, served as the initial prototype for building and calibrating the generic \texttt{BarangayAgent} class. Following this prototype development, the model was expanded as data from the other six planned interviews was collected, with six additional, unique \texttt{BarangayAgent} environments instantiated, each loaded with its own precise operational parameters. Furthermore, a socio-demographic baseline, specifically household income profiles and population densities for all seven barangays, was established using publicly available Philippine Statistics Authority (PSA) data \citep{Abordo2025}, which was then validated and refined by the qualitative insights and local context gathered from the interview process.
+
+\subsection{Policy and Operational Parameters}
+
+The strategic decision-making process of the LGU-DRL agent is fundamentally governed by the fiscal constraints identified during the institutional audit. Specifically, the agent operates within a fixed annual Solid Waste Management (SWM) budget of \textpeso 1,500,000 (refer to Appendix \ref{appendix:menro_interview}). To simulate realistic administrative cycles and allow for behavioral adaptation among household agents, the simulation employs a quarterly decision-making frequency. Consequently, the annual appropriation is discretized into a quarterly operating budget ($B_q$) of \textpeso 375,000. This temporal structuring allows the Deep Reinforcement Learning (DRL) agent to observe the immediate socio-behavioral shifts resulting from a specific policy mix and adjust the subsequent allocation to maximize long-term compliance rewards.
+
+The LGU agent’s action space is defined by a continuous allocation vector across three primary policy levers, each targeting a different construct of the household utility function. First, Monetary Incentives are modeled as direct subsidies (e.g., material-recovery exchange programs) designed to enhance the economic utility of compliance. Second, Enforcement expenditures facilitate the deployment of "Eco-warriors" and inspectors; this lever functions by increasing the probability of detection and the perceived severity of non-compliance, thereby influencing the agent's normative and calculative behavior. Finally, Information, Education, and Communication (IEC) Campaigns utilize funds for media dissemination and community workshops to improve the household agents' Knowledge, Attitude, and Practice (KAP) scores. By formalizing these levers as competing financial priorities, the model allows the DRL agent to discover the optimal "Policy Mix"—the specific ratio of incentives, penalties, and education—that yields the highest compliance rate while strictly adhering to the municipal budget.
+
+\subsection{Cost Parameter Estimation}
+
+To operationalize the continuous resource allocation model, the study defined specific cost functions to quantify the depletion of the \textpeso 1,500,000 annual municipal fund. These functions transformed abstract policy decisions into concrete financial constraints, addressing the chronic lack of funding often cited as a cause of institutional failure \citep{Ibanez2022, Santos2025}.
+
+\subsubsection{Cost of Enforcement ($C_{\mathrm{Enf}}$)}
+
+Enforcement expenditure was calculated as a function of the Coverage Ratio. Based on the logistical constraints of the Municipality of Bacolod, which included dispersed coastal and inland barangays, the model assumed a single enforcement officer could effectively monitor a maximum of 30 households per day. This conservative estimate accounted for travel time between households and the administrative burden of issuing citations \citep{Nishimura2022}.
+
+\begin{equation}
+    C_{\mathrm{Enf}} = (N_{\mathrm{Enforcers}} \times W_{\mathrm{Daily}} \times 66)
+    \label{eq:cost_enforcement}
+\end{equation}
+
+\noindent Where $N_{\mathrm{Enforcers}}$ was the number of personnel required, $W_{\mathrm{Daily}}$ was the regional minimum daily wage for Region X, and 66 represented the working days in a quarter. The Deep Reinforcement Learning (DRL) agent’s budgetary allocation determined $N_{\mathrm{Enforcers}}$, which subsequently defined the Probability of Detection ($P_{\mathrm{Detect}}$) variable in the household utility function \citep{MuZhang2021}.
+
+\subsubsection{Cost of Incentives ($C_{\mathrm{Inc}}$)}
+
+Incentive costs were modeled as a Variable Success Function, creating a dynamic positive feedback loop where successful behavioral change increased financial liability.
+
+\begin{equation}
+    C_{\mathrm{Inc}} = (V_{\mathrm{Reward}} \times N_{\mathrm{Compliant}})
+    \label{eq:cost_incentives}
+\end{equation}
+
+\noindent Where $V_{\mathrm{Reward}}$ was the monetary value of the incentive and $N_{\mathrm{Compliant}}$ was the count of compliant households. This structure introduced a critical "Victim of Success" risk; the DRL agent had to learn to optimize for a compliance equilibrium that was fiscally sustainable, avoiding scenarios where high compliance rapidly depleted the municipal treasury \citep{WorldBank2022}.
+
+\subsubsection{Cost of Information \& Educational Campaign ($C_{\mathrm{IEC}}$)}
+
+Information, Education, and Communication (IEC) costs were modeled as Tiered Fixed Costs, reflecting the discrete nature of media procurement.
+
+\begin{equation}
+    C_{\mathrm{IEC}} = (N_{\mathrm{Spots}} \times R_{\mathrm{Radio}}) + (N_{\mathrm{Events}} \times C_{\mathrm{Mobilization}})
+    \label{eq:cost_iec}
+\end{equation}
+
+\noindent This formulation aligned with the LGU’s operational reliance on local radio broadcasting (e.g., 101.3 Grace Covenant FM) as the primary dissemination channel for environmental policy \citep{Collado2024}.
