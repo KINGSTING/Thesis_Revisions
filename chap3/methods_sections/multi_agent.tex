@@ -130,8 +130,34 @@ The damping factor is governed by the strength of local social norms ($SN$), rep
 
 Furthermore, to prevent the total erosion of community standards during periods of fiscal austerity or low LGU intervention, the model introduces a \textit{Social Norm Floor set at 40\%}. This floor ensures that once a barangay has achieved a baseline level of awareness, the perceived social pressure does not drop to zero, representing the residual collective memory and existing communal infrastructure of the municipality \citep{Nishimura2022}. This refinement is critical for addressing the sustainability objectives of this research, as it allows the Deep Reinforcement Learning agent to discover strategies that foster self-sustaining compliance rather than perpetual reliance on high-cost monetary incentives .
 
-\subsection{Barangay Agent Design}
+\subsection{Barangay and Enforcement Agent Design}
 
-The \textit{BarangayAgent} serves as the critical intermediate implementation layer, bridging the gap between municipal-level resource allocation and household-level behavioral shifts. The model initializes seven unique instances of this agent class—representing the geographically and socioeconomically distinct units of Liangan East, Ezperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya—calibrated with parameters derived from municipal institutional audits. The utilization of Agent-Based Modeling to simulate the dynamics between governance units and neighborhood interactions is a robust approach for evaluating public policy efficacy in complex social systems. Within this framework, the \textit{BarangayAgent} functions as an executive entity that manages the "stacking effect" of fiscal resources, combining the quarterly augmentation funds provided by the LGU-DRL agent with its own localized, baseline operating budget, such as the \textpeso 30,000 appropriation for Barangay Liangan East.
+The \texttt{BarangayAgent} serves as the critical intermediate implementation layer, bridging the gap between municipal-level resource allocation and household-level behavioral shifts. The model initializes seven unique instances of this agent class—representing the geographically and socioeconomically distinct units of Liangan East, Esperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya—calibrated with parameters derived from municipal institutional audits. Within this framework, the \texttt{BarangayAgent} functions as an executive entity that manages the ``stacking effect'' of fiscal resources, combining LGU-DRL quarterly augmentation funds with its own localized operating budget. 
 
-Beyond fiscal management, the agent serves as the primary mediator of environmental policy by operationalizing the "No Segregation, No Collection" mandate through the deployment of local enforcement staff and "Eco-warriors". This operational capacity is formally linked to the individual household's perceived probability of detection ($P_{\mathrm{Detection}}$), as the intensity of local enforcement is directly proportional to the agent's allocated enforcement fund. At the conclusion of each simulated quarter, the \textit{BarangayAgent} tracks and reports its aggregate \textit{BarangayComplianceRate} to the LGU agent. This creates a high-fidelity feedback loop where local citizen behavior informs subsequent municipal-level policy adjustments, supporting an adaptive policy analysis framework that accounts for the heterogeneity of the municipality’s constituent barangays.
+Operating under the directive of the \texttt{BarangayAgent} is the \texttt{EnforcementAgent}, which serves as the operational extension of the municipal government tasked with physically monitoring household compliance and executing punitive measures.  Together, these agents mediate environmental policy by operationalizing the three core municipal levers: Information, Education, and Communication (IEC), Incentives, and Enforcement.
+
+\subsubsection{IEC Campaign Broadcasting and Incentive Distribution}
+When the LGU-DRL agent allocates IEC funds ($A_{\mathrm{IEC}, B_i}$) to a specific barangay, the \texttt{BarangayAgent} translates this continuous financial variable into a localized \textit{Information Dissemination Signal}. IEC campaigns are broadcast globally to all constituent \texttt{HouseholdAgent} objects within that barangay, proportionally shifting the internal Attitude weight ($w_A(t)$) positively to counteract the natural stochastic decay of pro-environmental habits.
+
+For the Incentive budget ($A_{\mathrm{Inc}, B_i}$), the \texttt{BarangayAgent} functions as a direct financial distributor. During the quarterly evaluation phase, the agent identifies the subset of households actively practicing segregation (\texttt{is\_segregating == True}) and distributes the allocated reward pool among them, which directly modifies the perceived monetary benefit ($I$) in the household's net disutility calculation. Crucially, the \texttt{BarangayAgent} manages the per-capita dilution of these funds. If the local compliance rate surges, the fixed quarterly allocation is divided among a larger pool of households, reducing individual reward magnitude. This mechanism accurately simulates the ``victim of success'' dynamic, forcing the DRL agent to continuously adjust funding to maintain motivation.
+
+\subsubsection{Enforcement Deployment, Capacity, and System Feedback}
+To operationalize the ``No Segregation, No Collection'' mandate, the \texttt{BarangayAgent} deploys local \texttt{EnforcementAgent} staff. To ensure ecological validity, each enforcement agent is initialized with a \texttt{base\_daily\_capacity} of 30 households. This cap reflects the geographical realities and administrative friction of monitoring the municipality. Operating on a quarterly time step of 66 standard working days, the maximum theoretical inspection capacity ($C_{\mathrm{Quarterly}}$) of an active enforcer is defined as:
+
+\begin{equation}
+    C_{\mathrm{Quarterly}} = (C_{\mathrm{BaseDaily}} \times \mu_{\mathrm{eff}}) \times 66
+    \label{eq:enforcement_capacity}
+\end{equation}
+
+\noindent where $\mu_{\mathrm{eff}}$ represents an efficiency multiplier (defaulted to 1.0) that can be adjusted to simulate varying levels of institutional competence.
+
+During each simulation step, the deployed \texttt{EnforcementAgent} employs a randomized monitoring strategy, selecting a discrete sample of households up to its capacity limit. If a household is non-compliant, the agent flags it and increments its internal \texttt{citations\_issued} tracker, directly triggering the financial penalty ($F$) within the household's utility function. 
+
+Crucially, the presence of these agents generates a systemic feedback loop. Following inspections, the enforcement agent updates the barangay's macro-level Perceived Probability of Detection ($P_{\mathrm{Detection}}$) using the ratio of total inspection capacity to the total household population:
+
+\begin{equation}
+    P_{\mathrm{Detection}} = \min\left(1.0, \frac{\sum C_{\mathrm{Quarterly}}}{N_{\mathrm{Households}}}\right)
+    \label{eq:prob_detection}
+\end{equation}
+
+This updated probability is broadcasted back to the \texttt{HouseholdAgent} objects, dynamically increasing their anticipated risk. At the conclusion of each quarter, the \texttt{BarangayAgent} aggregates this data and reports the \textit{BarangayComplianceRate} to the LGU agent, completing a high-fidelity feedback loop where local citizen behavior informs subsequent municipal-level policy adjustments.

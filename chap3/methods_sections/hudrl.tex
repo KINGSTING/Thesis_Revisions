@@ -104,6 +104,34 @@ The components of the reward function are defined as follows:
 
 The weighting coefficients ($w_1, w_2, w_3$) are calibrated to reflect the operational reality of a 4th Class Municipality, where fiscal survival and the prevention of social backlash are as critical as environmental performance.
 
+\subsubsection{Multi-Objective Heuristic Reward Function}
+
+The Local Government Unit (LGU) agent's learning behavior is guided by a Composite Reward Function designed to optimize environmental policy while strictly managing fiscal limitations and social acceptability. To accelerate the agent's training, the model employs Reward Shaping to provide immediate, dense feedback.
+
+The total reward at each time step ($t$) is calculated as:
+\begin{equation}
+    R_{\mathrm{total}} = w_1 R_{\mathrm{Comp}} + w_2 R_{\mathrm{Sustain}} - w_3 P_{\mathrm{Backlash}} + R_{\mathrm{Shaping}}
+    \label{eq:total_reward_summary}
+\end{equation}
+
+This function balances four distinct operational components:
+
+\begin{itemize}
+    \item \textbf{Environmental Compliance ($R_{\mathrm{Comp}}$):} The primary objective, measured by the population-weighted waste segregation rate across all barangays.
+    
+    \item \textbf{Fiscal Sustainability ($R_{\mathrm{Sustain}}$):} A regularization term that prevents premature budget exhaustion by penalizing deviations from a steady, ideal spending rate:
+    \begin{equation}
+        R_{\mathrm{Sustain}} = - \left| \frac{S_{\mathrm{Actual}}}{B_{\mathrm{Total}}} - \frac{1}{12} \right|
+        \label{eq:fiscal_sustainability}
+    \end{equation}
+    
+    \item \textbf{Political Backlash Penalty ($P_{\mathrm{Backlash}}$):} A penalty applied when strict enforcement is paired with low public compliance, discouraging draconian policies that could trigger social resistance.
+    
+    \item \textbf{Heuristic Shaping Rewards ($R_{\mathrm{Shaping}}$):} Targeted training bonuses designed to guide the agent out of sub-optimal strategies and toward a ``Sequential Saturation'' approach. This includes an Allocation Focus Bonus for directing $>40\%$ of the budget to a critical, underperforming barangay, and an Intensity Threshold Jackpot ($+20,000$) for pushing local enforcement intensity beyond a critical $0.80$ threshold.
+\end{itemize}
+
+Finally, the function's weights ($w_1, w_2, w_3$) calibrate these competing objectives to accurately mirror the real-world constraints of a 4th Class Municipality, ensuring the AI's solutions are practically viable.
+
 \subsection{The HuDRL Algorithm}
 
 The implementation logic is formalized in the \textbf{Heuristic-Guided Action Selection \& Reward Shaping (HuDRL)} algorithm. It utilizes \textbf{Targeted Amplification} as a saliency filter: if the agent expresses an "intent" to fund a critical barangay, the environment multiplies that signal by a factor of $\alpha=100$.
