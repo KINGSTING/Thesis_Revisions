@@ -1,10 +1,16 @@
 \includepdf[
     pages=1, 
-    scale=0.80, 
-    offset=0 -5.5cm, 
+    width=\textwidth,     % <--- Changed to 100% of the text width for maximum size
+    offset=0 -5cm,      % <--- Slightly adjusted so it fits nicely under the chapter title
     pagecommand={
-        \chapter{Policy Recommendation} % Changed from \section to \chapter
+        \chapter{Policy Recommendation}
         \label{appendix:policy_recommendation}
+        \thispagestyle{empty} 
     }
 ]{appD/Policy_Recommendation.pdf}
-\includepdf[pages=2-, scale=0.9, pagecommand={}]{appD/Policy_Recommendation.pdf}
+
+\includepdf[
+    pages=2-, 
+    width=\textwidth,     % <--- Enlarged the remaining pages as well
+    pagecommand={\thispagestyle{empty}} 
+]{appD/Policy_Recommendation.pdf}

@@ -2,7 +2,7 @@ The results from these simulations unequivocally demonstrated that without the `
 
 \subsection{Baseline: The Status Quo}
 
-The baseline scenario replicated the current administrative strategy employed by the Local Government Unit (LGU), wherein the limited municipal budget was distributed equally among all seven barangays, resulting in an allocation of approximately \textpeso 53,571 per quarter for each unit. This strategy heavily prioritized IEC materials under the assumption that increasing awareness would drive behavioral change \citep{Paigalan2025}. 
+The baseline scenario replicated the current administrative strategy employed by the Local Government Unit (LGU), wherein the limited municipal budget was distributed equally among all seven barangays, resulting in an allocation of approximately \textpeso 53,571 per quarter for each unit. This strategy heavily prioritized IEC materials under the assumption that increasing awareness would drive behavioral change \citep{Paigalan2025}. The detailed financial and compliance data tracking this scenario over the 3-year term for each barangay can be found in Appendix \ref{sec:baseline_results}.
 
 The simulation results by Quarter 12 revealed a highly stratified outcome strictly determined by the initial demographic profile. Small, socially cohesive areas such as Barangay Mati and Barangay Babalaya achieved 100\% compliance, driven not by the LGU's funding but by the inherent social momentum within their tight-knit populations \citep{Yazawa2025}.
 
@@ -18,7 +18,7 @@ However, this apparent success in smaller communities masked a catastrophic fail
 
 \subsection{Pure Enforcement Strategy}
 
-In the second scenario, the entire LGU allocation was shifted toward hiring Enforcement Agents (Tanods) while maintaining the principle of equal distribution. This strategy tested the \textit{Deterrence Hypothesis}, which posited that increasing the probability of detection through stricter policing was the most effective driver of compliance \citep{Chen2023}.
+In the second scenario, the entire LGU allocation was shifted toward hiring Enforcement Agents (Tanods) while maintaining the principle of equal distribution. This strategy tested the \textit{Deterrence Hypothesis}, which posited that increasing the probability of detection through stricter policing was the most effective driver of compliance \citep{Chen2023}. The comprehensive quarterly results for this pure enforcement strategy across all seven barangays are tabulated in Appendix \ref{sec:pure_enforcement}.
 
 \begin{figure}[htbp]
     \centering
@@ -34,7 +34,7 @@ Furthermore, the total absence of IEC and incentives eliminated any mechanism to
 
 \subsection{Pure Incentives Strategy}
 
-The third scenario allocated all municipal funds to providing monetary rewards, testing the efficacy of a purely positive reinforcement model. The results demonstrated moderate success in smaller demographics (e.g., Barangay Babalaya reached 88.89\%) but ultimately failed in larger populations due to the mechanics of ``budget dilution.''
+The third scenario allocated all municipal funds to providing monetary rewards, testing the efficacy of a purely positive reinforcement model. Detailed quarterly financial and compliance data for the Pure Incentives strategy are provided in Appendix \ref{sec:pure_incentives}. The results demonstrated moderate success in smaller demographics (e.g., Barangay Babalaya reached 88.89\%) but ultimately failed in larger populations due to the mechanics of ``budget dilution.''
 
 \begin{figure}[htbp]
     \centering
@@ -48,7 +48,7 @@ Barangay Poblacion stagnated at 0.00\% compliance. Mathematically, incentives fu
 
 \subsection{Heuristic-Guided Deep Reinforcement Learning Approach}
 
-The Deep Reinforcement Learning (PPO) agent, operating under the ``Heuristic-Guided'' framework, completely outperformed all manual strategies by discovering a non-linear resource allocation logic termed \textbf{Sequential Saturation}. Unlike the manual strategies that plateaued or failed in high-density areas, the AI-driven strategy achieved near-universal compliance by Quarter 12, with even the difficult Barangay Poblacion reaching \textbf{98.76\%} compliance, while global averages exceeded 90\%.
+The Deep Reinforcement Learning (PPO) agent, operating under the ``Heuristic-Guided'' framework, completely outperformed all manual strategies by discovering a non-linear resource allocation logic termed \textit{Sequential Saturation}. The complete quarterly financial and compliance data demonstrating the success of the HuDRL approach for each barangay are tabulated in Appendix \ref{sec:hudrl_results}. Unlike the manual strategies that plateaued or failed in high-density areas, the AI-driven strategy achieved near-universal compliance by Quarter 12, with even the difficult Barangay Poblacion reaching \textit{98.76\%} compliance, while global averages exceeded 90\%.
 
 \begin{figure}[htbp]
     \centering
@@ -57,17 +57,17 @@ The Deep Reinforcement Learning (PPO) agent, operating under the ``Heuristic-Gui
     \label{fig:PPO_graph}
 \end{figure}
 
-The superior performance of this algorithm was attributed to its abandonment of the ``Equal Distribution'' heuristic. The simulation logs revealed that the AI did not fight on all fronts simultaneously; instead, it concentrated the majority of the total municipal budget (between \textbf{51\% to 69\%}) onto specific, single barangays for dedicated periods before rotating to the next target.
+The superior performance of this algorithm was attributed to its abandonment of the ``Equal Distribution'' heuristic. The simulation logs revealed that the AI did not fight on all fronts simultaneously; instead, it concentrated the majority of the total municipal budget (between \textit{51\% to 69\%}) onto specific, single barangays for dedicated periods before rotating to the next target.
 
 This ``King of the Hill'' logic is evident in the sequential budget spikes recorded in the financial logs:
 \begin{itemize}
-    \item \textbf{Quarter 2 (The Demologan Siege):} The agent allocated \textbf{68.92\%} of the total LGU budget to Barangay Demologan, raising its compliance to functional stability.
-    \item \textbf{Quarter 3 (The Liangan Pivot):} Once Demologan was secured, the agent shifted \textbf{64.52\%} of funds to Barangay Liangan East.
-    \item \textbf{Quarter 4 (The Mati Surge):} The focus rotated to Barangay Mati, receiving \textbf{60.64\%} of the quarterly allocation.
-    \item \textbf{Quarter 5 (The Ezperanza Shift):} Funds were redirected to Barangay Ezperanza, capturing \textbf{57.20\%} of the budget.
-    \item \textbf{Quarter 6 (The Babalaya Operation):} Barangay Babalaya received \textbf{54.08\%} of the allocation.
-    \item \textbf{Quarter 7 (The Binuni Targeted):} The agent allocated \textbf{51.15\%} to Barangay Binuni.
-    \item \textbf{Quarters 8--12 (The Poblacion Endgame):} Finally, identifying Barangay Poblacion as the most resistant node due to the Urban Resource Trap, the agent committed a sustained \textbf{42.85\%} of the budget for five consecutive quarters to break its inertia.
+    \item \textit{Quarter 2 (The Demologan Siege):} The agent allocated \textit{68.92\%} of the total LGU budget to Barangay Demologan, raising its compliance to functional stability.
+    \item \textit{Quarter 3 (The Liangan Pivot):} Once Demologan was secured, the agent shifted \textit{64.52\%} of funds to Barangay Liangan East.
+    \item \textit{Quarter 4 (The Mati Surge):} The focus rotated to Barangay Mati, receiving \textit{60.64\%} of the quarterly allocation.
+    \item \textit{Quarter 5 (The Ezperanza Shift):} Funds were redirected to Barangay Ezperanza, capturing \textit{57.20\%} of the budget.
+    \item \textit{Quarter 6 (The Babalaya Operation):} Barangay Babalaya received \textit{54.08\%} of the allocation.
+    \item \textit{Quarter 7 (The Binuni Targeted):} The agent allocated \textit{51.15\%} to Barangay Binuni.
+    \item \textit{Quarters 8--12 (The Poblacion Endgame):} Finally, identifying Barangay Poblacion as the most resistant node due to the Urban Resource Trap, the agent committed a sustained \textit{42.85\%} of the budget for five consecutive quarters to break its inertia.
 \end{itemize}
 
 This strategy mirrors the \textit{AI Economist} approach of discovering non-intuitive governance policies that human administrators typically avoid due to perceived unfairness \citep{ZhengAI2022}. The AI learned that by saturating one community until it reached a self-sustaining level of compliance (driven by social norms), it could then safely withdraw funds and move the ``siege'' to the next non-compliant barangay without causing a collapse in previous gains \citep{Constantino2022}. This finding validates the hypothesis of a \textit{Social Tipping Point} \citep{Centola2018, Nyborg2024}, suggesting that effectiveness in resource-constrained environments requires the political will to prioritize sequential efficacy over simultaneous but ineffectual fairness.
@@ -84,12 +84,12 @@ The comparative analysis unequivocally demonstrates the superior efficacy of the
     \renewcommand{\arraystretch}{1.2}
     \begin{tabular}{l c c c c}
         \toprule
-        \textbf{Policy Regime} & \textbf{Q1 (Initial)} & \textbf{Q4 (Year 1)} & \textbf{Q8 (Year 2)} & \textbf{Q12 (Terminal)} \\
+        \textit{Policy Regime} & \textit{Q1 (Initial)} & \textit{Q4 (Year 1)} & \textit{Q8 (Year 2)} & \textit{Q12 (Terminal)} \\
         \midrule
         Status Quo (Baseline) & 10.7\% & 52.4\% & 55.3\% & 57.1\% \\
         Pure Incentives & 10.7\% & 34.6\% & 34.2\% & 34.3\% \\
         Pure Enforcement & 10.7\% & 14.9\% & 14.0\% & 13.9\% \\
-        \textbf{Adaptive (HuDRL)} & \textbf{10.7\%} & \textbf{45.3\%} & \textbf{72.2\%} & \textbf{92.8\%} \\
+        \textit{Adaptive (HuDRL)} & \textit{10.7\%} & \textit{45.3\%} & \textit{72.2\%} & \textit{92.8\%} \\
         \bottomrule
     \end{tabular}
     \vspace{0.2cm}
@@ -99,4 +99,4 @@ The comparative analysis unequivocally demonstrates the superior efficacy of the
     \end{minipage}
 \end{table}
 
-In stark contrast, the HuDRL Agent successfully navigates these trade-offs by dynamically shifting resources, achieving a terminal Global Compliance Rate of \textbf{92.8\%} by Quarter 12. This represents a significant deviation from the linear trajectories of the static models; although the adaptive strategy starts slower due to its exploration phase, it surpasses the Status Quo by Quarter 6 and exhibits an exponential learning curve. This success is attributed to the agent's ability to discover and execute the ``Sequential Saturation'' strategy, which prioritizes the sequential dominance of individual barangays over the ineffective, simultaneous dilution of resources characteristic of the baseline approaches.
+In stark contrast, the HuDRL Agent successfully navigates these trade-offs by dynamically shifting resources, achieving a terminal Global Compliance Rate of \textit{92.8\%} by Quarter 12. This represents a significant deviation from the linear trajectories of the static models; although the adaptive strategy starts slower due to its exploration phase, it surpasses the Status Quo by Quarter 6 and exhibits an exponential learning curve. This success is attributed to the agent's ability to discover and execute the ``Sequential Saturation'' strategy, which prioritizes the sequential dominance of individual barangays over the ineffective, simultaneous dilution of resources characteristic of the baseline approaches.
