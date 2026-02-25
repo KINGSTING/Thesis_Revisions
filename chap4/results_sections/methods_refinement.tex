@@ -24,6 +24,20 @@ In stark contrast, the \textbf{Heuristic Approach} (represented by the solid blu
 
 The disparity between the two trajectories underscores the necessity of the heuristic mechanism. While the non-heuristic agent failed to escape the local optima of low compliance, the heuristic approach effectively leveraged state feedback to reinforce high-reward behaviors, ensuring long-term policy sustainability.
 
+\subsection{Heuristic Reward Design: Overcoming Population Density Bias}
+
+During the development of the Heuristic-Guided Deep Reinforcement Learning (HuDRL) framework, a critical design choice involved defining the optimal heuristic to guide the agent's budget allocation. The study conducted trial tests comparing two distinct reward architectures:
+\begin{enumerate}
+    \item \textbf{Algorithm 1 (Lowest-Compliance First):} The reward function factored the agent based purely on the barangay with the lowest absolute percentage of compliance, regardless of its population size. The heuristic guided the agent to funnel the largest budget allocations to the worst-performing barangay.
+    \item \textbf{Algorithm 2 (Density-Weighted):} The reward function factored in both low compliance and high population density. The theoretical assumption was that targeting dense areas would maximize the raw number of compliant households per budget allocation, thereby optimizing overall efficiency.
+\end{enumerate}
+
+Empirical trial tests revealed a significant flaw in Algorithm 2, rooted in what reinforcement learning literature identifies as "population density bias" \cite{Mehrabi2021}. Because the DRL agent's underlying objective is to maximize cumulative numerical rewards, it developed a propensity to disproportionately funnel budget allocations into highly populated urban centers (e.g., Barangay Poblacion) even if their compliance rates were only moderately low. Shifting a large population by a few percentage points yielded a higher absolute numerical reward than completely fixing a sparsely populated rural barangay. 
+
+Consequently, Algorithm 2 neglected the absolute worst-performing, less-dense barangays. This approach mirrors findings in algorithmic public policy where optimizing purely for aggregate efficiency often reinforces systemic inequities, favoring "majority" or high-density groups while leaving minority outliers in a persistent state of collapse \cite{Alphonso2024}. In the context of the simulation, these neglected rural barangays acted as systemic bottlenecks, continually dragging down the municipality's Global Average Compliance and preventing the system from achieving stabilization.
+
+In contrast, Algorithm 1 proved to be significantly more optimized for the municipal macro-system. By ignoring population density and strictly targeting the lowest percentage compliance, the heuristic forced the agent to perform systematic "bottleneck resolution" \cite{TianReview2024}. This aligns with the \textit{Maximin} equity principle (maximizing the minimum), forcing the DRL agent to raise the "floor" of the entire system. Algorithm 1 executed the Sequential Saturation strategy flawlessly by stabilizing the absolute weakest link in the municipality before moving to the next. This ensured that no single barangay was left behind in the Collapse Zone, ultimately resulting in a much higher, stable, and sociologically equitable Global Compliance Rate compared to the density-weighted approach.
+
 \subsection{Addressing Behavioral Volatility}
 
 The second major deviation from the initial proposal involved the behavioral stability of the Household Agents. Early simulation runs exhibited a phenomenon of ``Instantaneous Collapse,'' where compliance rates in a barangay would plummet from 90\% to 0\% within a single quarter immediately after the LGU withdrew financial support.

@@ -10,11 +10,16 @@ Crucially, the agents were not instantiated as \textit{tabula rasa} entities; ra
 
 \begin{table}[ht]
     \centering
+    % --- Local caption setup for THIS table only ---
+    \captionsetup{font={bf, small}} 
+    % -----------------------------------------------
     \caption{Initialization Parameters for Household Agents derived from Paigalan et al. (2025)}
     \label{tab:initialization_parameters}
-    \vspace{0.2cm}
     \small
-    \renewcommand{\arraystretch}{1.4} 
+    
+    % REDUCED PADDING HERE: Changed from 1.4 to 1.15
+    \renewcommand{\arraystretch}{1.15} 
+    
     \begin{tabularx}{\textwidth}{ 
         >{\raggedright\arraybackslash}p{2.8cm} 
         >{\raggedright\arraybackslash}p{3.2cm} 
