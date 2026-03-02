@@ -83,24 +83,31 @@
 \frontmatter 
     \maketitle
     \input{frontmatter/copyright}          
+    
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \addcontentsline{toc}{chapter}{Dedication}
     \input{frontmatter/dedication}         
+    
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \addcontentsline{toc}{chapter}{Acknowledgements}
     \input{frontmatter/acknowledgements}
-       
-    
+        
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \addcontentsline{toc}{chapter}{Abstract}
     \input{frontmatter/abstract}
-    \if@openright\cleardoublepage\else\clearpage\fi
     
-    \tableofcontents*
     \if@openright\cleardoublepage\else\clearpage\fi
+    \tableofcontents* % Asterisk kept here so ToC doesn't list itself
     
-    \listoffigures*
     \if@openright\cleardoublepage\else\clearpage\fi
+    \listoffigures % Removed asterisk to include LoF in ToC
     
-    \listoftables*
     \if@openright\cleardoublepage\else\clearpage\fi
+    \listoftables % Removed asterisk to include LoT in ToC
     
-    \input{frontmatter/abbreviations}
     \if@openright\cleardoublepage\else\clearpage\fi
+    % Assuming abbreviations is already working for you based on your last message
+    \input{frontmatter/abbreviations} 
 
 \makeatother
 
@@ -109,8 +116,8 @@
     \input{chap1/introduction_main} 
     \input{chap2/rrl_main}
     \input{chap3/methodology_main}
-    \input{chap4/results_and_discussion_main}
-    \input{chap5/evaluation_main}
+    \input{chap4/results_main}
+    \input{chap5/discussion_main}
     \input{chap6/conclusions_main}
     \appendix
         \input{appA/appendix_a_main}     

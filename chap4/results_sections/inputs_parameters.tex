@@ -62,15 +62,15 @@ In stark contrast, Barangay Binuni exhibited a ``Wealthy Anomaly'' profile, comp
         \toprule
         & \multicolumn{4}{c}{{Agent Behavior Parameters}} & & \multicolumn{3}{c}{{Budget Allocation (\%)}} \\
         \cmidrule(lr){2-5} \cmidrule(lr){7-9}
-        {Barangay} & {Attitude ($w_a$)} & {Norms ($w_{sn}$)} & {Effort ($C_e$)} & {Decay ($\gamma$)} & & {Enf} & {Inc} & {IEC} \\
+        {Barangay} & {Attitude ($w_a$)} & {Norms ($w_{sn}$)} & {Perceived Behavior ($PBC$)} & {Decay ($\gamma$)} & & {Enf} & {Inc} & {IEC} \\
         \midrule
-        Binuni       & 0.65 & 0.80 & 0.64 & 0.02 & & 40 & 40 & 20 \\
-        Ezperanza    & 0.40 & 0.70 & 0.55 & 0.03 & & 50 & 30 & 20 \\
-        Babalaya     & 0.60 & 0.90 & 0.62 & 0.05 & & 90 & 5  & 5 \\
-        Liangan East & 0.65 & 0.60 & 0.58 & 0.04 & & 25 & 65 & 10 \\
-        Poblacion    & 0.55 & 0.20 & 0.48 & 0.03 & & 60 & 20 & 20 \\
-        Demologan    & 0.60 & 0.60 & 0.62 & 0.05 & & 85 & 10 & 5 \\
-        Mati         & 0.60 & 0.50 & 0.60 & 0.05 & & 30 & 50 & 20 \\
+        Binuni       & 0.65 & 0.80 & 0.65 & 0.02 & & 40 & 40 & 20 \\
+        Ezperanza    & 0.40 & 0.70 & 0.50 & 0.03 & & 50 & 30 & 20 \\
+        Babalaya     & 0.60 & 0.90 & 0.70 & 0.05 & & 90 & 5  & 5 \\
+        Liangan East & 0.65 & 0.60 & 0.50 & 0.04 & & 25 & 65 & 10 \\
+        Poblacion    & 0.55 & 0.20 & 0.40 & 0.03 & & 60 & 20 & 20 \\
+        Demologan    & 0.60 & 0.60 & 0.50 & 0.05 & & 85 & 10 & 5 \\
+        Mati         & 0.60 & 0.50 & 0.40 & 0.05 & & 30 & 50 & 20 \\
         \bottomrule
     \end{tabular}
     }
@@ -78,7 +78,7 @@ In stark contrast, Barangay Binuni exhibited a ``Wealthy Anomaly'' profile, comp
     
     \raggedright
     \footnotesize
-    \textit{Note: Agent behavior parameters correspond to Theory of Planned Behavior (TPB) weights: $w_a$ (Attitude), $w_{sn}$ (Social Norms), $C_e$ (Perceived Cost of Effort), and $\gamma$ (Compliance Decay Rate). Budget allocation percentages reflect the legislative constraints under the Status Quo scenario.}
+    \textit{Note: Agent behavior parameters correspond to Theory of Planned Behavior (TPB) weights: $w_a$ (Attitude), $w_{sn}$ (Social Norms), $PBC$ (Perceived Behavior Control), and $\gamma$ (Compliance Decay Rate). Budget allocation percentages reflect the legislative constraints under the Status Quo scenario.}
 \end{table}
 
 Beyond economics, the distinct psychosocial profiles of each barangay determined how they responded to policy interventions. The simulation encoded these differences through TPB weights—Attitude, Social Norms, and Perceived Behavioral Control—and a decay factor representing habit retention. Barangay Poblacion presented the most significant behavioral challenge; despite its size, it exhibited an ``Urban Isolation'' profile with the lowest Social Norm weight (0.20) and the highest Cost of Effort (0.75). This indicated that social pressure from neighbors was ineffective in the high-density commercial center, and the friction to comply was maximal. This finding was consistent with \cite{Meng2018}, who demonstrated that recycling behavior was heavily dependent on neighborhood-level interactions; where such social cohesion was absent (as in high-density urban settings), Subjective Norms failed to drive compliance.

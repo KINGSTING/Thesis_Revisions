@@ -1,0 +1,29 @@
+\section{The Determinants of Compliance: A Sensitivity Perspective}
+
+The Global Sensitivity Analysis (GSA) provided a mathematical foundation for the DRL agent's strategic preferences. By identifying which behavioral drivers most heavily influenced the model's variance, the study moves beyond anecdotal policy-making toward evidence-based intervention.
+
+\subsection{The ``Convenience Barrier'' and the Dominance of Cost}
+The overwhelming sensitivity of the model to the Cost of Effort ($c_{\text{effort}}$), which accounted for approximately 83\% of the variance in global compliance rates ($S_1 \approx 0.83$), provides mathematical validation for the ``Convenience Hypothesis.'' In this framework, ``Cost'' is not merely financial; it represents the total ``friction'' of the activity, including temporal, physical, and cognitive effort \citep{Corcoran2020}. 
+
+In Bacolod, Lanao del Norte, this sensitivity implies that if the segregation process is characterized by high friction---such as distant collection points or complex sorting requirements---households default to non-compliance regardless of pro-environmental beliefs. This aligns with the work of \citet{Yazawa2025}, suggesting that structural deficiencies often override individual intent. The DRL agent's aggressive funding of Enforcement (to increase the cost of non-compliance) and Incentives (to offset the cost of compliance) represents a rational response to this barrier. The AI learned that it could not simply ``educate'' away physical friction; it had to fundamentally alter the individual utility calculus \citep{Chen2023}.
+
+\subsection{The ``Value-Action Gap'' and Diminishing Returns on Education}
+A significant revelation of the GSA was the near-zero sensitivity of the Attitude ($w_a$) parameter. While traditional municipal policies focus heavily on Information, Education, and Communication (IEC) campaigns, the model demonstrates that awareness alone has a low ceiling of effectiveness. This is a computational realization of the ``Value-Action Gap'' \citep{Liao2024}. 
+
+As noted by \citet{Zhao2022}, extrinsic motivators (incentives and regulation) are significantly more effective than intrinsic motivators (education) in promoting consistent participation in developing nations. For Bacolod, these results suggest a state of diminishing returns on IEC. Residents likely understand the ecological importance of segregation, but the policy framework fails to bridge the gap where knowledge turns into action. The DRL agent’s pivot away from IEC was a strategic recognition that the most effective lever for immediate compliance lies in structural and extrinsic motivators \citep{Badua2022}.
+
+\section{Mechanisms of Behavior Change and Sustainability}
+
+The efficacy of the DRL strategy relied on exploiting two underlying behavioral mechanisms: the stabilizing force of ``Cultural Inertia'' and the opposing friction of ``Density-Dependent Resistance.''
+
+\subsection{Social Norms, Cultural Inertia, and the ``Tipping Point''}
+The sensitivity to Social Norms ($w_{sn}, S_1 \approx 0.35$) validated the ``Sequential Saturation'' strategy. Social Norms function as a non-linear multiplier; when compliance is low ($<10\%$), the norm reinforces non-compliance, creating a state of ``Cultural Inertia'' \citep{Andre2021}. 
+
+However, the DRL agent identified a critical ``Tipping Point'' (approximately 70\% compliance) where social influence flips from a barrier to a facilitator \citep{Centola2018}. Once this threshold is crossed, the behavior becomes self-reinforcing. This explains the ``Graduation Effect'' observed in barangays like Mati and Binuni, which maintained 100\% compliance from Quarter 4 through Quarter 12 even after the agent reduced funding to near-zero ``Maintenance Mode.'' This validates the \textit{Threshold Hypothesis} in Philippine governance, where collective action becomes sustainable only after a critical mass internalizes the mandate, allowing the LGU to redirect scarce resources elsewhere \citep{Nishimura2022}.
+
+
+
+\subsection{Density-Dependent Resistance and the Urban Trap}
+Conversely, the struggle in Barangay Poblacion revealed that resistance was driven by ``Density-Dependent'' factors. With 1,534 households, even a 90\% municipal budget allocation only resulted in an effective enforcement intensity of $\approx 0.38$. 
+
+This dilution effect confirms the \textit{Urban Resource Trap} \citep{Villanueva2021}, where high population density dissolves the impact of standard monitoring, allowing non-compliance to persist as the status quo. The simulation implies that for high-density centers, standard allocation is insufficient. The success of the DRL agent in Poblacion required a ``Shock and Awe'' approach---temporarily diverting all funds from IEC and Incentives to focus purely on Enforcement. This aligns with \citet{Badua2022} regarding the operational burdens of LGUs: overcoming the inertia of large, anonymous urban populations requires an enforcement visibility threshold that equal-distribution strategies can never mathematically achieve.
