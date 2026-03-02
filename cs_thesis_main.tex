@@ -84,31 +84,28 @@
     \maketitle
     \input{frontmatter/copyright}          
     
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \addcontentsline{toc}{chapter}{Dedication}
+    \cleardoublepage 
+    % Removed addcontentsline so Dedication is NOT in the list
     \input{frontmatter/dedication}         
     
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \addcontentsline{toc}{chapter}{Acknowledgements}
+    \cleardoublepage
+    % Removed addcontentsline so Acknowledgements is NOT in the list
     \input{frontmatter/acknowledgements}
         
-    \if@openright\cleardoublepage\else\clearpage\fi
+    \cleardoublepage
+    \phantomsection % <--- THIS FIXES THE JUMPING PAGE ISSUE
     \addcontentsline{toc}{chapter}{Abstract}
     \input{frontmatter/abstract}
     
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \tableofcontents* % Asterisk kept here so ToC doesn't list itself
+    \cleardoublepage
+    \phantomsection % <--- THIS FIXES THE JUMPING PAGE ISSUE
+    \addcontentsline{toc}{chapter}{\contentsname}
+    \tableofcontents* \cleardoublepage
     
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \listoffigures % Removed asterisk to include LoF in ToC
-    
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \listoftables % Removed asterisk to include LoT in ToC
-    
-    \if@openright\cleardoublepage\else\clearpage\fi
-    % Assuming abbreviations is already working for you based on your last message
+    % The abbreviations file is included without being added to the TOC
     \input{frontmatter/abbreviations} 
 
+\mainmatter
 \makeatother
 
 \pagestyle{umpage}
