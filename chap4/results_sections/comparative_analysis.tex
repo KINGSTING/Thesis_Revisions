@@ -95,32 +95,3 @@ This "King of the Hill" logic is starkly evident in the sequential budget spikes
 \end{itemize}
 
 This strategy mirrors the \textit{AI Economist} approach of discovering non-intuitive governance policies that human administrators typically avoid due to perceived unfairness \citep{ZhengAI2022}. The AI learned that by saturating one community until it reached a self-sustaining level of compliance (driven by localized social norms), it could safely withdraw funds and move the "siege" to the next non-compliant barangay without causing a collapse in previous gains \citep{Constantino2022}. This finding forcefully validates the hypothesis of a \textit{Social Tipping Point} \citep{Centola2018, Nyborg2024}, suggesting that true effectiveness in resource-constrained local governments requires the political will to prioritize sequential efficacy over simultaneous but ineffectual fairness.
-
-\subsection{Summary of Comparative Analysis}
-
-The comparative analysis unequivocally demonstrates the superior efficacy of the Adaptive (HuDRL) Strategy over all static, equal-distribution policy interventions. As detailed in Table \ref{tab:policy_comparison}, the traditional baseline and single-instrument strategies fail to generate or sustain municipality-wide behavioral change due to the mathematical realities of resource dilution. The Status Quo approach experiences a steady decay, ending at a dismal terminal compliance of 10.63\%, as passive education fails to build habit formation. Similarly, both the Pure Enforcement (29.60\%) and Pure Incentives (32.20\%) regimes plateau early. By spreading limited funds equally across all barangays, these static models never achieve the critical density of policing or the minimum per-capita incentive threshold necessary to overcome the behavioral resistance of dense urban populations like Barangay Poblacion. 
-
-\begin{table}[ht]
-    \centering
-    \caption{Comparative Global Compliance Rates across Policy Regimes (Years 1--3)}
-    \label{tab:policy_comparison}
-    \small
-    \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{l c c c c}
-        \toprule
-        \textit{Policy Regime} & \textit{Q1 (Year 1)} & \textit{Q4 (Year 1)} & \textit{Q8 (Year 2)} & \textit{Q12 (Year 3)} \\
-        \midrule
-        Status Quo (Baseline) & 12.50\% & 12.72\% & 11.50\% & 10.63\% \\
-        Pure Enforcement & 12.50\% & 29.50\% & 29.23\% & 29.60\% \\
-        Pure Incentives & 12.50\% & 28.62\% & 28.64\% & 32.20\% \\
-        \textbf{Adaptive (HuDRL)} & \textbf{12.50\%} & \textbf{73.65\%} & \textbf{97.84\%} & \textbf{98.23\%} \\
-        \bottomrule
-    \end{tabular}
-    \vspace{0.2cm}
-    \begin{minipage}{0.9\textwidth}
-        \footnotesize
-        \textit{Note: Global Compliance is calculated as the true population-weighted mean of the segregation rates across the seven constituent barangays, accurately reflecting the impact of high-density areas. While static policies stagnate due to budget dilution, the Adaptive Strategy immediately outpaces baselines by Quarter 4 through aggressive, targeted resource allocation.}
-    \end{minipage}
-\end{table}
-
-In stark contrast, the HuDRL Agent successfully navigates these economic trade-offs by dynamically shifting resources, achieving an exceptional terminal Global Compliance Rate of 98.23\% by Quarter 12. This represents a massive deviation from the stagnant, linear trajectories of the static models. Rather than suffering from a slow exploration phase, the adaptive strategy breaks the municipality's inertia almost immediately, surging to 73.65\% compliance by the end of Year 1. This overwhelming success is attributed directly to the agent's discovery of the ``Sequential Saturation'' logic, proving that overcoming the \textit{Urban Resource Trap} requires abandoning simultaneous, equal distribution in favor of sequential dominance and localized budget concentration.

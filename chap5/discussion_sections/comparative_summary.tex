@@ -1,0 +1,37 @@
+The comparative analysis of the simulation trajectories unequivocally demonstrates the superior efficacy of the Adaptive Heuristic-Guided Deep Reinforcement Learning (HuDRL) Strategy over all static, equal-distribution policy interventions. As detailed in Table \ref{tab:policy_comparison}, traditional baseline and single-instrument strategies systematically fail to generate or sustain municipality-wide behavioral change \citep{Villanueva2021}. This failure is not fundamentally due to a lack of total municipal funding, but rather the mathematical and behavioral realities of resource dilution when applied across heterogeneous barangays \citep{Alphonso2024, Badua2022}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparative Global Compliance Rates across Policy Regimes (Years 1--3)}
+    \label{tab:policy_comparison}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{l c c c c}
+        \toprule
+        \textit{Policy Regime} & \textit{Q1 (Year 1)} & \textit{Q4 (Year 1)} & \textit{Q8 (Year 2)} & \textit{Q12 (Year 3)} \\
+        \midrule
+        Status Quo (Baseline) & 12.50\% & 12.72\% & 11.50\% & 10.63\% \\
+        Pure Enforcement & 12.50\% & 29.50\% & 29.23\% & 29.60\% \\
+        Pure Incentives & 12.50\% & 28.62\% & 28.64\% & 32.20\% \\
+        \textbf{Adaptive (HuDRL)} & \textbf{12.50\%} & \textbf{73.65\%} & \textbf{97.84\%} & \textbf{98.23\%} \\
+        \bottomrule
+    \end{tabular}
+    \vspace{0.2cm}
+    \begin{minipage}{0.9\textwidth}
+        \footnotesize
+        \textit{Note: Global Compliance is calculated as the true population-weighted mean of the segregation rates across the seven constituent barangays, accurately reflecting the impact of high-density areas. While static policies stagnate due to budget dilution, the Adaptive Strategy immediately outpaces baselines by Quarter 4 through aggressive, targeted resource allocation.}
+    \end{minipage}
+\end{table}
+
+\subsection{The Dilution Effect and the Failure of the Status Quo}
+The Status Quo approach, heavily reliant on Information, Education, and Communication (IEC) campaigns distributed equally across the municipality, experienced a steady decay, ending at a dismal terminal compliance of 10.63\%. This trajectory computationally validates the limitations of the ``Value-Action Gap''---also referred to as the intention-action gap in environmental psychology \citep{Geiger2021, Liao2024}. While IEC campaigns may marginally increase the environmental attitude ($w_a$) of the household agents, passive education fails to build habit formation when the physical friction of segregation remains unaddressed \citep{Moeini2023, Yazawa2025}. By spreading limited funds equally, the Local Government Unit (LGU) dilutes its capacity, ensuring that the critical density of policing or the minimum per-capita incentive threshold is never met in any single barangay \citep{Alphonso2024}. 
+
+\subsection{The Plateau of Single-Instrument Regimes}
+Similarly, the simulation revealed the inherent behavioral ceilings of single-instrument regimes. Both the Pure Enforcement (29.60\%) and Pure Incentives (32.20\%) strategies plateaued early in the first year and stagnated through Year 3. 
+
+In the Pure Enforcement scenario, the uniform distribution of penal resources meant that dense urban centers like Barangay Poblacion simply overwhelmed the available enforcers, a phenomenon consistent with the \textit{Urban Resource Trap} \citep{Villanueva2021}. The probability of a non-compliant household being caught remained statistically insignificant, neutralizing the deterrent effect of the policy \citep{Badua2022}. Conversely, the Pure Incentives scenario failed due to the diminishing per-capita value of rewards \citep{MuZhang2021}. When a fixed municipal budget is divided equally among a large population, the individual payout drops below the household's ``Cost of Effort'' ($c_{\text{effort}}$) threshold, rendering the financial motivation insufficient to overcome the logistical inconvenience of waste sorting \citep{Chen2023, Corcoran2020}.
+
+\subsection{Sequential Saturation: The HuDRL Advantage}
+In stark contrast, the HuDRL Agent successfully navigated these socio-economic trade-offs by dynamically shifting resources, achieving an exceptional terminal Global Compliance Rate of 98.23\% by Quarter 12 \citep{Dey2025, ZhengAI2022}. This represents a massive deviation from the stagnant, linear trajectories of the static models. 
+
+Rather than suffering from a slow exploration phase, the adaptive strategy broke the municipality's inertia almost immediately, surging to 73.65\% compliance by the end of Year 1. This overwhelming success is attributed directly to the agent's discovery of the ``Sequential Saturation'' logic. The AI recognized that overcoming the urban density barrier required abandoning the heuristic of simultaneous, equal distribution. Instead, the agent utilized sequential dominance---concentrating its budget to artificially induce a behavioral tipping point in specific barangays \citep{Centola2018, Nyborg2024}, locking in compliance through social norms \citep{Andre2021}, and subsequently reallocating those funds to besiege the next resistant population center \citep{Nishimura2022}. This dynamic phasing proved that in resource-constrained LGUs, the timing and concentration of capital are far more critical than the absolute budget size \citep{Jimenez2025}.
