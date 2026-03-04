@@ -1,5 +1,5 @@
-
 This section details the experimental design for the study, outlining the complete process of operationalizing the coupled ABM-RL model to answer the core research questions. This framework was the "experimental" phase of the research, defining how the simulation was run and how the results were measured. It was divided into four key stages: (1) the protocol for initializing, calibrating, and training the model; (2) the design of the specific policy scenarios to be tested; (3) the performance metrics that were used to evaluate and compare the outcomes of each scenario; and (4) the sensitivity analysis to validate the model's robustness.
+
 
 \begin{figure}[htbp]
     \centering
@@ -9,6 +9,55 @@ This section details the experimental design for the study, outlining the comple
 \end{figure}
 
 This diagram illustrated the integrated simulation pipeline designed to optimize waste management policies. The workflow initiated with Input \& Parameterization, grounding the model in real-world demographic data from the Philippine Statistics Authority (PSA), waste management records from the Bacolod LGU, and behavioral parameters synthesized from literature. These inputs drove the ABM \& DRL Dynamic Loop, a cyclical process where the Reinforcement Learning agent (LGU) iteratively adjusted policy levers—specifically IEC intensity, incentives, and enforcement—based on the feedback received from Household Agents. The system generated quantitative Output Results, such as segregation rates and budget utilization, which were finally translated into actionable Policy Suggestions for the Municipality of Bacolod to effectively implement R.A. 9003.
+
+\subsection{The Macro Simulation Driver (Temporal \& Budget Loop)}
+
+The simulation operates on a highly structured dual timescale designed to capture both micro-level human behavior and macro-level administrative governance \citep{Brugiere2022}. At the micro-level, the environment processes daily ticks where individual agents---such as households and enforcement personnel---execute their routine interactions, evaluate their behavioral friction, and make daily segregation decisions \citep{Meng2018}. Concurrently, the macro-level operates on a 90-day (quarterly) epoch, which serves as the fundamental unit of analysis and adaptation for the governance agents \citep{Akbarpour2021}. This quarterly interval triggers the central policy evaluation, allowing the Local Government Unit (LGU) to observe the accumulated socio-behavioral shifts from the daily ticks and adapt its resource allocation strategy for the subsequent cycle to maximize long-term compliance \citep{Jimenez2025}.
+
+
+\begin{algorithm}
+\caption{Main Simulation Loop}
+\label{alg:main_loop}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\Require Annual Budget, Total Ticks (e.g., 1080 for 3 years)
+\State Initialize Model Environment and Agents (Households, Enforcers, Barangays)
+\Statex
+\For{each tick $t$ from 1 to Total Ticks}
+    \If{$t \pmod{90} == 0$}
+        \State \Comment{Start of a new quarter}
+        \State $Quarter \gets Quarter + 1$
+        \Statex
+        \State \Comment{1. Run Decision Logic (AI or Manual Policy)}
+        \State $State \gets \text{Get\_Current\_Environment\_State}()$
+        \State $Action\_Vector \gets \text{Calculate\_Allocation}(State)$
+        \State $\text{Apply\_Budget\_Actions}(Action\_Vector)$
+        \Statex
+        \State \Comment{2. Reset household redemption status}
+        \For{each HouseholdAgent}
+            \State $Redemption\_Status \gets \text{False}$
+        \EndFor
+    \EndIf
+    \Statex
+    \State \Comment{3. Daily Updates}
+    \For{each Barangay}
+        \State Execute Barangay step
+    \EndFor
+    \For{each Agent}
+        \State Execute Agent step (Household, Enforcement)
+    \EndFor
+    \Statex
+    \State \Comment{4. System Maintenance}
+    \State $\text{Update\_Political\_Capital}()$
+    \State $\text{Calculate\_Daily\_Operating\_Costs}()$
+    \State $\text{Collect\_Data\_Metrics}()$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+The main simulation loop is driven by two primary inputs: the \textit{Annual Budget} and \textit{Total Ticks}. The \textit{Annual Budget} establishes the strict fiscal constraints of the municipality, forcing the policy engine to solve the multi-objective optimization problem without violating hard financial limits \citep{Abdallah2021}. The \textit{Total Ticks} parameter defines the finite temporal horizon of the simulation (e.g., 1080 ticks representing a 3-year period), aligning the Markov Decision Process (MDP) with the standard political term of local government officials \citep{Akbarpour2021}.
+
+Crucially, this loop serves as the structural bridge connecting the descriptive Agent-Based Model (ABM) environment to the prescriptive Reinforcement Learning (RL) policy engine \citep{Kompella2020}. As the loop executes, the ABM acts as a high-fidelity data generator, accumulating the complex, non-linear compliance behaviors of heterogeneous household agents \citep{Tian2024}. At each 90-day epoch, these behavioral observations are aggregated into a multi-dimensional state vector and transmitted to the RL agent, which then processes this environmental feedback to calculate a newly optimized policy action—specifically, the dynamic reallocation of funds across incentives, enforcement, and educational campaigns \citep{Ha2025}.
 
 \subsection{Training and Validation}
 The simulation framework was operationalized through a three-stage process: initialization, calibration, and large-scale training. 
@@ -48,7 +97,8 @@ To evaluate the outcomes of the simulations and compare the success of each poli
 \end{enumerate}
 
 \subsection{Global Sensitivity Analysis}
-To validate the structural integrity of the model and ensure its findings were not artifacts of specific initialization values, a Global Sensitivity Analysis (GSA) was conducted using the method called \cite{Sobol2001}.
+
+To validate the structural integrity of the model and ensure its findings were not artifacts of specific initialization values, a Global Sensitivity Analysis (GSA) was conducted using the Sobol method \citep{Sobol2001}.
 
 This rigorous validation technique decomposed the variance of the model's output (Global Compliance) into fractions attributable to specific input parameters. The analysis stress-tested the model by varying the five core behavioral parameters ($w_a, w_{sn}, w_{pbc}, c_{effort}, decay$) by $\pm 20\%$.
 
@@ -57,3 +107,63 @@ Two indices were calculated for each parameter:
     \item \textbf{First-Order Index ($S_1$):} Measured the direct contribution of the parameter to the output variance.
     \item \textbf{Total-Order Index ($S_T$):} Measured the contribution including interactions with other parameters.
 \end{itemize}
+
+\subsection{Global Sensitivity Analysis: Addressing Parameter Uncertainty}
+
+Agent-Based Models (ABMs) are highly effective at simulating complex socio-environmental systems, but they frequently suffer from parameter uncertainty, particularly when dealing with unobservable psychological constructs and heuristic behavioral rules \citep{McCulloch2022}. To rigorously validate the structural integrity of the simulation and quantify this uncertainty, a variance-based Global Sensitivity Analysis (GSA) was conducted using the Sobol method \citep{Sobol2001}. 
+
+
+
+Unlike local sensitivity analyses that alter one variable at a time, the Sobol method explores the entire multidimensional parameter space simultaneously. This sophisticated approach decomposes the variance of the model's primary macro-level outputs—specifically, the final Global Compliance rate and accumulated Political Capital—into fractions directly attributable to the individual Theory of Planned Behavior (TPB) parameters and their complex, non-linear interactions \citep{Zheng2022a}. By doing so, it provides a quantitative measure of how heavily the LGU's policy outcomes rely on specific assumptions about human behavior.
+
+\begin{algorithm}[H]
+\caption{Global Sensitivity Analysis (Sobol Method)}
+\label{alg:sobol_gsa}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\Require Simulation Model, Total Samples ($N$)
+\Statex
+\State \Comment{Step 1: Define the Parameter Space}
+\State Define Problem dictionary with $Number\_of\_Variables = 5$
+\State Define bounds for each parameter:
+\State \quad - Weight\_Attitude ($w_a$): $[0.1, 0.6]$
+\State \quad - Weight\_SocialNorm ($w_{sn}$): $[0.1, 0.6]$
+\State \quad - Weight\_PBC ($w_{pbc}$): $[0.1, 0.6]$
+\State \quad - Base\_Effort ($c_{effort}$): $[0.1, 0.5]$
+\State \quad - Attitude\_Decay: $[0.001, 0.02]$
+\Statex
+\State \Comment{Step 2: Generate Parameter Samples}
+\State $Parameter\_Matrix \gets \text{Generate Saltelli Samples based on Problem and } N$
+\State Initialize $Output\_Array\_Compliance$
+\State Initialize $Output\_Array\_Capital$
+\Statex
+\State \Comment{Step 3: Execute Simulation for Each Sample}
+\For{each $Row$ in $Parameter\_Matrix$}
+    \State Override Base\_Behavioral\_Profiles with $Row$ values
+    \State Initialize Model with Policy\_Mode = ``status\_quo''
+    \Statex
+    \While{Model is Running}
+        \State Execute Model Step
+    \EndWhile
+    \Statex
+    \State \Comment{Extract Final Metrics}
+    \State $Final\_Compliance \gets \text{Calculate\_Global\_Compliance}()$
+    \State $Final\_Capital \gets \text{Get\_Political\_Capital}()$
+    \Statex
+    \State Append $Final\_Compliance$ to $Output\_Array\_Compliance$
+    \State Append $Final\_Capital$ to $Output\_Array\_Capital$
+\EndFor
+\Statex
+\State \Comment{Step 4: Compute Sensitivity Indices}
+\State $Sobol\_Indices\_Compliance \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Compliance)$
+\State $Sobol\_Indices\_Capital \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Capital)$
+\Statex
+\State \Return First-Order ($S_1$) and Total-Order ($S_T$) indices for all variables
+\end{algorithmic}
+\end{algorithm}
+
+
+
+The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights for Attitude ($w_a$), Subjective Norms ($w_{sn}$), and Perceived Behavioral Control ($w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the decision-making equation without empirical justification, allowing the simulation to explore a diverse spectrum of household archetypes (e.g., highly conformist versus highly independent citizens). Additionally, operational constraints such as Base Effort ($c_{effort}$) and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.02]$, respectively. 
+
+By calculating the First-Order ($S_1$) and Total-Order ($S_T$) indices, we can isolate which specific parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters is crucial; it not only highlights where future empirical data collection efforts by the municipality should be focused to reduce real-world uncertainty, but it also mathematically validates whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation \citep{Tian2024}.

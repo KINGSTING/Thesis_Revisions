@@ -96,6 +96,76 @@ This function balances four distinct operational components:
 
 Finally, the weighting coefficients ($w_1, w_2, w_3$) calibrate these competing objectives to accurately mirror the real-world operational constraints of a 4th Class Municipality, ensuring the AI's solutions remain practically viable.
 
+\subsection{Macro-Level Governance: PPO Budget Allocation and Triage Logic}
+
+
+To model the adaptive decision-making of the Local Government Unit (LGU), the simulation employs Proximal Policy Optimization (PPO), a state-of-the-art Deep Reinforcement Learning (DRL) algorithm known for its stability in continuous action spaces \citep{Agarwal2020}. At the start of every 90-day epoch, the PPO agent receives a state vector representing the current compliance levels and behavioral metrics of all 7 barangays. The agent's action space is a continuous vector dictating the proportional allocation of the municipal budget across three policy levers: Information, Education, and Communication (IEC), Incentives, and Enforcement \citep{Abdallah2021}. 
+
+However, pure RL agents often struggle with sparse rewards and the vastness of the policy space, sometimes learning to "spray" limited funds inefficiently across all sectors. To accelerate convergence and ground the AI in realistic administrative practices, the agent's raw continuous output is modulated by a heuristic Triage Logic \citep{Alphonso2024}. This mechanism evaluates the compliance gap of each geographic unit and forcefully categorizes barangays into three strategic states:
+\begin{itemize}
+    \item \textbf{Attack:} The single most critically non-compliant barangay, which receives a massive multiplier ($100.0$) to act as the primary target for the quarter's aggressive intervention.
+    \item \textbf{Sustain (Solved):} Barangays that have successfully crossed the 70\% target threshold. They receive a standard defense multiplier ($10.0$) to maintain their "Lock-in" phase and prevent behavioral decay without over-consuming resources \citep{Jimenez2025}.
+    \item \textbf{Queue:} Non-compliant barangays that are not the primary target. They receive a minimal multiplier ($0.01$) to keep them in a holding pattern until resources are freed up.
+\end{itemize}
+
+
+\begin{algorithm}[H]
+\caption{PPO Budget Allocation \& Triage Logic}
+\label{alg:ppo_allocation}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\Require $Action\_Vector$ (from PPO Agent), $List$ of Barangays
+\State $Target\_Threshold \gets 0.70$
+\State $Max\_Gap \gets -1.0$
+\State $Priority\_Index \gets -1$
+\State $Solved\_List \gets \text{Empty List}$
+\Statex
+\State \Comment{Step 1: Identify Targets}
+\For{each $Barangay$ in $List$}
+    \State $Compliance \gets \text{Get\_Compliance}(Barangay)$
+    \If{$Compliance > Target\_Threshold$}
+        \State $\text{Add } Barangay \text{ to } Solved\_List$
+    \Else
+        \State $Gap \gets 1.0 - Compliance$
+        \If{$Gap > Max\_Gap$}
+            \State $Max\_Gap \gets Gap$
+            \State $Priority\_Index \gets \text{Index}(Barangay)$
+        \EndIf
+    \EndIf
+\EndFor
+\Statex
+\State \Comment{Step 2: Distribute Funds via Multipliers}
+\For{each $Barangay$ in $List$}
+    \If{$\text{Index}(Barangay) == Priority\_Index$}
+        \State $Multiplier \gets 100.0$ \Comment{ATTACK MODE}
+    \ElsIf{$Barangay \in Solved\_List$}
+        \If{$Barangay \text{ is ``Poblacion''}$}
+            \State $Multiplier \gets 45.0$ \Comment{Massive Defense}
+        \Else
+            \State $Multiplier \gets 10.0$ \Comment{Standard Defense}
+        \EndIf
+    \Else
+        \If{$Barangay \text{ is ``Poblacion''}$}
+            \State $Multiplier \gets 15.0$ \Comment{Too Big To Fail Queue}
+        \Else
+            \State $Multiplier \gets 0.01$ \Comment{Standard Queue}
+        \EndIf
+    \EndIf
+    \Statex
+    \State $\text{Scale } Action\_Vector \text{ slice for this } Barangay \text{ by } Multiplier$
+\EndFor
+\Statex
+\State $\text{Normalize}(Action\_Vector) \text{ to fit Quarterly Budget}$
+\State $\text{Apply Budget (IEC, Enforcement, Incentives) to Barangays}$
+\State $\text{Adjust Active Enforcement Agents based on New Budget}$
+\end{algorithmic}
+\end{algorithm}
+
+
+A critical feature of this triage logic is the ``Too Big To Fail'' safety net, which is specifically applied to major population centers like Barangay Poblacion. In a population-weighted compliance metric, the collapse of segregation habits in a densely populated commercial hub would mathematically devastate the municipality's overall score \citep{Alphonso2024}. Therefore, the algorithm overrides standard queueing protocols, granting Poblacion significantly higher baseline multipliers ($15.0$ in Queue, $45.0$ in Sustain) to ensure a steady stream of maintenance funding, reflecting the political and logistical reality that central urban hubs cannot be ignored \citep{Abordo2025}.
+
+To close the reinforcement loop, the PPO agent's actions are evaluated against a rigorously defined reward function at the end of the quarter. The environment provides a scalar reward that seeks to maximize global compliance while enforcing strict fiscal discipline \citep{Zheng2022b}. The function heavily penalizes bankruptcy (assigning a large negative reward if the normalized actions hypothetically exceed the hard fiscal constraint prior to clipping) and rewards the maintenance of high enforcement intensity and incentive coverage. By forcing the agent to navigate this constrained reward landscape, the model converges on an optimal, budget-conscious policy that strategically rotates funds between attacking non-compliance and sustaining acquired habits.
+
 \subsection{The HuDRL Algorithm}
 
 The implementation logic is formalized in the \textit{Heuristic-Guided Action Selection \& Reward Shaping (HuDRL)} algorithm. It utilizes \textit{Targeted Amplification} as a saliency filter: if the agent expresses an "intent" to fund a critical barangay, the environment multiplies that signal by a factor of $\alpha=100$.
@@ -143,3 +213,53 @@ First, the algorithm employs a mechanism of \textit{Targeted Amplification}. The
 Second, the model imposes strict \textit{Budget Normalization}. Unlike standard continuous control tasks where outputs are often independent, municipal budgeting is a zero-sum game. The algorithm enforces a strict "Softmax-style" normalization across the action vector, ensuring that the sum of all allocations never exceeds the quarterly budget constraint ($Budget_Q$). This step mathematically guarantees that all generated policies remain fiscally feasible, regardless of the neural network's raw output intensity.
 
 Finally, the learning process is reinforced through \textit{Reward Shaping}. To encourage the agent to adopt the "Sequential Saturation" behavior, the reward function includes a discrete "Jackpot Bonus." Beyond the standard reward for aggregate compliance, the agent receives an additional $+20,000$ reward specifically for allocating more than 40\% of the quarterly budget to the \textit{Critical Barangay}. This artificial feedback signal bridges the temporal gap between the immediate action of spending money and the delayed result of behavioral change, effectively teaching the agent that focused intervention yields higher long-term returns than equitable distribution.
+
+\subsection{DRL Agent Training and Checkpoint Loop}
+
+Training the Deep Reinforcement Learning (DRL) agent requires a robust computational pipeline where the Proximal Policy Optimization (PPO) algorithm continuously interacts with the underlying Agent-Based Model (ABM). Over successive episodes, the PPO agent learns to optimize its continuous action space—representing the dynamic municipal budget allocation across multiple barangays—by maximizing cumulative rewards tied to compliance rates and fiscal efficiency \citep{Agarwal2020}. To overcome the massive computational overhead of simulating thousands of interacting household agents, the training architecture utilizes vectorized environments. By wrapping the custom environment in a \texttt{DummyVecEnv}, the system instantiates multiple parallel instances of the ABM. This parallelization allows the policy network to gather diverse, uncorrelated behavioral trajectories simultaneously, which drastically improves the sample efficiency, stabilizes gradient updates, and reduces the wall-clock convergence time of the learning process \citep{Tian2024}.
+
+
+
+\begin{algorithm}[H]
+\caption{DRL Agent Training and Checkpoint Loop}
+\label{alg:drl_training}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\Require Gym Environment (BacolodGymEnv), $Total\_Timesteps$ (e.g., 200,000)
+\Statex
+\State \Comment{Step 1: Initialize Vectorized Environments}
+\State $Environment \gets \text{Create DummyVecEnv wrapping BacolodGymEnv}$
+\State $Evaluation\_Environment \gets \text{Create DummyVecEnv wrapping BacolodGymEnv}$
+\Statex
+\State \Comment{Step 2: Initialize PPO Algorithm}
+\State $Agent \gets \text{Initialize PPO Model with:}$
+\State \quad - Policy: Multi-Layer Perceptron (MlpPolicy)
+\State \quad - Environment: $Environment$
+\State \quad - Learning\_Rate: $0.0003$
+\State \quad - Clip\_Range: $0.2$
+\State \quad - Gamma (Discount Factor): $0.99$
+\Statex
+\State \Comment{Step 3: Setup Callback for Continuous Evaluation}
+\State $Best\_Mean\_Reward \gets -\infty$
+\State $Callback \gets \text{Initialize Custom Callback:}$
+\State \quad Trigger every 2000 steps:
+\State \quad \quad $Current\_Mean\_Reward \gets \text{Evaluate Agent on } Evaluation\_Environment$
+\State \quad \quad \If{$Current\_Mean\_Reward > Best\_Mean\_Reward$}
+\State \quad \quad \quad $Best\_Mean\_Reward \gets Current\_Mean\_Reward$
+\State \quad \quad \quad $\text{Save Agent to ``bacolod\_ppo\_best.zip''}$
+\State \quad \quad \EndIf
+\Statex
+\State \Comment{Step 4: Execute Training}
+\State $\text{Start Training Agent for } Total\_Timesteps \text{ using } Callback$
+\Statex
+\State \Comment{Step 5: Finalization}
+\State $\text{Save Final Trained Agent to ``bacolod\_ppo\_final.zip''}$
+\State $\text{Plot and Export Training Reward Graph}$
+\end{algorithmic}
+\end{algorithm}
+
+
+
+A critical operational component of this training loop is the custom callback function, which serves as an automated quality assurance mechanism. In continuous Deep Reinforcement Learning, agents trained over extended horizons (e.g., 200,000 timesteps) are highly susceptible to ``catastrophic forgetting''—a phenomenon where the neural network's gradient updates inadvertently overwrite a previously optimal policy with a strictly inferior one, causing performance to suddenly collapse \citep{Zheng2022b}. 
+
+To mathematically guarantee that the final deployed policy is the absolute best version discovered during the training run, the callback systematically halts training every 2,000 steps to run a deterministic evaluation on a separate, pristine testing environment. If the newly calculated mean reward surpasses the historical maximum, the network's weights are immediately serialized and saved to disk. This checkpointing protocol ensures the preservation of the optimal, highest-yielding policy regardless of any subsequent training instability or policy degradation experienced in the final timesteps \citep{Kompella2020}.
