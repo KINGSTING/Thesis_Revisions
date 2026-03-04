@@ -13,7 +13,7 @@ To evaluate the efficacy of the proposed optimization strategy, the simulation c
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/non-heuristic_vs_heuristic.png}
+    \includegraphics[width=\textwidth]{images/non-heuristic_vs_heuristic.png}
     \caption{Comparison of Global Compliance Rates between Non-Heuristic and Heuristic Approaches.}
     \label{fig:heuristic_vs_non_heuristic}
 \end{figure}
@@ -40,13 +40,14 @@ To resolve this mathematical exploit, the HuDRL framework ultimately adopted the
 
 \subsection{Addressing Behavioral Volatility}
 
-The second major deviation from the initial proposal involved the behavioral stability of the Household Agents. Early simulation runs exhibited a phenomenon of ``Instantaneous Collapse,'' where compliance rates in a barangay would plummet from 90\% to 0\% within a single quarter immediately after the LGU withdrew financial support.
+The second major deviation from the initial proposal involved the behavioral stability of the Household Agents. Early simulation runs exhibited a phenomenon of ``Instantaneous Collapse,'' where compliance rates in a barangay would plummet from 90\% to 0\% within a single quarter immediately after the Local Government Unit (LGU) withdrew financial support.
 
 This behavior, while mathematically consistent with the raw Theory of Planned Behavior (TPB) equation, was sociologically unrealistic. Real-world communities exhibit Cultural Inertia, where established habits persist even after the removal of external stimuli \citep{Nishimura2022}. To correct this artifact and align the model with empirical observations of Philippine community behavior \citep{Yazawa2025}, the study introduced a Social Norm Shield mechanism, governed by two empirically tuned thresholds:
 
 \begin{itemize}
-    \item \textbf{The Tipping Point (70\%):} It was observed that once a barangay achieved a compliance rate of 70\%, the behavior transitioned from ``incentive-driven'' to ``norm-driven.'' This aligns with the \textit{Threshold Hypothesis}, which suggests that once a critical mass of the population adopts a behavior, the subjective norm becomes the primary driver of compliance \citep{Nishimura2022}. Consequently, the model locks the Subjective Norm ($w_{sn}$) weight at a higher value once this threshold is crossed, simulating the internalization of the practice within the community.
-    \item \textbf{The Social Norm Floor (40\%):} To prevent total behavioral collapse during the DRL agent's exploration phase, a ``floor'' was implemented. Even if enforcement ceased, the strong social pressure from neighbors prevented compliance from dropping below 40\%, representing the residual collective memory and the internalized ``moral obligation'' identified in recent waste management studies \citep{Zheng2022}. This mechanism ensures that the model accounts for cultural inertia, preventing sociologically unrealistic swings in household behavior.
+    \item \textbf{The Tipping Point (70\%) and Deterministic Lock:} It was observed that once a barangay achieved a compliance rate of 70\%, the behavior transitioned from ``incentive-driven'' to ``norm-driven.'' Consequently, the model applies a deterministic hard lock on the Subjective Norm ($w_{sn}$) weight, fixing it at a high sustained value rather than utilizing a flattened dynamic decay curve. This architectural choice is deliberately designed to capture the non-linear phase transitions characteristic of social conventions. As established by threshold models of collective behavior \citep{Granovetter1978, Centola2018}, social tipping points do not manifest as gradual erosions; rather, once a critical mass is achieved, the behavior rapidly institutionalizes into a self-sustaining equilibrium. Implementing a continuous decay curve would falsely imply that social norms inherently erode without constant external fiscal energy. This contradicts the ``ratchet effect'' observed in pro-environmental behaviors, where established communal norms actively resist degradation and act as a permanent behavioral shield \citep{Andre2021, Nyborg2024}.
+    
+    \item \textbf{The Social Norm Floor (40\%):} To prevent total behavioral collapse during the Deep Reinforcement Learning (DRL) agent's exploration phase, a ``floor'' was implemented. Even if enforcement ceased entirely, the strong social pressure from neighbors prevented compliance from dropping below 40\%. This represents the residual collective memory and the internalized ``moral obligation'' identified in recent waste management studies \citep{Zheng2022}. This mechanism ensures that the model accounts for cultural inertia, preventing sociologically unrealistic swings in household behavior.
 \end{itemize}
 
-This refinement was crucial for the success of the Comparative Analysis, as it allowed the HuDRL agent to execute the "Sequential Saturation" strategy—leaving one barangay to tend to another—without the first barangay collapsing behind it, thereby reflecting a more sustainable governance model \citep{Abdallah2021}.
+This refinement was crucial for the success of the Comparative Analysis, as it allowed the HuDRL agent to execute the ``Sequential Saturation'' strategy---concentrating capital in one barangay before moving to another---without the first barangay collapsing behind it, thereby reflecting a more sustainable and mathematically sound governance model \citep{Abdallah2021}.

@@ -1,4 +1,3 @@
-
 The Global Sensitivity Analysis (GSA) provided a mathematical foundation for the DRL agent's strategic preferences. By identifying which behavioral drivers most heavily influenced the model's variance, the study moves beyond anecdotal policy-making toward evidence-based intervention.
 
 \subsection{The ``Convenience Barrier'' and the Dominance of Cost}
@@ -18,11 +17,12 @@ The efficacy of the DRL strategy relied on exploiting two underlying behavioral 
 \subsection{Social Norms, Cultural Inertia, and the ``Tipping Point''}
 The sensitivity to Social Norms ($w_{sn}, S_1 \approx 0.35$) validated the ``Sequential Saturation'' strategy. Social Norms function as a non-linear multiplier; when compliance is low ($<10\%$), the norm reinforces non-compliance, creating a state of ``Cultural Inertia'' \citep{Andre2021}. 
 
-However, the DRL agent identified a critical ``Tipping Point'' (approximately 70\% compliance) where social influence flips from a barrier to a facilitator \citep{Centola2018}. Once this threshold is crossed, the behavior becomes self-reinforcing. This explains the ``Graduation Effect'' observed in barangays like Mati and Binuni, which maintained 100\% compliance from Quarter 4 through Quarter 12 even after the agent reduced funding to near-zero ``Maintenance Mode.'' This validates the \textit{Threshold Hypothesis} in Philippine governance, where collective action becomes sustainable only after a critical mass internalizes the mandate, allowing the LGU to redirect scarce resources elsewhere \citep{Nishimura2022}.
-
-
+However, the DRL agent identified a critical ``Tipping Point'' (approximately 70\% compliance) where social influence flips from a barrier to a facilitator \citep{Centola2018}. Once this threshold is crossed, the behavior becomes self-reinforcing. This explains the ``Graduation Effect'' observed in barangays like Mati and Binuni, which maintained 100\% compliance from Quarter 4 through Quarter 12 even after the agent reduced funding to near-zero ``Maintenance Mode.'' This validates the \textit{Threshold Hypothesis} in Philippine governance, where collective action becomes sustainable only after a critical mass internalizes the mandate, allowing the Local Government Unit (LGU) to redirect scarce resources elsewhere \citep{Nishimura2022}.
 
 \subsection{Density-Dependent Resistance and the Urban Trap}
 Conversely, the struggle in Barangay Poblacion revealed that resistance was driven by ``Density-Dependent'' factors. With 1,534 households, even a 90\% municipal budget allocation only resulted in an effective enforcement intensity of $\approx 0.38$. 
 
 This dilution effect confirms the \textit{Urban Resource Trap} \citep{Villanueva2021}, where high population density dissolves the impact of standard monitoring, allowing non-compliance to persist as the status quo. The simulation implies that for high-density centers, standard allocation is insufficient. The success of the DRL agent in Poblacion required a ``Shock and Awe'' approach---temporarily diverting all funds from IEC and Incentives to focus purely on Enforcement. This aligns with \citet{Badua2022} regarding the operational burdens of LGUs: overcoming the inertia of large, anonymous urban populations requires an enforcement visibility threshold that equal-distribution strategies can never mathematically achieve.
+
+\subsection{Real-World Implications: The Informal Economy}
+While the computational model successfully demonstrates the theoretical efficiency of the LGU's enforcement mechanisms, it is important to acknowledge that the simulation excludes the informal economy, such as tipping or localized bribery of collection personnel (as established in Section 1.5). In reality, these informal practices could artificially lower the perceived Net Cost ($C_{Net}$) of non-compliance. If a nominal bribe effectively bypasses the official penal structure, it undermines the utility calculus established by the DRL strategy. This suggests that the LGU's actual enforcement must be coupled with strict auditing of the collection crews to match the model's projected compliance rates.
