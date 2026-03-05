@@ -1,0 +1,116 @@
+This section details the experimental design for the study, outlining the complete process of operationalizing the coupled ABM-RL model to answer the core research questions. This framework was the "experimental" phase of the research, defining how the simulation was run and how the results were measured. It was divided into four key stages: (1) the protocol for initializing, calibrating, and training the model; (2) the design of the specific policy scenarios to be tested; (3) the performance metrics that were used to evaluate and compare the outcomes of each scenario; and (4) the sensitivity analysis to validate the model's robustness.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{simul_gym.png}
+    \caption{Process Flow of Simulation}
+    \label{fig:process_flow}
+\end{figure}
+
+This diagram illustrates the integrated simulation pipeline designed to optimize waste management policies. The workflow initiates with Input \& Parameterization, grounding the model in real-world demographic data from the Philippine Statistics Authority (PSA), waste management records from the Bacolod LGU, and behavioral parameters synthesized from literature. These inputs drive the ABM \& DRL Dynamic Loop, a cyclical process where the Reinforcement Learning agent (LGU) iteratively adjusts policy levers—specifically IEC intensity, incentives, and enforcement—based on feedback received from Household Agents. The system generates quantitative Output Results, such as segregation rates and budget utilization, which are finally translated into actionable Policy Suggestions for the Municipality of Bacolod to effectively implement R.A. 9003.
+
+\subsection{The Macro Simulation Driver (Temporal \& Budget Loop)}
+
+The simulation operates on a highly structured dual timescale designed to capture both micro-level human behavior and macro-level administrative governance \citep{Brugiere2022}. At the micro-level, the environment processes daily ticks where individual agents---such as households and enforcement personnel---execute their routine interactions, evaluate their behavioral friction, and make daily segregation decisions \citep{Meng2018}. Concurrently, the macro-level operates on a 90-day (quarterly) epoch, which serves as the fundamental unit of analysis and adaptation for the governance agents \citep{Akbarpour2021}. This quarterly interval triggers the central policy evaluation, allowing the Local Government Unit (LGU) to observe the accumulated socio-behavioral shifts from the daily ticks and adapt its resource allocation strategy for the subsequent cycle to maximize long-term compliance \citep{Jimenez2025}.
+
+\begin{algorithm}
+\caption{Main Simulation Loop}
+\label{alg:main_loop_english}
+\begin{algorithmic}[1]
+\State \textbf{Starting Data Needed:} Annual Budget, Total Number of Days (e.g., 1080 days for 3 years)
+\State \textbf{Initial Setup:} Set up the starting environment and bring all participants into the simulation (Households, Enforcers, Barangays, and Mayor Agent)
+\Statex
+\State \textbf{The Daily Routine:}
+\For{every single day from day 1 to the end of the simulation}
+    \Statex
+    \State \textbf{1. Check for the End of the Quarter}
+    \If{today marks the end of a quarter (every 90 days)}
+        \State Add +1 to the Quarter counter
+        \Statex
+        \State \textit{The Mayor Agent: Make Budget Decisions}
+        \State Look at the current overall situation in the simulation
+        \State Calculate how the budget should be divided based on what is happening
+        \State Put those budget decisions into action
+        \Statex
+        \State \textit{The Household Agents: Redemption Status Resets}
+        \For{every single household}
+            \State Reset their redemption status back to False
+        \EndFor
+    \EndIf
+    \Statex
+    \State \textbf{2. Perform Daily Activities}
+    \For{each Barangay}
+        \State Perform its standard daily routine
+    \EndFor
+    \For{each individual participant (Households and Enforcers)}
+        \State Perform their daily actions and make their daily choices
+    \EndFor
+    \Statex
+    \State \textbf{3. End-of-Day System Maintenance}
+    \State Update the overall Political Capital based on what happened today
+    \State Calculate the daily operating costs and deduct them
+    \State Collect and save the day's data and performance metrics
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+The main simulation loop is driven by two primary inputs: the \textit{Annual Budget} and \textit{Total Ticks}. The \textit{Annual Budget} establishes the strict fiscal constraints of the municipality, forcing the policy engine to solve the multi-objective optimization problem without violating hard financial limits \citep{Abdallah2021}. The \textit{Total Days} parameter defines the finite temporal horizon of the simulation (e.g., 1080 ticks representing a 3-year period), aligning the Markov Decision Process (MDP) with the standard political term of local government officials \citep{Akbarpour2021}.
+
+A critical mechanism embedded within this loop is the quarterly \textit{Redemption Status Reset}. By reverting every household's redemption status to False at the start of a new 90-day epoch, the simulation prevents the indefinite accumulation of rewards based on historical actions. This mechanism mirrors real-world administrative cycles, forcing households to actively renew their compliance behaviors (such as consistent waste segregation) in the current quarter to qualify for municipal incentives. Consequently, this ensures that the Mayor Agent's newly allocated incentive budget strictly targets and measures contemporaneous compliance rather than subsidizing past behavior.
+
+Crucially, this loop serves as the structural bridge connecting the descriptive Agent-Based Model (ABM) environment to the prescriptive Deep Reinforcement Learning (DRL) policy engine \citep{Kompella2020}. As the loop executes, the ABM acts as a high-fidelity data generator, accumulating the complex, non-linear compliance behaviors of heterogeneous household agents \citep{TianReview2024}. At each 90-day epoch, these behavioral observations are aggregated into a multi-dimensional state vector and transmitted to the RL agent, which then processes this environmental feedback to calculate a newly optimized policy action—specifically, the dynamic reallocation of funds across incentives, enforcement, and educational campaigns \citep{HaMinh2025}.
+
+\subsection{Policy Scenario To Be Tested}
+The approach of testing distinct, constrained policy scenarios is a standard and necessary step in Deep Reinforcement Learning (DRL) studies embedded within Agent-Based Models (ABM), as it allows researchers to isolate the causal impact of different instruments on system outcomes \citep{Jimenez2025, TianReview2024}. To answer the research questions and systematically evaluate the efficacy of the policy frameworks, four core scenarios were simulated by manipulating the available action space across three core municipal levers: Information, Education, and Communication (IEC), Incentives, and Enforcement (penalties).
+
+\subsubsection{Baseline - Status Quo (PURE IEC)}
+This scenario represented the default strategy for many Local Government Units (LGUs) operating under typical administrative and budgetary constraints. In this regime, the action space was restricted so that resources were entirely dedicated to Information, Education, and Communication campaigns. It relied purely on public awareness, moral suasion, and intrinsic motivation to drive waste segregation, with zero allocation for material rewards or active penalty enforcement. This served as the foundational benchmark to measure the marginal benefits of introducing more complex policy levers.
+
+\subsubsection{Pure Enforcement}
+This scenario simulated a ``hard'' governance approach by constraining the action space to prioritize monitoring, fines, and institutional coercion \citep{Wang2023}. Reflecting a strict ``No Segregation, No Collection'' mandate, this scenario tested whether a heavily punitive financial strategy could coerce superior compliance. This scenario is particularly relevant given the historical challenges and enforcement bottlenecks highlighted in the context of the Ecological Solid Waste Management Act (R.A. 9003) in the Philippines \citep{Dalugdog2021}.
+
+\subsubsection{Pure Incentives}
+This scenario simulated a ``soft'' governance approach by relying exclusively on positive reinforcement. In this scenario, funds were allocated toward rewards, behavioral nudges, and social motivation to drive compliance, with no budget directed toward punitive enforcement \citep{LoanBalanay2023}. Existing literature strongly supports that an incentive-based strategy can be highly effective in promoting pro-environmental behavior like source separation \citep{Chen2023, MuZhang2021, Vorobeva2022}.
+
+\subsubsection{Heuristic-Guided Deep Reinforcement Learning Approach}
+This scenario represented the optimized, adaptive policy framework. The agent was granted access to its full action space, allowing it to dynamically allocate funds across IEC, Incentives, and Enforcement in response to shifting household behaviors. Crucially, the DRL's exploration was stabilized and accelerated using expert heuristics, grounding the agent's actions within realistic administrative bounds and preventing physically impossible resource allocations. Literature suggests that an effective solution often requires this sophisticated combination \citep{MuZhang2021, Zhao2022}. By comparing compliance rates and cost-efficiency across the static scenarios, this heuristic-guided DRL approach aimed to provide a powerful, data-driven recommendation for the optimal, long-term budget strategy \citep{TianReview2024}.
+
+\subsection{Cost Parameter Estimation}
+
+To operationalize the continuous resource allocation model, the study defined specific cost functions to quantify the depletion of the \textpeso 1,500,000 annual municipal fund. These functions transformed abstract policy decisions into concrete financial constraints, addressing the chronic lack of funding often cited as a cause of institutional failure \citep{Ibanez2022, Santos2025}.
+
+\subsubsection{Cost of Enforcement ($C_{\mathrm{Enf}}$)}
+
+Enforcement expenditure was calculated as a function of the Coverage Ratio. Based on the logistical constraints of the Municipality of Bacolod, which included dispersed coastal and inland barangays, the model assumed a single enforcement officer could effectively monitor a maximum of 30 households per day. This conservative estimate accounted for travel time between households and the administrative burden of issuing citations \citep{Nishimura2022}.
+
+\begin{equation}
+    C_{\mathrm{Enf}} = (N_{\mathrm{Enforcers}} \times W_{\mathrm{Daily}} \times 66)
+    \label{eq:cost_enforcement}
+\end{equation}
+\addequation{Cost of Enforcement Function}
+
+\noindent Where $N_{\mathrm{Enforcers}}$ was the number of personnel required, $W_{\mathrm{Daily}}$ was the regional minimum daily wage for Region X, and 66 represented the working days in a quarter. The Deep Reinforcement Learning (DRL) agent’s budgetary allocation determined $N_{\mathrm{Enforcers}}$, which subsequently defined the Probability of Detection ($P_{\mathrm{Detect}}$) variable in the household utility function \citep{MuZhang2021}.
+
+\subsubsection{Cost of Incentives ($C_{\mathrm{Inc}}$)}
+
+Incentive costs were modeled as a Variable Success Function, creating a dynamic positive feedback loop where successful behavioral change increased financial liability.
+
+\begin{equation}
+    C_{\mathrm{Inc}} = (V_{\mathrm{Reward}} \times N_{\mathrm{Compliant}})
+    \label{eq:cost_incentives}
+\end{equation}
+\addequation{Cost of Incentives Function}
+
+\noindent Where $V_{\mathrm{Reward}}$ was the monetary value of the incentive and $N_{\mathrm{Compliant}}$ was the count of compliant households. This structure introduced a critical "Victim of Success" risk; the DRL agent had to learn to optimize for a compliance equilibrium that was fiscally sustainable, avoiding scenarios where high compliance rapidly depleted the municipal treasury \citep{WorldBank2022}.
+
+\subsubsection{Cost of Information \& Educational Campaign ($C_{\mathrm{IEC}}$)}
+
+Information, Education, and Communication (IEC) costs were modeled as Tiered Fixed Costs, reflecting the discrete nature of media procurement.
+
+\begin{equation}
+    C_{\mathrm{IEC}} = (N_{\mathrm{Spots}} \times R_{\mathrm{Radio}}) + (N_{\mathrm{Events}} \times C_{\mathrm{Mobilization}})
+    \label{eq:cost_iec}
+\end{equation}
+\addequation{Cost of Information and Educational Campaign Function}
+
+\noindent This formulation aligned with the LGU’s operational reliance on local radio broadcasting (e.g., 101.3 Grace Covenant FM) as the primary dissemination channel for environmental policy \citep{Collado2024}.

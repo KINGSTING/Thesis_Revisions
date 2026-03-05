@@ -21,6 +21,7 @@
 \usepackage{algpseudocode}  
 \usepackage{bm} 
 \usepackage{acronym}
+\usepackage{hyperref} % Added to ensure \hypersetup works
 
 % --- ADDED FOR BOLD CAPTIONS ---
 \usepackage{caption}
@@ -32,7 +33,7 @@
     position=top       % Ensures spacing is correct for top-aligned captions
 }
 \captionsetup[figure]{
-    font=small,              % Decreases the font size (use 'footnotesize' for even smaller)
+    font=small,              % Decreases the font size
     justification=centering, % Centers the caption
 }
 % -------------------------------
@@ -44,6 +45,23 @@
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
 \newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}}
+
+%% --- UPDATED: CUSTOM LIST OF EQUATIONS (Prefix removed) ---
+\newcommand{\listequationname}{List of Equations}
+\newlistof{listofequations}{loe}{\listequationname}
+\newlistentry{equation}{loe}{0} 
+
+% Reduced from 4em to 2.5em since we no longer need space for the "eq:" text
+\setlength{\cftequationnumwidth}{3em} 
+
+\newcommand{\addequation}[1]{%
+    % Removed the "eq: " prefix from the numberline
+    \addcontentsline{loe}{equation}{\protect\numberline{\theequation}#1}%
+}
+
+\makeatletter
+\makeatother
+% ---------------------------------------------------
 
 %% --- APA CITATION FORMATTING ---
 \bibpunct{(}{)}{;}{a}{,}{,} 
@@ -94,14 +112,33 @@
     \input{frontmatter/acknowledgements}
         
     \cleardoublepage
-    \phantomsection % <--- THIS FIXES THE JUMPING PAGE ISSUE
+    \phantomsection
     \addcontentsline{toc}{chapter}{Abstract}
     \input{frontmatter/abstract}
     
     \cleardoublepage
-    \phantomsection % <--- THIS FIXES THE JUMPING PAGE ISSUE
+    \phantomsection
     \addcontentsline{toc}{chapter}{\contentsname}
     \tableofcontents* \cleardoublepage
+
+    % --- NEW: Hide Lists from PDF Bookmarks Sidebar ---
+    \hypersetup{bookmarksdepth=-2} % Turns OFF sidebar bookmark generation
+    
+    \cleardoublepage
+    \listoftables
+    
+    \cleardoublepage
+    \listoffigures
+
+    \cleardoublepage
+    \listofequations
+    
+    \cleardoublepage
+    \listofalgorithms
+    
+    \cleardoublepage
+    \hypersetup{bookmarksdepth=3} % Turns sidebar bookmark generation back ON
+    % ---------------------------------------------------
     
     % The abbreviations file is included without being added to the TOC
     \input{frontmatter/abbreviations} 

@@ -76,7 +76,83 @@ The State Space ($S$) is characterized as a multi-dimensional, continuous vector
 
 The system dynamics are governed by the Transition Function ($P$), denoted as $P(S_{t+1} | S_t, A_t)$. Within this framework, the ABM serves as the implicit transition engine; unlike classical control problems where transitions are defined by explicit differential equations, the state evolution here emerges from the aggregate, non-linear behaviors of heterogeneous household agents updating their internal utility based on the Theory of Planned Behavior (TPB). Consequently, the simulation acts as a generative model where the subsequent state $S_{t+1}$ is a stochastic manifestation of the community’s collective response to the LGU's policy intervention $A_t$ \citep{TianReview2024, Jimenez2025}. To evaluate the efficacy of these interventions, the Reward Function ($R$) provides a scalar feedback signal $R_t$ that balances the LGU’s multi-objective mandates. This function is designed to reward high aggregate compliance while penalizing fiscal overspending and the social friction associated with excessive punitive enforcement \citep{Dey2025}. Finally, a Discount Factor of $\gamma = 0.99$ is applied to the objective function, ensuring that the DRL agent prioritizes strategies that foster long-term, sustained behavioral shifts rather than pursuing ephemeral, short-term compliance spikes that may deplete the annual budget prematurely.
 
-\subsection{Household Agent Design}
+\subsection{Barangay Agent Design and Resource Distribution}
+
+The \texttt{BarangayAgent} serves as the critical intermediate implementation layer, bridging the gap between municipal-level resource allocation and household-level behavioral shifts. The model initializes seven unique instances of this agent class—representing the geographically and socioeconomically distinct units of Liangan East, Esperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya—calibrated with parameters derived from municipal institutional audits. Within this framework, the \texttt{BarangayAgent} functions as an executive entity that manages the ``stacking effect'' of fiscal resources, combining LGU-DRL quarterly augmentation funds with its own localized operating budget. 
+
+When the LGU-DRL agent allocates IEC funds ($A_{\mathrm{IEC}, B_i}$) to a specific barangay, the \texttt{BarangayAgent} translates this continuous financial variable into a localized \textit{Information Dissemination Signal}. IEC campaigns are broadcast globally to all constituent \texttt{HouseholdAgent} objects within that barangay, proportionally shifting the internal Attitude weight ($w_A(t)$) positively to counteract the natural stochastic decay of pro-environmental habits.
+
+For the Incentive budget ($A_{\mathrm{Inc}, B_i}$), the \texttt{BarangayAgent} functions as a direct financial distributor. During the quarterly evaluation phase, the agent identifies the subset of households actively practicing segregation (\texttt{is\_segregating == True}) and distributes the allocated reward pool among them, which directly modifies the perceived monetary benefit ($I$) in the household's net disutility calculation. Crucially, the \texttt{BarangayAgent} manages the per-capita dilution of these funds. If the local compliance rate surges, the fixed quarterly allocation is divided among a larger pool of households, reducing individual reward magnitude. This mechanism accurately simulates the ``victim of success'' dynamic, forcing the DRL agent to continuously adjust funding to maintain motivation. At the conclusion of each quarter, the \texttt{BarangayAgent} aggregates compliance data and reports the \textit{BarangayComplianceRate} to the LGU agent, completing a high-fidelity feedback loop where local citizen behavior informs subsequent municipal-level policy adjustments.
+
+\subsection{Enforcement Agent Design and Spatial Dynamics}
+
+Operating under the directive of the \texttt{BarangayAgent} is the \texttt{EnforcementAgent}, which serves as the operational extension of the municipal government tasked with physically monitoring household compliance and executing punitive measures. To operationalize the ``No Segregation, No Collection'' mandate, the \texttt{BarangayAgent} deploys these local enforcers. 
+
+To ensure ecological validity, each enforcement agent is initialized with a \texttt{base\_daily\_capacity} of 30 households. This cap reflects the geographical realities and administrative friction of monitoring the municipality. Operating on a quarterly time step of 66 standard working days, the maximum theoretical inspection capacity ($C_{\mathrm{Quarterly}}$) of an active enforcer is defined as:
+
+\begin{equation}
+    C_{\mathrm{Quarterly}} = (C_{\mathrm{BaseDaily}} \times \mu_{\mathrm{eff}}) \times 66
+    \label{eq:enforcement_capacity}
+\end{equation}
+\addequation{Theoretical Quarterly Enforcement Capacity}
+
+\noindent where $\mu_{\mathrm{eff}}$ represents an efficiency multiplier (defaulted to 1.0) that can be adjusted to simulate varying levels of institutional competence.
+
+The physical environment of the Agent-Based Model (ABM) is constructed as a two-dimensional spatial grid, where Household and Enforcement Agents are geographically distributed to represent the topographical layout of the municipality. Unlike centralized, equation-based models that assume uniform mixing or omniscient actors, this spatial formulation enforces strict geographical limitations on agent interactions \citep{Meng2018}. Specifically, Enforcement Agents do not possess global, omniscient vision of the entire barangay. Instead, they operate under bounded rationality and physical constraints, forcing them to rely on localized spatial searches within a defined line-of-sight (e.g., $Radius = 10$). This architectural design accurately simulates the limited monitoring capacity of real-world local enforcers who can only act upon non-compliant behaviors physically observed within their immediate vicinity \citep{Dalugdog2021, TianReview2024}.
+
+The algorithmic movement of the Enforcement Agents is bifurcated into two distinct behavioral states: ``Chase Mode'' and ``Patrol Mode.'' When in Patrol Mode, the agent conducts a stochastic spatial search, moving to random adjacent coordinates. This represents the routine, unguided neighborhood rounds conducted by personnel when no immediate waste violations are visible. However, if a non-compliant Household Agent is detected within the enforcer's scanning radius, the agent dynamically switches to Chase Mode, calculating a directed spatial trajectory toward the closest violator to execute an intervention \citep{Zhao2022}. 
+
+During each simulation step, the deployed agent employs this randomized monitoring strategy, selecting a discrete sample of households up to its capacity limit. If a household is non-compliant, the agent flags it and increments its internal \texttt{citations\_issued} tracker, directly triggering the financial penalty ($F$) within the household's utility function. 
+
+
+\begin{algorithm}[H]
+\caption{Enforcement Agent Patrol \& Fining}
+\label{alg:enforcement_patrol}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\Require Agent Position, Local Radius = 10
+\Statex
+\State \Comment{Step 1: Mark Immediate Surroundings}
+\State Mark all Household Agents in Radius 1 as ``Visited''
+\Statex
+\State \Comment{Step 2: Determine Movement (Separate Patrol Logic)}
+\State $Local\_Targets \gets \text{Scan for Unvisited Household Agents in Radius 10}$
+\State $\text{Filter } Local\_Targets \text{ for Non-Compliant behavior}$
+\Statex
+\If{$Local\_Targets \text{ is NOT empty}$}
+    \State \Comment{CHASE MODE}
+    \State $Target \gets \text{Find Closest Agent in } Local\_Targets$
+    \State $Next\_Position \gets \text{Calculate coordinate step closer to } Target$
+\Else
+    \State \Comment{PATROL MODE}
+    \State $Next\_Position \gets \text{Select Random Valid Adjacent Coordinate}$
+\EndIf
+\Statex
+\State $\text{Move Agent to } Next\_Position$
+\Statex
+\State \Comment{Step 3: Enforcement Execution}
+\State $Catch\_Zone \gets \text{Scan for Household Agents in Radius 1 (Include Center)}$
+\For{each $Household$ in $Catch\_Zone$}
+    \If{$Household \text{ is NOT Compliant}$}
+        \State $\text{Apply Fine (Decrease Household Utility and Attitude)}$
+        \State $\text{Increment Global Fines Collected}$
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
+Crucially, the presence of these agents generates a systemic feedback loop. Following inspections, the enforcement agent updates the barangay's macro-level Perceived Probability of Detection ($P_{\mathrm{Detection}}$) using the ratio of total inspection capacity to the total household population:
+
+\begin{equation}
+    P_{\mathrm{Detection}} = \min\left(1.0, \frac{\sum C_{\mathrm{Quarterly}}}{N_{\mathrm{Households}}}\right)
+    \label{eq:prob_detection}
+\end{equation}
+\addequation{Macro-level Perceived Probability of Detection}
+
+This updated probability is broadcasted back to the \texttt{HouseholdAgent} objects, dynamically increasing their anticipated risk. This spatial limitation profoundly reflects the real-world logistical constraints of municipal governance, particularly the deployment of \textit{barangay tanods} (village watchmen) or local environmental enforcers in the Philippines. Local Government Units (LGUs) rarely have the manpower or budgetary resources to monitor every household simultaneously \citep{Abordo2025}. Consequently, the probability of a household being caught and fined is not absolute; rather, it is a highly localized phenomenon dependent on spatial proximity and the enforcer's current patrol route. This localized enforcement mechanism organically generates the dynamic, fluctuating detection probability experienced by households, ensuring that the deterrent effect of punitive policies is realistically constrained by the physical and temporal capacity of the barangay's law enforcement \citep{Jimenez2025}.
+
+\subsection{Household Agent Design: The TPB Framework and Utility Architecture}
 
 The decision-making architecture of the \texttt{HouseholdAgent} is governed by a dynamic utility function grounded in the Theory of Planned Behavior (TPB), which posits that an individual's intention to perform a behavior is a function of their attitude, subjective norms, and perceived behavioral control \citep{Ceschi2021}. In contrast to static behavioral models, this framework incorporates time-variant weights ($w(t)$) for psychological constructs, allowing agent behavior to evolve non-linearly in response to LGU interventions and social feedback loops \citep{Taraghi2025, Ma2023}. The core decision logic is represented by the utility of segregation ($U_{\mathrm{segregate}}$):
 
@@ -84,56 +160,66 @@ The decision-making architecture of the \texttt{HouseholdAgent} is governed by a
     U_{\mathrm{segregate}} = (w_A(t) A) + (w_{SN}(t) SN_{\mathrm{local}}) + (w_{PBC}(t)  PBC) - C_{\mathrm{Net}} + \epsilon
     \label{eq:utility_function}
 \end{equation}
+\addequation{Household Utility of Segregation Function}
 
-In this formulation, $w_A(t)$ represents the temporal evolution of the agent's internal valuation of segregation, functioning as a decay model that increases in response to Information, Education, and Communication (IEC) investment and decays stochastically in the absence of reinforcement to simulate ``public forgetting'' \citep{Trushna2024}. The social component, $SN_{\mathrm{local}}$, is an endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood (radius $r$), capturing the effects of social pressure and observational learning \citep{Meng2018, Liao2024}. To account for the inherent uncertainty in human decision-making, the term $\epsilon$ introduces stochastic noise, ensuring the model reflects real-world behavioral variance \citep{Subedi2025}.
+In this formulation, $w_A(t)$ represents the temporal evolution of the agent's internal valuation of segregation, functioning as a decay model that increases in response to Information, Education, and Communication (IEC) investment and decays stochastically in the absence of reinforcement to simulate ``public forgetting'' \citep{Trushna2024}. The social component, $SN_{\mathrm{local}}$, is an endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood, capturing the effects of social pressure and observational learning \citep{Meng2018, Liao2024}. To account for inherent uncertainty in human decision-making, $\epsilon$ introduces stochastic noise ($\mu=0, \sigma=0.05$), ensuring the model reflects real-world behavioral variance \citep{Subedi2025}.
 
-A critical innovation in this model is the calculation of $C_{\mathrm{Net}}$, the net behavioral cost, which characterizes the perceived friction of compliance. This variable is defined as:
+A critical innovation in this model is the calculation of $C_{\mathrm{Net}}$, the net behavioral cost, which characterizes the perceived friction of compliance:
 
 \begin{equation}
     C_{\mathrm{Net}} = C_{\mathrm{Effort}} + (\gamma C_{\mathrm{Monetary}}) - (\gamma I) - (\gamma F P_{\mathrm{Detection}})
     \label{eq:net_disutility}
 \end{equation}
+\addequation{Net Disutility of Segregation Function}
 
 \noindent This cost-benefit sub-model integrates both physical and financial barriers, defined as follows:
 
 \begin{description}
-    \item[$\bm{C_{\mathrm{Effort}}}$:] The physical hassle associated with the washing, sorting, and storage of waste.
-    \item[$\bm{C_{\mathrm{Monetary}}}$:] Tangible financial expenses, such as the procurement of color-coded bins or sacks.
+    \item[$\bm{C_{\mathrm{Effort}}}$:] The physical hassle associated with washing, sorting, and storage of waste.
+    \item[$\bm{C_{\mathrm{Monetary}}}$:] Tangible financial expenses, such as procuring color-coded bins or sacks.
     \item[$\bm{\gamma}$ (Income Sensitivity):] A weighting factor derived from household income level; for lower-income households, $\gamma > 1$ as financial levers ($I$ and $F$) carry greater psychological weight, whereas $\gamma < 1$ for higher-income households.
     \item[$\bm{I}$ and $\bm{F}$:] The objective magnitudes of monetary incentives and punitive fines, respectively.
-    \item[$\bm{P_{\mathrm{Detection}}}$:] The likelihood of enforcement detection, which is dynamically linked to the LGU's resource allocation for enforcement personnel.
+    \item[$\bm{P_{\mathrm{Detection}}}$:] The likelihood of enforcement detection, dynamically linked to the LGU's resource allocation.
 \end{description}
 
-Furthermore, the model captures complex psychological feedbacks such as ``psychological reactance.'' While LGU investments in IEC campaigns generally improve Attitude ($A$) and Subjective Norms ($SN$) \citep{Trushna2024}, the model stipulates that if enforcement intensity crosses a specific threshold, Attitude ($A$) may paradoxically decrease. This inverse reaction reflects the tendency of individuals to resist coercive mandates when they perceive a loss of autonomy, a concept central to Nudge Theory applications in waste management \citep{LoanBalanay2023}. Finally, Perceived Behavioral Control ($PBC$) is calibrated by the agent's internal psychological friction and self-efficacy regarding segregation. This ensures the simulation acknowledges that even agents with positive attitudes and strong social pressure may fail to comply if they perceive the behavior as too mentally taxing, overwhelmingly complex, or highly disruptive to their established daily routines.
-\subsection{Behavioral Hysteresis and the Internalization of Social Norms}
+The model also captures complex psychological feedbacks such as ``psychological reactance.'' While LGU investments generally improve Attitude ($A$) and Subjective Norms ($SN$) \citep{Trushna2024}, if enforcement intensity crosses a specific threshold, Attitude may paradoxically decrease. This reflects the tendency of individuals to resist coercive mandates when they perceive a loss of autonomy \citep{LoanBalanay2023}. Finally, Perceived Behavioral Control ($PBC$) is calibrated by the agent's internal psychological friction, acknowledging that agents with strong motivation may still fail to comply if the behavior is highly disruptive to established routines.
 
-While the baseline \texttt{HouseholdAgent} architecture operates on the Theory of Planned Behavior (TPB), standard models often exhibit unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To more accurately simulate the real-world stability of established habits, this study incorporates a \textit{Norm Internalization Mechanism}. This mechanism addresses the phenomenon of ``Cultural Inertia,'' where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit once a critical tipping point is reached \citep{Ceschi2021, Corcoran2020}.
+\subsubsection{Behavioral Hysteresis: Social Shields and Norm Internalization}
 
-In this framework, the standard attitude update function, which typically suffers from a decay constant ($\delta$) due to enforcement fatigue or apathy, is refined by a dynamic damping factor ($D_{\mathrm{factor}}$). This modification aligns with recent findings on the persistence of pro-environmental behavior, suggesting that established social norms act as a buffer against the rapid erosion of compliance \citep{Andre2021}:
+Standard Agent-Based Models often suffer from hyper-reactivity, exhibiting unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To more accurately simulate the real-world stability of established habits, this study incorporates a ``Two-Stage Social Shield'' and \textit{Norm Internalization Mechanism}. This mathematically models human behavioral inertia—or ``Cultural Inertia''—where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit once critical thresholds are reached \citep{Ceschi2021, Corcoran2020}.
+
+To achieve this, the standard attitude update function is refined by a dynamic damping factor ($D_{\mathrm{factor}}$), suggesting that established social norms act as a buffer against the rapid erosion of compliance \citep{Andre2021}:
 
 \begin{equation}
     A_{t+1} = A_t - (\delta \times D_{\mathrm{factor}})
 \end{equation}
+\addequation{Attitude Decay and Damping Function}
 
-The damping factor is governed by the strength of local social norms ($SN$), representing the protective effect of community-wide compliance. Specifically, the model identifies a \textit{tipping point at 70\% compliance}, beyond which the behavior is considered internalized. This threshold reflects the ``critical mass'' theory in social dynamics, where minority behaviors cascade into majority conventions once a specific saturation point is exceeded \citep{Centola2018, Nyborg2024}:
+The damping factor is governed by the strength of local social norms ($SN$) through two distinct stages:
+
+\textbf{Stage 1: Bayanihan Activation (The 40\% Floor):} Triggered when barangay compliance surpasses 40\%, representing an emergent community spirit that slows the erosion of positive norms. This acts as a \textit{Social Norm Floor}, ensuring that once a baseline awareness is achieved, perceived social pressure does not drop to zero, representing residual collective memory \citep{Nishimura2022}.
+
+\textbf{Stage 2: Norm Lock-in (The 70\% Tipping Point):} Occurs when compliance exceeds 70\%, representing deep cultural habituation where segregation becomes the default state \citep{Jimenez2025}. This reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions \citep{Centola2018, Nyborg2024}. 
+
+Mathematically, this damping effect is expressed as:
 
 \begin{equation}
     D_{\mathrm{factor}} = 
     \begin{cases} 
-        0.1 & \text{if } SN > 0.70 \text{ (Strong Norms / Internalized)} \\
-        0.5 & \text{if } SN > 0.50 \text{ (Moderate Norms)} \\
-        1.0 & \text{otherwise (Weak Norms)}
+        0.1 & \text{if } SN > 0.70 \text{ (Stage 2: Strong Norms / Internalized)} \\
+        0.5 & \text{if } SN > 0.40 \text{ (Stage 1: Bayanihan Activation)} \\
+        1.0 & \text{otherwise (Weak Norms / Standard Decay)}
     \end{cases}
 \end{equation}
+\addequation{Dynamic Damping Factor for Behavioral Inertia}
 
-Furthermore, to prevent the total erosion of community standards during periods of fiscal austerity or low LGU intervention, the model introduces a \textit{Social Norm Floor set at 40\%}. This floor ensures that once a barangay has achieved a baseline level of awareness, the perceived social pressure does not drop to zero, representing the residual collective memory and existing communal infrastructure of the municipality \citep{Nishimura2022}. This refinement is critical for addressing the sustainability objectives of this research, as it allows the Deep Reinforcement Learning agent to discover strategies that foster self-sustaining compliance rather than perpetual reliance on high-cost monetary incentives .
+This refinement is critical for addressing sustainability objectives, allowing the Deep Reinforcement Learning agent to discover strategies that foster self-sustaining compliance rather than perpetual reliance on high-cost incentives.
 
-\subsection{Household Decision-Making: The TPB Framework and Social Shields}
+\subsubsection{Algorithmic Implementation of Household Decisions}
 
+The integration of the dynamic utility function and the protective social shields is executed daily by each \texttt{HouseholdAgent} via Algorithm \ref{alg:household_decision}. 
 
-The behavioral state and daily segregation decisions of each Household Agent are governed by the Theory of Planned Behavior (TPB), a robust psychological framework that predicts deliberate behavior through the interplay of an individual's Attitude, Subjective Norms, and Perceived Behavioral Control (PBC) \citep{Meng2018, Zheng2022a}. However, traditional Agent-Based Models often suffer from hyper-reactivity, where agents immediately abandon positive behaviors the moment external pressures or local norms drop. 
-
-To address this, we introduce the ``Two-Stage Social Shield'' mechanism, which mathematically models human behavioral inertia and the stickiness of pro-environmental habits \citep{Ceschi2021}. This mechanism dictates that once a community reaches critical thresholds of compliance, households develop a resistance to negative behavioral decay. \textit{Stage 1: Bayanihan Activation} is triggered when the barangay compliance surpasses 40\%, representing an emergent community spirit that slows the erosion of positive norms. \textit{Stage 2: Norm Lock-in} occurs when compliance exceeds 70\%, representing deep cultural habituation where segregation becomes the default state \citep{Jimenez2025}. In this locked-in state, households will largely maintain their segregation practices even if the perceived reality of neighbor compliance temporarily falters.
+If the calculated $Utility$ exceeds $0.0$, the agent's baseline intent is to segregate. However, intentionality does not guarantee perfect execution \citep{McCulloch2022}. To model this, the algorithm implements a strict ``1\% Human Error'' rule. Even when a household has a highly positive utility and full intention to comply, there is a 1\% probability that they fail to segregate on any given day due to unpredictable real-world friction (e.g., misplacing items, lack of time, or full bins). This constraint prevents the model from plateauing at an unrealistic, deterministic 100\% compliance rate, ensuring ecological validity aligned with actual municipal waste management data \citep{TianReview2024}.
 
 \begin{algorithm}[H]
 \caption{Household Decision-Making (TPB with Shields)}
@@ -184,89 +270,59 @@ To address this, we introduce the ``Two-Stage Social Shield'' mechanism, which m
 \end{algorithmic}
 \end{algorithm}
 
-Following the parameter updates, the final household decision is computed using a randomized Utility maximization function. Mathematically, the $Utility$ equation integrates the weighted psychological components of the TPB with the objective economic costs, defined as:
-\begin{equation}
-    Utility = (w_a \cdot Attitude) + (w_{sn} \cdot Current\_SN) + (w_{pbc} \cdot Base\_PBC) - Net\_Cost + Epsilon
-\end{equation}
-where $w_a$, $w_{sn}$, and $w_{pbc}$ are the calibrated importance weights for each respective TPB construct, and $Epsilon$ represents the stochastic noise inherently present in human decision-making ($\mu=0, \sigma=0.05$). If the calculated $Utility$ exceeds $0.0$, the baseline intent is to segregate. 
-
-However, intentionality does not guarantee perfect execution \citep{McCulloch2022}. To model this, we implement a strict ``1\% Human Error'' rule. Even when a household has a highly positive utility and full intention to comply, there is a 1\% probability that they fail to segregate on any given day due to unpredictable real-world factors (e.g., misplacing items, lack of time, or full bins). This constraint is functionally necessary to prevent the Agent-Based Model from plateauing at an unrealistic, deterministic 100\% compliance rate, ensuring the simulation maintains a degree of ecological validity aligned with actual municipal waste management data \citep{Tian2024}.
-
-\subsection{Barangay and Enforcement Agent Design}
-
-The \texttt{BarangayAgent} serves as the critical intermediate implementation layer, bridging the gap between municipal-level resource allocation and household-level behavioral shifts. The model initializes seven unique instances of this agent class—representing the geographically and socioeconomically distinct units of Liangan East, Esperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya—calibrated with parameters derived from municipal institutional audits. Within this framework, the \texttt{BarangayAgent} functions as an executive entity that manages the ``stacking effect'' of fiscal resources, combining LGU-DRL quarterly augmentation funds with its own localized operating budget. 
-
-Operating under the directive of the \texttt{BarangayAgent} is the \texttt{EnforcementAgent}, which serves as the operational extension of the municipal government tasked with physically monitoring household compliance and executing punitive measures.  Together, these agents mediate environmental policy by operationalizing the three core municipal levers: Information, Education, and Communication (IEC), Incentives, and Enforcement.
-
-\subsubsection{IEC Campaign Broadcasting and Incentive Distribution}
-
-When the LGU-DRL agent allocates IEC funds ($A_{\mathrm{IEC}, B_i}$) to a specific barangay, the \texttt{BarangayAgent} translates this continuous financial variable into a localized \textit{Information Dissemination Signal}. IEC campaigns are broadcast globally to all constituent \texttt{HouseholdAgent} objects within that barangay, proportionally shifting the internal Attitude weight ($w_A(t)$) positively to counteract the natural stochastic decay of pro-environmental habits.
-
-For the Incentive budget ($A_{\mathrm{Inc}, B_i}$), the \texttt{BarangayAgent} functions as a direct financial distributor. During the quarterly evaluation phase, the agent identifies the subset of households actively practicing segregation (\texttt{is\_segregating == True}) and distributes the allocated reward pool among them, which directly modifies the perceived monetary benefit ($I$) in the household's net disutility calculation. Crucially, the \texttt{BarangayAgent} manages the per-capita dilution of these funds. If the local compliance rate surges, the fixed quarterly allocation is divided among a larger pool of households, reducing individual reward magnitude. This mechanism accurately simulates the ``victim of success'' dynamic, forcing the DRL agent to continuously adjust funding to maintain motivation.
-
-\subsubsection{Enforcement Deployment, Capacity, and System Feedback}
-To operationalize the ``No Segregation, No Collection'' mandate, the \texttt{BarangayAgent} deploys local \texttt{EnforcementAgent} staff. To ensure ecological validity, each enforcement agent is initialized with a \texttt{base\_daily\_capacity} of 30 households. This cap reflects the geographical realities and administrative friction of monitoring the municipality. Operating on a quarterly time step of 66 standard working days, the maximum theoretical inspection capacity ($C_{\mathrm{Quarterly}}$) of an active enforcer is defined as:
-
-\begin{equation}
-    C_{\mathrm{Quarterly}} = (C_{\mathrm{BaseDaily}} \times \mu_{\mathrm{eff}}) \times 66
-    \label{eq:enforcement_capacity}
-\end{equation}
-
-\noindent where $\mu_{\mathrm{eff}}$ represents an efficiency multiplier (defaulted to 1.0) that can be adjusted to simulate varying levels of institutional competence.
-
-During each simulation step, the deployed \texttt{EnforcementAgent} employs a randomized monitoring strategy, selecting a discrete sample of households up to its capacity limit. If a household is non-compliant, the agent flags it and increments its internal \texttt{citations\_issued} tracker, directly triggering the financial penalty ($F$) within the household's utility function. 
-
-Crucially, the presence of these agents generates a systemic feedback loop. Following inspections, the enforcement agent updates the barangay's macro-level Perceived Probability of Detection ($P_{\mathrm{Detection}}$) using the ratio of total inspection capacity to the total household population:
-
-\begin{equation}
-    P_{\mathrm{Detection}} = \min\left(1.0, \frac{\sum C_{\mathrm{Quarterly}}}{N_{\mathrm{Households}}}\right)
-    \label{eq:prob_detection}
-\end{equation}
-
-This updated probability is broadcasted back to the \texttt{HouseholdAgent} objects, dynamically increasing their anticipated risk. At the conclusion of each quarter, the \texttt{BarangayAgent} aggregates this data and reports the \textit{BarangayComplianceRate} to the LGU agent, completing a high-fidelity feedback loop where local citizen behavior informs subsequent municipal-level policy adjustments.
-
-\subsection{Spatial Dynamics and Enforcement Constraints}
+\subsection{Global Sensitivity Analysis: Addressing Parameter Uncertainty}
+Agent-Based Models (ABMs) are highly effective at simulating complex socio-environmental systems, but they frequently suffer from parameter uncertainty, particularly when dealing with unobservable psychological constructs and heuristic behavioral rules \citep{McCulloch2022}. To rigorously validate the structural integrity of the simulation and quantify this uncertainty, a variance-based Global Sensitivity Analysis (GSA) was conducted using the Sobol method \citep{Sobol2001}. 
 
 
-The physical environment of the Agent-Based Model (ABM) is constructed as a two-dimensional spatial grid, where Household and Enforcement Agents are geographically distributed to represent the topographical layout of the municipality. Unlike centralized, equation-based models that assume uniform mixing or omniscient actors, this spatial formulation enforces strict geographical limitations on agent interactions \citep{Meng2018}. Specifically, Enforcement Agents do not possess global, omniscient vision of the entire barangay. Instead, they operate under bounded rationality and physical constraints, forcing them to rely on localized spatial searches within a defined line-of-sight (e.g., $Radius = 10$). This architectural design is critical for the model's ecological validity, as it accurately simulates the limited monitoring capacity of real-world local enforcers who can only act upon the non-compliant behaviors they physically observe within their immediate vicinity \citep{Dalugdog2021, Tian2024}.
+
+Unlike local sensitivity analyses that alter one variable at a time, the Sobol method explores the entire multidimensional parameter space simultaneously. This sophisticated approach decomposes the variance of the model's primary macro-level outputs—specifically, the final Global Compliance rate and accumulated Political Capital—into fractions directly attributable to the individual Theory of Planned Behavior (TPB) parameters and their complex, non-linear interactions \citep{ZhengAI2022}. By doing so, it provides a quantitative measure of how heavily the LGU's policy outcomes rely on specific assumptions about human behavior.
 
 \begin{algorithm}[H]
-\caption{Enforcement Agent Patrol \& Fining}
-\label{alg:enforcement_patrol}
+\caption{Global Sensitivity Analysis (Sobol Method)}
+\label{alg:sobol_gsa}
 \begin{algorithmic}[1]
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\Require Agent Position, Local Radius = 10
+\Require Simulation Model, Total Samples ($N$)
 \Statex
-\State \Comment{Step 1: Mark Immediate Surroundings}
-\State Mark all Household Agents in Radius 1 as ``Visited''
+\State \Comment{Step 1: Define the Parameter Space}
+\State Define Problem dictionary with $Number\_of\_Variables = 5$
+\State Define bounds for each parameter:
+\State \quad - Weight\_Attitude ($w_a$): $[0.1, 0.6]$
+\State \quad - Weight\_SocialNorm ($w_{sn}$): $[0.1, 0.6]$
+\State \quad - Weight\_PBC ($w_{pbc}$): $[0.1, 0.6]$
+\State \quad - Base\_Effort ($c_{effort}$): $[0.1, 0.5]$
+\State \quad - Attitude\_Decay: $[0.001, 0.02]$
 \Statex
-\State \Comment{Step 2: Determine Movement (Separate Patrol Logic)}
-\State $Local\_Targets \gets \text{Scan for Unvisited Household Agents in Radius 10}$
-\State $\text{Filter } Local\_Targets \text{ for Non-Compliant behavior}$
+\State \Comment{Step 2: Generate Parameter Samples}
+\State $Parameter\_Matrix \gets \text{Generate Saltelli Samples based on Problem and } N$
+\State Initialize $Output\_Array\_Compliance$
+\State Initialize $Output\_Array\_Capital$
 \Statex
-\If{$Local\_Targets \text{ is NOT empty}$}
-    \State \Comment{CHASE MODE}
-    \State $Target \gets \text{Find Closest Agent in } Local\_Targets$
-    \State $Next\_Position \gets \text{Calculate coordinate step closer to } Target$
-\Else
-    \State \Comment{PATROL MODE}
-    \State $Next\_Position \gets \text{Select Random Valid Adjacent Coordinate}$
-\EndIf
-\Statex
-\State $\text{Move Agent to } Next\_Position$
-\Statex
-\State \Comment{Step 3: Enforcement Execution}
-\State $Catch\_Zone \gets \text{Scan for Household Agents in Radius 1 (Include Center)}$
-\For{each $Household$ in $Catch\_Zone$}
-    \If{$Household \text{ is NOT Compliant}$}
-        \State $\text{Apply Fine (Decrease Household Utility and Attitude)}$
-        \State $\text{Increment Global Fines Collected}$
-    \EndIf
+\State \Comment{Step 3: Execute Simulation for Each Sample}
+\For{each $Row$ in $Parameter\_Matrix$}
+    \State Override Base\_Behavioral\_Profiles with $Row$ values
+    \State Initialize Model with Policy\_Mode = ``status\_quo''
+    \Statex
+    \While{Model is Running}
+        \State Execute Model Step
+    \EndWhile
+    \Statex
+    \State \Comment{Extract Final Metrics}
+    \State $Final\_Compliance \gets \text{Calculate\_Global\_Compliance}()$
+    \State $Final\_Capital \gets \text{Get\_Political\_Capital}()$
+    \Statex
+    \State Append $Final\_Compliance$ to $Output\_Array\_Compliance$
+    \State Append $Final\_Capital$ to $Output\_Array\_Capital$
 \EndFor
+\Statex
+\State \Comment{Step 4: Compute Sensitivity Indices}
+\State $Sobol\_Indices\_Compliance \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Compliance)$
+\State $Sobol\_Indices\_Capital \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Capital)$
+\Statex
+\State \Return First-Order ($S_1$) and Total-Order ($S_T$) indices for all variables
 \end{algorithmic}
 \end{algorithm}
 
+The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights for Attitude ($w_a$), Subjective Norms ($w_{sn}$), and Perceived Behavioral Control ($w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the decision-making equation without empirical justification, allowing the simulation to explore a diverse spectrum of household archetypes (e.g., highly conformist versus highly independent citizens). Additionally, operational constraints such as Base Effort ($c_{effort}$) and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.02]$, respectively. 
 
-The algorithmic movement of the Enforcement Agents is bifurcated into two distinct behavioral states: ``Chase Mode'' and ``Patrol Mode.'' When in Patrol Mode, the agent conducts a stochastic spatial search, moving to random adjacent coordinates. This represents the routine, unguided neighborhood rounds conducted by personnel when no immediate waste violations are visible. However, if a non-compliant Household Agent is detected within the enforcer's scanning radius, the agent dynamically switches to Chase Mode, interrupting the random walk to calculate a directed spatial trajectory toward the closest violator to execute an intervention \citep{Zhao2022}. 
-
-This spatial limitation profoundly reflects the real-world logistical constraints of municipal governance, particularly the deployment of \textit{barangay tanods} (village watchmen) or local environmental enforcers in the Philippines. Local Government Units (LGUs) rarely have the manpower or budgetary resources to monitor every household simultaneously \citep{Abordo2025}. Consequently, the probability of a household being caught and fined is not absolute; rather, it is a highly localized phenomenon dependent on spatial proximity and the enforcer's current patrol route. This localized enforcement mechanism organically generates the dynamic, fluctuating detection probability experienced by households, ensuring that the deterrent effect of punitive policies in the simulation is realistically constrained by the physical and temporal capacity of the barangay's law enforcement \citep{Jimenez2025}.
+By calculating the First-Order ($S_1$) and Total-Order ($S_T$) indices, we can isolate which specific parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters is crucial; it not only highlights where future empirical data collection efforts by the municipality should be focused to reduce real-world uncertainty, but it also mathematically validates whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation \citep{TianReview2024}.

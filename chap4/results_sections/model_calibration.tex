@@ -14,13 +14,13 @@ To ensure the Agent-Based Model reflected the true ``Status Quo,'' the initializ
 
 \begin{table}[htbp]
     \centering
-    \caption{Comparison of Acquired Compliance Data vs.\ Calibrated Simulation Initialization}
+    \caption{Comparison of Self-Reported Compliance Rate vs.\ Calibrated Compliance Rate}
     \label{tab:calibration_data}
     \small
     \begin{tabular}{l c c p{5cm}}
         \toprule
-        Barangay & Acquired Data & Calibrated $S_0$ & Primary Calibration Factor \\
-         & \textit{(Self-Reported)} & \textit{(Simulation Start)} & \\
+        Barangay & Self-Reported & Calibrated & Primary Calibration Factor \\
+         & \textit{(Compliance Rate)} & \textit{(Compliance Rate)} & \\
         \midrule
         Brgy Babalaya     & 100\% & 15\% & Adjusted for lack of funding/monitoring \\
         Brgy Binuni       & 95\%  & 15\% & Decoupled awareness from actual practice \\
@@ -35,7 +35,7 @@ To ensure the Agent-Based Model reflected the true ``Status Quo,'' the initializ
     \vspace{1ex}
     \raggedright
     \footnotesize
-    \textit{Note: ``Acquired Data'' refers to unverified compliance rates reported during Key Informant Interviews (Appendix \ref{ch:appendix_b}). ``Calibrated $S_0$'' refers to the initialized compliance state in the Agent-Based Model, tuned to match the aggregate municipal segregation rate of $\approx$12.5\% verified by MENRO.}
+    \textit{Note: ``Self-Reported'' refers to compliance rates reported during Key Informant Interviews (Appendix \ref{ch:appendix_b}). ``Calibrated'' refers to the initialized compliance state in the Agent-Based Model, tuned to match the aggregate municipal segregation rate of $\approx$12.5\% verified by MENRO.}
 \end{table}
 
 Barangay Binuni officials reported a near-perfect compliance rate of 95\% (refer to Appendix \ref{appendix:binuni_interview}). However, initializing the simulation at this level resulted in immediate global compliance exceeding 40\%, rendering the RL agent’s optimization tasks trivial. The simulation logic posited that the reported 95\% reflected \textit{awareness} rather than \textit{practice}. This distinction was critical; as noted by \cite{Paigalan2025}, positive attitudes (Mean=3.17) often coexisted with poor practices like open burning (Mean=2.90), creating an ``Intention-Action Gap'' that the model had to explicitly correct for.
