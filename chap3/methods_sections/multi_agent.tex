@@ -88,15 +88,7 @@ For the Incentive budget ($A_{\mathrm{Inc}, B_i}$), the \texttt{BarangayAgent} f
 
 Operating under the directive of the \texttt{BarangayAgent} is the \texttt{EnforcementAgent}, which serves as the operational extension of the municipal government tasked with physically monitoring household compliance and executing punitive measures. To operationalize the ``No Segregation, No Collection'' mandate, the \texttt{BarangayAgent} deploys these local enforcers. 
 
-To ensure ecological validity, each enforcement agent is initialized with a \texttt{base\_daily\_capacity} of 30 households. This cap reflects the geographical realities and administrative friction of monitoring the municipality. Operating on a quarterly time step of 66 standard working days, the maximum theoretical inspection capacity ($C_{\mathrm{Quarterly}}$) of an active enforcer is defined as:
-
-\begin{equation}
-    C_{\mathrm{Quarterly}} = (C_{\mathrm{BaseDaily}} \times \mu_{\mathrm{eff}}) \times 66
-    \label{eq:enforcement_capacity}
-\end{equation}
-\addequation{Theoretical Quarterly Enforcement Capacity}
-
-\noindent where $\mu_{\mathrm{eff}}$ represents an efficiency multiplier (defaulted to 1.0) that can be adjusted to simulate varying levels of institutional competence.
+To ensure ecological validity, each enforcement agent is initialized with a \texttt{base\_daily\_capacity} of 30 households. This cap reflects the geographical realities and administrative friction of monitoring the municipality. Operating on a quarterly time step of 66 standard working days, the maximum theoretical inspection capacity ($C_{\mathrm{Quarterly}}$) of an active enforcer as defined in Equation \ref{eq:cost_enforcement}, where $\mu_{\mathrm{eff}}$ represents an efficiency multiplier (defaulted to 1.0) that can be adjusted to simulate varying levels of institutional competence.
 
 The physical environment of the Agent-Based Model (ABM) is constructed as a two-dimensional spatial grid, where Household and Enforcement Agents are geographically distributed to represent the topographical layout of the municipality. Unlike centralized, equation-based models that assume uniform mixing or omniscient actors, this spatial formulation enforces strict geographical limitations on agent interactions \citep{Meng2018}. Specifically, Enforcement Agents do not possess global, omniscient vision of the entire barangay. Instead, they operate under bounded rationality and physical constraints, forcing them to rely on localized spatial searches within a defined line-of-sight (e.g., $Radius = 10$). This architectural design accurately simulates the limited monitoring capacity of real-world local enforcers who can only act upon non-compliant behaviors physically observed within their immediate vicinity \citep{Dalugdog2021, TianReview2024}.
 
@@ -106,36 +98,33 @@ During each simulation step, the deployed agent employs this randomized monitori
 
 
 \begin{algorithm}[H]
-\caption{Enforcement Agent Patrol \& Fining}
-\label{alg:enforcement_patrol}
+\caption{The Enforcer's Daily Patrol and Fining Process}
+\label{alg:enforcement_patrol_english}
 \begin{algorithmic}[1]
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\Require Agent Position, Local Radius = 10
+\State \textbf{Starting Information Needed:} The Enforcer's current location, and a ``Field of Vision'' covering the surrounding 10 blocks (or units)
 \Statex
-\State \Comment{Step 1: Mark Immediate Surroundings}
-\State Mark all Household Agents in Radius 1 as ``Visited''
+\State \textbf{Step 1: Mark the Immediate Area}
+\State Mark all households right next to the Enforcer as ``Visited'' (so the Enforcer doesn't get stuck checking the exact same houses over and over)
 \Statex
-\State \Comment{Step 2: Determine Movement (Separate Patrol Logic)}
-\State $Local\_Targets \gets \text{Scan for Unvisited Household Agents in Radius 10}$
-\State $\text{Filter } Local\_Targets \text{ for Non-Compliant behavior}$
+\State \textbf{Step 2: Decide Where to Go Next (Movement Logic)}
+\State Look around the entire Field of Vision for households that haven't been visited yet
+\State Out of those unvisited households, spot anyone who is currently breaking the rules (Non-Compliant)
 \Statex
-\If{$Local\_Targets \text{ is NOT empty}$}
-    \State \Comment{CHASE MODE}
-    \State $Target \gets \text{Find Closest Agent in } Local\_Targets$
-    \State $Next\_Position \gets \text{Calculate coordinate step closer to } Target$
+\If{there are compliant in sight}
+    \State \textit{CHASE}
+    \State Pick the non-compliant who is closest to the Enforcer
+    \State Take one step directly toward that specific household
 \Else
-    \State \Comment{PATROL MODE}
-    \State $Next\_Position \gets \text{Select Random Valid Adjacent Coordinate}$
+    \State \textit{PATROL}
+    \State If no one is breaking the rules nearby, take a step in a random direction to continue patrolling the neighborhood
 \EndIf
 \Statex
-\State $\text{Move Agent to } Next\_Position$
-\Statex
-\State \Comment{Step 3: Enforcement Execution}
-\State $Catch\_Zone \gets \text{Scan for Household Agents in Radius 1 (Include Center)}$
-\For{each $Household$ in $Catch\_Zone$}
-    \If{$Household \text{ is NOT Compliant}$}
-        \State $\text{Apply Fine (Decrease Household Utility and Attitude)}$
-        \State $\text{Increment Global Fines Collected}$
+\State \textbf{Step 3: Issue Fines (Enforcement Execution)}
+\State Look at the households immediately surrounding the Enforcer's new location (the ``Catch Zone'')
+\For{every household in this immediate catch area}
+    \If{the household is actively breaking the rules}
+        \State Issue a fine to the household (this physically decreases their money/happiness and hurts their attitude toward the government)
+        \State Add the fine amount to the city's overall collected fines tracker
     \EndIf
 \EndFor
 \end{algorithmic}
@@ -221,105 +210,101 @@ The integration of the dynamic utility function and the protective social shield
 
 If the calculated $Utility$ exceeds $0.0$, the agent's baseline intent is to segregate. However, intentionality does not guarantee perfect execution \citep{McCulloch2022}. To model this, the algorithm implements a strict ``1\% Human Error'' rule. Even when a household has a highly positive utility and full intention to comply, there is a 1\% probability that they fail to segregate on any given day due to unpredictable real-world friction (e.g., misplacing items, lack of time, or full bins). This constraint prevents the model from plateauing at an unrealistic, deterministic 100\% compliance rate, ensuring ecological validity aligned with actual municipal waste management data \citep{TianReview2024}.
 
+\newpage
+\vspace*{-2cm} 
 \begin{algorithm}[H]
-\caption{Household Decision-Making (TPB with Shields)}
-\label{alg:household_decision}
+\caption{The Household's Daily Decision Process: To Segregate or Not?}
+\label{alg:household_decision_english}
 \begin{algorithmic}[1]
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\Require Household properties (Income, Base Attitude, Base SN, Base PBC)
+\State \textbf{Starting Information Needed:} The Household's Income, their baseline Motivation, their susceptibility to Peer Pressure, and the Base Effort required to segregate waste.
 \Statex
-\State \Comment{Step 1: Update Social Norms (SN) with Perception Cap}
-\State $Local\_Compliance \gets \text{Calculate\_Neighbors\_Compliance}(Radius = 2)$
-\State $Authority\_Boost \gets Enforcement\_Intensity \times 0.50$
-\State $Perceived\_Reality \gets \min(0.92, Local\_Compliance + Authority\_Boost)$
+\State \textbf{Step 1: Evaluate Peer Pressure and "Sticky" Habits}
+\State Look at immediate neighbors to see what percentage are following the rules
+\State Add a "Respect for Authority" bonus if Enforcers are highly visible in the area
+\State Calculate the household's ``Perceived Reality'' (what they think the neighborhood is doing), capped at a realistic 92\%
 \Statex
-\If{$Perceived\_Reality < Current\_SN$}
-    \State \Comment{Apply Damper (Inertia/Stickiness)}
-    \If{$Barangay\_Compliance > 0.70$}
-        \State $Current\_SN \gets (0.90 \times Current\_SN) + (0.10 \times Perceived\_Reality)$ \Comment{Stage 2}
-    \ElsIf{$Barangay\_Compliance > 0.40$}
-        \State $Current\_SN \gets (0.85 \times Current\_SN) + (0.15 \times Perceived\_Reality)$ \Comment{Stage 1}
+\State \textit{The Habit Shield (Resistance to Negative Peer Pressure):}
+\If{the neighborhood seems to be doing worse than the household previously thought}
+    \State \textit{Apply the Habit Damper:}
+    \If{they live in a highly compliant neighborhood (over 70\% passing)}
+        \State They are very stubborn: they mostly hold onto their good habits and only slightly let the new negative reality affect them
+    \ElsIf{they live in an average neighborhood (over 40\% passing)}
+        \State They are moderately stubborn: they let the negative reality affect them a bit more
     \Else
-        \State $Current\_SN \gets Perceived\_Reality$
+        \State They live in a failing neighborhood: they instantly lose hope and adopt the negative reality
     \EndIf
 \Else
-    \State $Current\_SN \gets Perceived\_Reality$
+    \State If the neighborhood is doing better than expected, they adopt the positive reality immediately
 \EndIf
-\State $Current\_SN \gets \min(0.95, Current\_SN)$ \Comment{Realism Cap}
+\State Cap their final sense of Peer Pressure at 95\% (since no one believes a neighborhood is 100\% perfect)
 \Statex
-\State \Comment{Step 2: Update Attitude with Decay and Synergy}
-\State $Decay\_Damper \gets \text{Calculate\_Damper\_Based\_On\_Compliance}()$
-\State $Attitude \gets Attitude - (Decay\_Rate \times Decay\_Damper)$
-\State $Attitude \gets Attitude + \text{Calculate\_IEC\_Synergy\_Boost}()$
-\State $Attitude \gets \text{Apply\_Pride\_And\_Complacency\_Modifiers}(Attitude)$
+\State \textbf{Step 2: Update Internal Motivation (Attitude)}
+\State Motivation naturally fades over time, but this decay slows down if they live in a compliant neighborhood
+\State Boost their motivation if they recently heard an Information/Educational Campaign
+\State Adjust for human psychology (e.g., feeling Pride for doing a good job, or getting Complacent if things seem too easy)
 \Statex
-\State \Comment{Step 3: Calculate Utility and Decision}
-\State $Monetary\_Impact \gets Incentive\_Value + (Fine\_Amount \times Prob\_Detection)$
-\State $Net\_Cost \gets Base\_Effort - (Gamma\_Income \times (Monetary\_Impact / 2000.0))$
-\State $Epsilon \gets \text{Random\_Gaussian}(\text{Mean} = 0, \text{StdDev} = 0.05)$
+\State \textbf{Step 3: Weigh the Costs vs. Benefits (The Final Choice)}
+\State Calculate the Financial Impact: Weigh the potential municipal rewards against the risk of getting caught and fined
+\State Calculate the ``Net Effort'': How hard is it to segregate? (Keep in mind that rich and poor households value the exact same fine differently)
+\State Add a tiny bit of random human unpredictability to their thought process
 \Statex
-\If{$Utility > 0.0$}
-    \State $Is\_Compliant \gets \text{True}$
-    \State \Comment{Human Error Rule}
-    \If{$\text{Random}(0.0, 1.0) < 0.01$}
-        \State $Is\_Compliant \gets \text{False}$
+\State \textit{Make the Decision:}
+\If{the overall benefits and pressures outweigh the effort}
+    \State The household decides to Comply (segregate their waste)
+    \Statex
+    \State \textit{Human Error}
+    \If{even with the best intentions, they roll a 1\% chance of making a mistake}
+        \State They accidentally fail to segregate that day (e.g., they forgot, or a child mixed the bins)
     \EndIf
 \Else
-    \State $Is\_Compliant \gets \text{False}$
+    \State The effort is too high or motivation is too low: The household decides NOT to comply
 \EndIf
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{Global Sensitivity Analysis: Addressing Parameter Uncertainty}
+
 Agent-Based Models (ABMs) are highly effective at simulating complex socio-environmental systems, but they frequently suffer from parameter uncertainty, particularly when dealing with unobservable psychological constructs and heuristic behavioral rules \citep{McCulloch2022}. To rigorously validate the structural integrity of the simulation and quantify this uncertainty, a variance-based Global Sensitivity Analysis (GSA) was conducted using the Sobol method \citep{Sobol2001}. 
-
-
 
 Unlike local sensitivity analyses that alter one variable at a time, the Sobol method explores the entire multidimensional parameter space simultaneously. This sophisticated approach decomposes the variance of the model's primary macro-level outputs—specifically, the final Global Compliance rate and accumulated Political Capital—into fractions directly attributable to the individual Theory of Planned Behavior (TPB) parameters and their complex, non-linear interactions \citep{ZhengAI2022}. By doing so, it provides a quantitative measure of how heavily the LGU's policy outcomes rely on specific assumptions about human behavior.
 
 \begin{algorithm}[H]
-\caption{Global Sensitivity Analysis (Sobol Method)}
-\label{alg:sobol_gsa}
+\caption{Determining What Matters Most (Stress-Testing the Simulation)}
+\label{alg:sobol_gsa_english}
 \begin{algorithmic}[1]
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\Require Simulation Model, Total Samples ($N$)
+\State \textbf{Starting Information Needed:} The Household Agents, and the Total Number of "What-If" Scenarios to test (e.g., thousands of combinations)
 \Statex
-\State \Comment{Step 1: Define the Parameter Space}
-\State Define Problem dictionary with $Number\_of\_Variables = 5$
-\State Define bounds for each parameter:
-\State \quad - Weight\_Attitude ($w_a$): $[0.1, 0.6]$
-\State \quad - Weight\_SocialNorm ($w_{sn}$): $[0.1, 0.6]$
-\State \quad - Weight\_PBC ($w_{pbc}$): $[0.1, 0.6]$
-\State \quad - Base\_Effort ($c_{effort}$): $[0.1, 0.5]$
-\State \quad - Attitude\_Decay: $[0.001, 0.02]$
+\State \textbf{Step 1: Define the "What-If" Variables}
+\State Select the 5 key psychological traits we want to stress-test, and define their realistic minimum and maximum limits:
+\State \quad - \textit{Personal Attitude:} How heavily households weigh their own internal motivation
+\State \quad - \textit{Peer Pressure:} How heavily they weigh the actions of their neighbors
+\State \quad - \textit{Perceived Control:} How much they care about the difficulty of the rules
+\State \quad - \textit{Physical Effort:} The actual baseline effort required to segregate waste
+\State \quad - \textit{Motivation Decay:} How quickly a household naturally loses its good habits
 \Statex
-\State \Comment{Step 2: Generate Parameter Samples}
-\State $Parameter\_Matrix \gets \text{Generate Saltelli Samples based on Problem and } N$
-\State Initialize $Output\_Array\_Compliance$
-\State Initialize $Output\_Array\_Capital$
+\State \textbf{Step 2: Create the Test Scenarios}
+\State Generate a massive list of unique test cases by scrambling and mixing these 5 traits together into thousands of different mathematical combinations
+\State Prepare empty record books to track the final results of each test
 \Statex
-\State \Comment{Step 3: Execute Simulation for Each Sample}
-\For{each $Row$ in $Parameter\_Matrix$}
-    \State Override Base\_Behavioral\_Profiles with $Row$ values
-    \State Initialize Model with Policy\_Mode = ``status\_quo''
+\State \textbf{Step 3: Run the Simulation for Every Single Scenario}
+\For{every unique combination of traits in our massive list}
+    \State Inject these specific psychological traits into the simulation's household agent
+    \State Start the simulation using the standard Pure IEC policy strategy (Status Quo Policy)
     \Statex
-    \While{Model is Running}
-        \State Execute Model Step
-    \EndWhile
+    \State \textit{Let the simulation play out:}
+    \State Fast-forward the simulation until it reaches the end of its timeline
     \Statex
-    \State \Comment{Extract Final Metrics}
-    \State $Final\_Compliance \gets \text{Calculate\_Global\_Compliance}()$
-    \State $Final\_Capital \gets \text{Get\_Political\_Capital}()$
-    \Statex
-    \State Append $Final\_Compliance$ to $Output\_Array\_Compliance$
-    \State Append $Final\_Capital$ to $Output\_Array\_Capital$
+    \State \textit{Record the Final Grades:}
+    \State Check the municipalty's final Waste Segregation Compliance Rate
+    \State Check the Mayor agent final Political Capital score
+    \State Write both scores down in the record books next to that specific test case
 \EndFor
 \Statex
-\State \Comment{Step 4: Compute Sensitivity Indices}
-\State $Sobol\_Indices\_Compliance \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Compliance)$
-\State $Sobol\_Indices\_Capital \gets \text{Analyze Outputs using Sobol}(Problem, Output\_Array\_Capital)$
+\State \textbf{Step 4: Calculate the "Impact Scores" (The Sobol Method)}
+\State Feed the massive record books into the statistical analyzer
+\State Calculate which specific psychological traits were actually responsible for causing the municipality's compliance to succeed or fail
 \Statex
-\State \Return First-Order ($S_1$) and Total-Order ($S_T$) indices for all variables
+\State \textbf{Final Output:} A report showing the ``Direct Impact'' (which trait changes outcomes immediately on its own) and the ``Ripple Effect'' (which trait changes outcomes when it interacts with other traits) for all 5 variables.
 \end{algorithmic}
 \end{algorithm}
 
