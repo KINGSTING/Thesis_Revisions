@@ -1,0 +1,10 @@
+\subsection{Getting the Simulation Output}
+To capture the dynamic evolution of the system and evaluate the efficacy of the tested policies, the simulation employs a comprehensive data collection architecture. Using the \texttt{DataCollector} module within the Python MESA framework, the model systematically records both micro-level and macro-level variables at each temporal step. At the macro level, the system logs the Mayor Agent's quarterly financial allocations—detailing the exact expenditure on Information, Education, and Communication (IEC), enforcement personnel, and monetary incentives—alongside the remaining municipal budget and accumulated political capital. At the micro level, it tracks the shifting compliance rates of the individual barangays and the frequency of daily enforcement actions. At the conclusion of each simulation run, these temporal logs are serialized and exported as structured datasets (e.g., CSV files). This provides the necessary longitudinal data to conduct comparative analyses across different policy regimes and visualize the Reinforcement Learning agent's behavioral convergence.
+
+\begin{figure}[h]
+    \centering
+    % Ensure you have uploaded the file 'simulation_ui' to your project
+    \includegraphics[width=0.8\linewidth]{simulation_ui.jpg}
+    \caption{Bacolod Multi-View Simulation UI}
+    \label{fig:simulatio_ui}
+\end{figure}

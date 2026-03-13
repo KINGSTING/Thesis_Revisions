@@ -1,0 +1,149 @@
+\subsection{The Household Agent: Behavioral and Computational Architecture}
+
+The \texttt{HouseholdAgent} is the foundational computational node of the simulation. Rather than acting as a static data point, each household acts as a continuous finite state machine. To ensure the reader can follow the complex mechanics of this agent, this section is divided into three distinct phases: (1) the theoretical mathematical framework governing behavior, (2) the computational data structures and spatial algorithms that execute this theory, and (3) the validation of these parameters via Global Sensitivity Analysis.
+
+\subsubsection{Theoretical Foundation: The TPB Framework and Utility Architecture}
+
+The core decision logic of the \texttt{HouseholdAgent} is governed by a dynamic utility function grounded in the Theory of Planned Behavior (TPB). This theory posits that an individual's intention to perform a behavior is a function of their Attitude ($A$), Subjective Norms ($SN$), and Perceived Behavioral Control ($PBC$) \citep{Ceschi2021}. In contrast to static behavioral models, this framework incorporates time-variant weights ($w(t)$) for psychological constructs, allowing agent behavior to evolve non-linearly \citep{Taraghi2025, Ma2023}. The baseline utility of segregation ($U_{\mathrm{segregate}}$) is defined as:
+
+\begin{equation}
+    U_{\mathrm{segregate}} = (w_A(t) A) + (w_{SN}(t) SN_{\mathrm{local}}) + (w_{PBC}(t)  PBC) - C_{\mathrm{Net}} + \epsilon
+    \label{eq:utility_function}
+\end{equation}
+\addequation{Household Utility of Segregation Function}
+
+In this formulation, $w_A(t)$ represents the temporal evolution of the agent's internal valuation, functioning as a decay model that increases in response to educational campaigns and decays stochastically in their absence to simulate ``public forgetting'' \citep{Trushna2024}. The social component, $SN_{\mathrm{local}}$, is an endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood \citep{Liao2024}. To account for inherent uncertainty in human decision-making, $\epsilon$ introduces Gaussian stochastic noise ($\mu=0, \sigma=0.05$), ensuring the model reflects real-world behavioral variance \citep{Subedi2025}.
+
+A critical computational innovation in this model is the derivation of $C_{\mathrm{Net}}$, the net behavioral cost, which translates abstract psychological friction into a computable scalar:
+
+\begin{equation}
+    C_{\mathrm{Net}} = C_{\mathrm{Effort}} + (\gamma C_{\mathrm{Monetary}}) - (\gamma I) - (\gamma F P_{\mathrm{Detection}})
+    \label{eq:net_disutility}
+\end{equation}
+\addequation{Net Disutility of Segregation Function}
+
+This cost-benefit sub-model integrates both physical and financial barriers:
+\begin{itemize}
+    \item \textbf{$C_{\mathrm{Effort}}$}: The physical hassle associated with washing, sorting, and storage of waste.
+    \item \textbf{$C_{\mathrm{Monetary}}$}: Tangible financial expenses, such as procuring color-coded bins.
+    \item \textbf{$\gamma$ (Income Sensitivity)}: A weighting factor derived from household income level; for lower-income households, $\gamma > 1$ as financial levers carry greater psychological weight, whereas $\gamma < 1$ for higher-income households.
+    \item \textbf{$I$, $F$, and $P_{\mathrm{Detection}}$}: The objective magnitudes of monetary incentives, punitive fines, and detection probability. \textit{(Note: These external variables are dynamically controlled by macro-level municipal interventions, which will be extensively detailed in Section 3.3.4: The Mayor Agent).}
+\end{itemize}
+
+The model also captures complex psychological feedbacks such as ``psychological reactance.'' While municipal investments generally improve Attitude ($A$), if enforcement intensity crosses a specific threshold, Attitude paradoxically decreases, reflecting resistance to coercive mandates \citep{LoanBalanay2023}.
+
+\subsubsection{Modeling Behavioral Inertia: Social Shields and Norm Internalization}
+
+Standard Agent-Based Models often suffer from hyper-reactivity, exhibiting unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To accurately simulate the real-world stability of established habits, this study mathematically models ``Cultural Inertia''—where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit \citep{Corcoran2020}.
+
+To achieve this, the standard attitude update function is refined by a dynamic damping factor ($D_{\mathrm{factor}}$), suggesting that established social norms act as a buffer against the rapid erosion of compliance \citep{Andre2021}:
+
+\begin{equation}
+    A_{t+1} = A_t - (\delta \times D_{\mathrm{factor}})
+\end{equation}
+\addequation{Attitude Decay and Damping Function}
+
+The damping factor is governed by the strength of local social norms ($SN$) through two distinct stages:
+\begin{itemize}
+    \item \textbf{Stage 1: Bayanihan Activation (The 40\% Floor):} Triggered when barangay compliance surpasses 40\%, representing an emergent community spirit that slows the erosion of positive norms, ensuring perceived social pressure does not drop to zero \citep{Nishimura2022}.
+    \item \textbf{Stage 2: Norm Lock-in (The 70\% Tipping Point):} Occurs when compliance exceeds 70\%, representing deep cultural habituation where segregation becomes the default state \citep{Jimenez2025}. This reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions \citep{Centola2018, Nyborg2024}. 
+\end{itemize}
+
+Mathematically, this damping effect is expressed as a piecewise function:
+
+\begin{equation}
+    D_{\mathrm{factor}} = 
+    \begin{cases} 
+        0.1 & \text{if } SN > 0.70 \text{ (Stage 2: Strong Norms / Internalized)} \\
+        0.5 & \text{if } SN > 0.40 \text{ (Stage 1: Bayanihan Activation)} \\
+        1.0 & \text{otherwise (Weak Norms / Standard Decay)}
+    \end{cases}
+\end{equation}
+\addequation{Dynamic Damping Factor for Behavioral Inertia}
+
+
+\subsubsection{Computational Implementation and State Transitions}
+
+While the preceding equations establish the theoretical bounds of the agent, the \texttt{HouseholdAgent} requires a computational architecture to process these variables dynamically. In the ABM framework, the agent executes a continuous evaluation loop (the \texttt{step()} function) at every discrete time step ($t$). 
+
+\subparagraph{Part 1: State Vector Initialization:} 
+Upon instantiation, each agent is assigned a fixed demographic parameter (Income Level) and a continuously updating psychological state vector $S_{hh} = \langle A, SN, PBC \rangle$. To prevent synthetic uniformity, the initial state vector is populated using stochastic Gaussian sampling bounded by the agent's assigned behavioral profile \citep{Fischer2025}. For instance, agents initialized as "Compliant" derive their base attitude from $A \sim \mathcal{U}(0.75, 0.90)$, whereas "Non-Compliant" agents are seeded from $A \sim \mathcal{U}(0.10, 0.40)$.
+
+\subparagraph{Part 2: Spatial Queries (Moore Neighborhood Algorithm):} 
+The calculation of Social Norms ($SN_{\mathrm{local}}$) relies on spatial data. During execution, the agent utilizes a Moore Neighborhood search algorithm with a radius of $r=1$, querying adjacent grid cells in $O(k)$ time, where $k \le 8$ cells. The local compliance ratio $R_{local}$ is computed as:
+\begin{equation}
+    R_{local} = \frac{\sum_{i=1}^{k} \mathbb{I}(\text{neighbor}_i.\text{is\_compliant})}{k}
+\end{equation}
+If $R_{local}$ crosses the predefined social tipping point of $0.25$, the agent's internal $SN$ weight undergoes an asymmetric scalar multiplication ($SN_{new} = SN_{old} \times 1.30$), triggering a rapid, non-linear computational cascade in community compliance \citep{Centola2018}.
+
+\subparagraph{Part 3: Event-Driven Overrides (\texttt{get\_fined}):} 
+The \texttt{HouseholdAgent} exposes public methods for event-driven interrupts triggered by spatial collisions with an \texttt{EnforcementAgent}. When \texttt{get\_fined(amount)} is invoked, an economic penalty is applied to the agent's utility, scaled dynamically by the $\gamma$ multiplier. Furthermore, if the fine exceeds \textpeso 500, a probabilistic "Fear Factor" algorithm executes: a 60\% probability that the agent's internal state is forcefully overridden to \texttt{is\_compliant = True} for a temporal window. However, this applies a permanent flat deduction to the Attitude variable ($\Delta A = -0.10$), creating a computational tradeoff between short-term forced compliance and long-term intrinsic decay \citep{Hertweck2023}.
+
+\paragraph{Part 4: Algorithmic Execution of Household Decisions}
+
+The integration of the mathematical utility functions, the protective social shields, and the stochastic noise filters is executed daily by each household. To synthesize these complex operations into an interpretable sequence, Algorithm \ref{alg:household_decision_english} details the exact step-by-step heuristic process the agent undergoes during every simulation tick.
+
+\begin{algorithm}[H]
+\caption{The Household's Daily Decision Process (To Segregate or Not?)}
+\label{alg:household_decision_english}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Household Income, Baseline Motivation, Peer Pressure sensitivity, and Base Effort.
+\Statex
+\State \textbf{Step 1: Evaluate Peer Pressure \& The Habit Shield}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the local segregation rate by checking immediate neighbors.\strut}
+\If{the neighborhood is doing worse than the household expected}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Apply Habit Shield:} If the neighborhood is highly compliant ($>70\%$), heavily resist the negative pressure. If average ($>40\%$), resist slightly. If failing, instantly adopt the negative behavior.\strut}
+\Else
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Immediately absorb positive social pressure to fit in.\strut}
+\EndIf
+\Statex
+\State \textbf{Step 2: Update Motivation \& Calculate Net Effort}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Apply natural motivation decay, buffered by strong community habits, and apply motivation boosts from recent Educational Campaigns.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the "Net Effort" by weighing the physical hassle against the financial impact of municipal fines and rewards (scaled by the household's income level).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Add a fraction of random human unpredictability to the thought process.\strut}
+\Statex
+\State \textbf{Step 3: Execute the Final Choice}
+\If{the overall benefits and social pressures outweigh the effort}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Stochastic Human Error Check:} Roll a 1\% chance of accidental failure. If passed, successfully segregate waste.\strut}
+\Else
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ The effort is too high or motivation is too low: Do not segregate.\strut}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Validation of Household Mechanics: Global Sensitivity Analysis}
+
+Agent-Based Models (ABMs) are highly effective at simulating complex systems, but they frequently suffer from parameter uncertainty, particularly when dealing with unobservable psychological constructs \citep{McCulloch2022}. To rigorously validate the structural integrity of the Household Agent's programming and quantify this uncertainty, a variance-based Global Sensitivity Analysis (GSA) was conducted using the Sobol method \citep{Sobol2001}. 
+
+Unlike local sensitivity analyses that alter one variable at a time, the Sobol method explores the entire multidimensional parameter space simultaneously. This approach decomposes the variance of the model's primary macro-level outputs—specifically, the final Global Compliance rate—into fractions directly attributable to the individual Theory of Planned Behavior (TPB) parameters and their complex, non-linear interactions \citep{ZhengAI2022}. 
+
+\begin{algorithm}[H]
+\caption{Global Sensitivity Analysis (Stress-Testing the Simulation)}
+\label{alg:sobol_gsa_english}
+\begin{algorithmic}[1]
+\State \textbf{Starting Information Needed:} 
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ The boundaries for the psychological traits and a target of 384 parallel simulation runs.\strut}
+\Statex
+\State \textbf{Step 1: Define the "What-If" Variables}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Set the minimum and maximum limits for the 5 core behavioral drivers: Personal Motivation ($w_a$), Peer Pressure ($w_{sn}$), Rule Difficulty ($w_{pbc}$), Physical Effort ($C_{\mathrm{Effort}}$), and Motivation Decay.\strut}
+\Statex
+\State \textbf{Step 2: Generate the Test Matrix (Saltelli Method)}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Mathematically scramble and mix these 5 traits together to create a massive list of unique citizen profiles (e.g., highly conformist communities vs. highly independent communities).\strut}
+\Statex
+\State \textbf{Step 3: Run the Simulations (Headless Mode)}
+\For{every unique citizen profile in the test matrix}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Inject these specific psychological traits into the simulation's Household Agents.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Fast-forward the simulation to the end of the 3-year term using the standard "Status Quo" policy.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Record the municipality's final Waste Segregation Rate and the Mayor's Political Capital score.\strut}
+\EndFor
+\Statex
+\State \textbf{Step 4: Calculate the Impact Scores (Sobol Indices)}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Compute the \textbf{First-Order Index ($S_1$)}: This reveals the "Direct Impact" (which single trait changes the final segregation rate on its own).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Compute the \textbf{Total-Order Index ($S_T$)}: This reveals the "Ripple Effect" (which trait changes outcomes when it interacts and combines with other psychological traits).\strut}
+\end{algorithmic}
+\end{algorithm}
+
+The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights ($w_a, w_{sn}, w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the algorithmic decision-making without empirical justification. Additionally, operational constraints such as Base Effort and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.02]$, respectively. 
+
+By calculating the $S_1$ and $S_T$ indices, the analysis isolates which specific computational parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters mathematically validates whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation, ensuring the subsequent Deep Reinforcement Learning (DRL) agent is optimizing against a structurally sound and ecologically valid virtual population \citep{TianReview2024}.

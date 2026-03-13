@@ -1,0 +1,50 @@
+
+
+To accurately model the complex socio-ecological dynamics of municipal waste management, the simulation operates on a highly structured dual timescale and a spatially explicit grid \citep{Brugiere2022, TianReview2024}. 
+
+\subsection{Spatial and Temporal Scale}
+The physical environment is represented as a $50 \times 50$ non-toroidal \texttt{MultiGrid}, facilitating the spatial distribution of Household Agents and the stochastic patrolling routes of Enforcement Agents. The simulation's temporal resolution is defined by a dual timescale designed to capture both micro-level human behavior and macro-level administrative governance \citep{Akbarpour2021}. 
+
+At the micro-level, the environment processes daily iterations (1 tick = 1 day), allowing households to execute routine interactions, evaluate behavioral friction, and make daily segregation decisions based on the Theory of Planned Behavior. Concurrently, the macro-level operates on a 90-day (quarterly) epoch. The total simulation horizon is set to 1,080 ticks, representing a standard three-year political term for local government officials. 
+
+\subsection{Polycentric Governance: The Main Simulation Loop}
+As legally mandated by the Local Government Code of 1991 (R.A. 7160) and the Ecological Solid Waste Management Act of 2000 (R.A. 9003), the model employs a polycentric governance structure \citep{RA9003, Ostrom2010}. The Barangay Local Government Unit (BLGU) and the municipal Local Government Unit (LGU) operate as distinct administrative agents with strictly separate budgets. 
+
+The 90-day quarterly epoch serves as the fundamental unit of analysis for the municipal Mayor Agent. At the conclusion of each quarter, the Mayor Agent observes the aggregated state vector (compliance rates, attitude levels, and remaining budget) and executes a new policy allocation. Crucially, the simulation enforces a quarterly \textit{Redemption Status Reset}. By reverting every household's incentive eligibility to zero at the start of a new epoch, the model prevents the indefinite accumulation of rewards based on historical actions, forcing households to actively renew their compliance behaviors to qualify for municipal subsidies.
+
+\begin{algorithm}[H]
+\caption{The Coupled ABM-RL Main Simulation Loop (Policy \& Action Sequence)}
+\label{alg:main_loop}
+\begin{algorithmic}[1]
+\State \textbf{Initial Setup:}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Set Municipal Annual Budget to \textpeso 1,500,000.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Set Simulation Timeframe to 3 Years (1,080 days).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Populate the city with Household Citizens, Barangay Officials, and the Municipal Mayor.\strut}
+\Statex
+\State \textbf{Begin Daily Simulation Loop (Repeats every day for 3 years):}
+\For{Each Day in the Simulation}
+    \Statex
+    \State \textbf{Phase 1: Quarterly Policy Re-evaluation (Occurs every 90 days)}
+    \If{Today is the end of a Quarter}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Mayor's Observation:} The Mayor reviews the current state of the city, including segregation rates, public attitude, remaining funds, and current political capital (public approval).\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{AI Decision Formulation:} The Artificial Intelligence (HuDRL) processes these observations to formulate a new budget allocation strategy.\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Executive Action:} The Mayor deploys the new budget to specific barangays (funding new Information Campaigns, LGU Inspectors, or Incentives).\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Citizen Reset:} All households have their reward eligibility reset, meaning they must actively segregate again this quarter to earn new incentives.\strut}
+    \EndIf
+    \Statex
+    \State \textbf{Phase 2: Daily Grassroots \& Citizen Activities}
+    \For{Each Barangay}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ Conduct baseline local operations (e.g., Recorida announcements and Tanod patrols).\strut}
+    \EndFor
+    \For{Each Household}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ Weigh psychological factors: Peer pressure, fear of fines, and the physical effort required to segregate (Habit).\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ Make the daily behavioral choice: Segregate waste or do not segregate.\strut}
+    \EndFor
+    \Statex
+    \State \textbf{Phase 3: End-of-Day Administrative Accounting}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Deduct the daily operational costs of all active campaigns, deployed enforcers, and claimed rewards.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Replenish the municipal budget with any fines collected from caught violators.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Update the Mayor's Political Capital: Decrease approval if enforcement was too harsh, or increase it if the public is happy and the city is clean.\strut}
+\EndFor
+\end{algorithmic}
+\end{algorithm}

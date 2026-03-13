@@ -1,0 +1,64 @@
+\subsection{The Barangay Agent: Meso-Level Aggregation and Fiscal Execution}
+
+The \texttt{BarangayAgent} serves as the critical meso-level administrative node within the computational architecture. It bridges the gap between the micro-level behavioral shifts of the \texttt{HouseholdAgent} and the macro-level policy interventions of the \texttt{MayorAgent}. Rather than acting as a spatial entity that moves across the grid, the Barangay Agent functions as a localized environment manager for a specific subset of households. 
+
+To systematically detail its mechanics, this section is divided into three parts: (1) State initialization and data aggregation, (2) Autonomous baseline budget execution, and (3) The cascading incentive distribution protocol.
+
+\paragraph{Part 1: Initialization and Meso-Level State Aggregation}
+
+Upon initialization, the simulation instantiates seven unique \texttt{BarangayAgent} objects—representing Liangan East, Esperanza, Poblacion, Binuni, Demologan, Mati, and Babalaya. Each object is dynamically loaded with distinct demographic constraints (e.g., population sizes ranging from 463 to 1,534 households) and localized Internal Revenue Allotment (IRA) budgets derived from municipal institutional audits \citep{Delena2025}.
+
+Computationally, the Barangay Agent serves as the primary data aggregator for the Deep Reinforcement Learning (DRL) environment. During every simulation tick, the agent queries all constituent \texttt{HouseholdAgent} objects assigned to its jurisdiction. It calculates the localized compliance rate ($R_{bgy}$) in $O(N_b)$ time, where $N_b$ is the number of households in the specific barangay:
+\begin{equation}
+    R_{bgy} = \frac{\sum_{i=1}^{N_b} \mathbb{I}(\text{household}_i.\text{is\_compliant})}{N_b}
+\end{equation}
+This aggregated metric is crucial; it triggers the ``Habit Shield'' for the households (as detailed in Section 3.3.1) and is subsequently passed to the centralized \texttt{BacolodModel} to form the 17-dimensional State Space ($S_t$) evaluated by the AI Mayor \citep{TianReview2024}.
+
+\paragraph{Part 2: Autonomous Local Budget Execution (Micro-Interventions)}
+
+While the Mayor Agent dynamically shifts municipal funds, the Barangay Agent continuously executes a static baseline policy using its own hardcoded local budget. This ensures that even if the AI Mayor completely abandons a barangay, the community retains a baseline level of autonomous governance \citep{Nishimura2022}. This local budget is partitioned into Information/Education (IEC) and Enforcement operations:
+
+\begin{enumerate}
+    \item \textbf{Micro-IEC via Greedy Procurement:} Barangay agents lack the financial capacity for mass media. Instead, their daily IEC budget ($B_{local\_iec}$) is converted into grassroots activities using a greedy procurement heuristic. The algorithm prioritizes the most cost-effective method—\textit{Recoridas} (roving announcements, $C_{rec} = \text{\textpeso} 200$)—before allocating residual funds to \textit{Purok} (neighborhood) meetings ($C_{pur} = \text{\textpeso} 1,000$). The resulting computational intensity ($I_{micro}$) applies a daily fractional scalar boost to the Attitude construct of all households within its jurisdiction.
+    
+    \item \textbf{Dynamic Object Instantiation (Tanod Spawning):} To execute local enforcement, the Barangay calculates its maximum affordable headcount based on its local enforcement fund. If the current number of active Tanods is below this threshold, the Barangay Agent dynamically instantiates new \texttt{EnforcementAgent} objects (with \texttt{is\_municipal = False}) and injects them into the spatial grid. It also computes an ``Ambient Fear'' variable ($Base = 0.30$), ensuring citizens maintain a baseline perception of risk even when Tanods are not physically adjacent \citep{Zhao2022}.
+\end{enumerate}
+
+\paragraph{Part 3: The Cascading Incentive Distribution Protocol}
+
+A major architectural feature of the \texttt{BarangayAgent} is its role as a financial clearinghouse. When a compliant \texttt{HouseholdAgent} attempts to claim a monetary reward, it invokes the barangay's \texttt{redeem\_incentive(amount)} method. 
+
+To accurately simulate the ``stacking effect'' of polycentric governance \citep{Ostrom2010}, this method utilizes a \textit{cascading resource allocation tree}:
+\begin{itemize}
+    \item \textbf{Tier 1 (Local Funds):} The algorithm first attempts to deduct the \textpeso 500 reward from the \texttt{local\_incentive\_fund}. 
+    \item \textbf{Tier 2 (Municipal Augmentation):} If local funds are exhausted, the method queries the overarching \texttt{MayorAgent}. If the AI Mayor has injected targeted augmentation funds ($A_{\mathrm{Inc}, B_i}$) into this specific barangay, the reward is deducted from the municipal pool.
+    \item \textbf{Tier 3 (Budget Exhaustion):} If both budget tiers are empty, the method returns \texttt{False}. The household's claim is rejected, triggering a computational "Perceived Unfairness" penalty that degrades the household's future intrinsic motivation \citep{Chen2023}.
+\end{itemize}
+
+This tiered financial logic natively simulates the ``victim of success'' dynamic \citep{WorldBank2022}. If local compliance surges rapidly, the fixed municipal allocation is diluted among a larger pool of claimants, rapidly exhausting the budget and forcing the DRL agent to constantly adjust its policy to maintain systemic motivation.
+
+\vspace{0.5cm} 
+\begin{algorithm}[H]
+\caption{The Barangay's Administrative and Fiscal Loop}
+\label{alg:barangay_execution_english}
+\begin{algorithmic}[1]
+\State \textbf{Starting Information Needed:} 
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ The Barangay's assigned demographic profile, local baseline budget, and a registry of all resident households.\strut}
+\Statex
+\State \textbf{Phase 1: Daily Aggregation and Micro-Interventions}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Data Collection:} Query all local households to calculate the official Barangay Segregation Rate. Broadcast this rate to the AI Mayor.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Grassroots IEC:} Spend the daily local education budget. Buy cheap \textit{Recoridas} first; if money remains, buy \textit{Purok} meetings. Apply the resulting motivation boost to all local citizens.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Personnel Management:} Count the active Barangay Tanods on the grid. If the local budget allows for more personnel, spawn new Tanods and dispatch them into the neighborhood.\strut}
+\Statex
+\State \textbf{Phase 2: Processing Citizen Rewards (The Cascading Ledger)}
+\If{a citizen actively segregates and requests a municipal reward}
+    \If{the Barangay has its own local incentive funds remaining}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Approval:} Pay the citizen using local funds. The citizen remains highly motivated.\strut}
+    \ElsIf{the Mayor has provided supplemental municipal funds to this Barangay}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Approval:} Pay the citizen using the Mayor's augmentation budget.\strut}
+    \Else
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rejection (Budget Exhausted):} Deny the reward. The citizen feels cheated, triggering a permanent drop in their future willingness to segregate.\strut}
+    \EndIf
+\EndIf
+\end{algorithmic}
+\end{algorithm}
