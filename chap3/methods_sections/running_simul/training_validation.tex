@@ -1,42 +1,45 @@
-\subsection{Training and Validation}
-The simulation framework was operationalized through a three-stage process: initialization, calibration, and large-scale training. 
+\subsection{Training and Validation Architecture}
 
-First, the model was initialized using baseline data gathered from key-informant interviews with officials from all 7 barangays, loading in their specific population counts, local budgets, and current compliance rate estimates \citep{Villanueva2021, Yazawa2025}. This step was critical to ensure the Agent-Based Model (ABM) accurately captured the real-world heterogeneity and specific challenges facing each local unit, providing a relevant starting point for the policy simulation \citep{Camarillo2021}.
+The simulation framework was operationalized through a strict three-stage computational pipeline: initialization, multi-core vectorized training, and hyperparameter stabilization. By serving as the training environment, the Agent-Based Model (ABM) allowed the Deep Reinforcement Learning (DRL) agent to thoroughly explore the massive 21-dimensional policy space through high-volume trial and error—a process that would have been computationally prohibitive or unethical in the real world \citep{TianReview2024}.
 
-Second, the model underwent a rigorous calibration phase where the synthesized behavioral parameters—such as household sensitivity to fines and the strength of social norms—were systematically adjusted \citep{Taraghi2025, Ceschi2021}. The objective was to tune these unobservable parameters until the model's baseline behavior (when run without any new policy interventions) accurately reproduced the current-day, real-world compliance estimates provided by the LGU (e.g., the 10-15\% municipal baseline rate) \citep{Jimenez2025}. This process of matching model outputs to observed real-world outcomes was essential for validating the ABM as a credible representation of the socio-environmental system before proceeding to policy testing \citep{Ma2023}.
+\paragraph{Phase 1: Empirical Initialization and Baseline Calibration}
+First, the model was initialized using baseline data gathered from key-informant interviews with officials from all seven barangays. The environment was explicitly loaded with specific demographic profiles derived from municipal audits \citep{Villanueva2021, Yazawa2025}. For instance, \textit{Poblacion} was initialized with 1,534 households and a baseline compliance of 2\%, whereas \textit{Binuni} started with 507 households and a 15\% compliance rate. 
 
-Finally, once the ABM was calibrated, the Heuristic-Guided Deep Reinforcement Learning (HuDRL) agent's training began. This involved running over 12 simulated episodes, or "lifetimes" (e.g., 10,000 simulated 3-year periods), a high volume of interaction necessary to learn an optimal policy \citep{Dey2025}. By serving as the training environment, the ABM allowed the LGU agent to thoroughly explore the vast and complex 21-dimensional policy space through trial and error—a process that would have been computationally prohibitive or unethical in the real world—to ultimately converge on a stable and optimal budget allocation strategy that maximized long-term compliance under fiscal constraints \citep{TianReview2024}.
+This step was critical to ensure the ABM accurately captured the real-world heterogeneity facing the Local Government Unit (LGU). The unobservable behavioral parameters (e.g., household sensitivity to fines) were systematically tuned until the model's unguided baseline accurately reproduced the current-day municipal compliance rate of 10–15\% \citep{Jimenez2025}. Validating this "Status Quo" baseline ensures the ABM is a credible socio-environmental system before proceeding to AI policy testing \citep{Ma2023}.
 
-Training the DRL agent required a robust computational pipeline where the PPO algorithm continuously interacted with the underlying Agent-Based Model. To overcome the massive computational overhead of simulating thousands of interacting household agents over multiple years, the training architecture utilized vectorized environments via a \texttt{DummyVecEnv}. This instantiated multiple parallel instances of the ABM, drastically improving sample efficiency, stabilizing gradient updates, and reducing the wall-clock convergence time of the simulation \citep{TianReview2024}.
+\paragraph{Phase 2: Multi-Core Vectorized Environments}
+Training a DRL agent within an ABM requires a massive computational pipeline. Processing thousands of interacting household agents over multi-year horizons creates a severe computational bottleneck. To overcome this, the training architecture eschewed standard sequential loops (such as \texttt{DummyVecEnv}) in favor of true multiprocessing using a \texttt{SubprocVecEnv} wrapper.
 
-A critical operational component of this training loop was the custom continuous evaluation callback function. In continuous DRL, agents trained over extended horizons are highly susceptible to ``catastrophic forgetting''—where neural gradient updates inadvertently overwrite an optimal policy with an inferior one as the agent explores new strategies. To mathematically guarantee that the final deployed policy was the absolute best version discovered during training, the callback systematically halted training every 2,000 steps to run a deterministic evaluation on a pristine testing environment. If the newly calculated mean reward surpassed the historical maximum, the network's weights were immediately serialized to disk, ensuring the preservation of the highest-yielding policy.
+The \texttt{Stable-Baselines3} training script spawns four parallel CPU processes ($N_{cpu} = 4$), with each core running its own isolated instance of the \texttt{BacolodGymEnv}. This architectural decision drastically improves sample efficiency by allowing the PPO agent to collect diverse environmental trajectories simultaneously, stabilizing gradient updates and significantly reducing the wall-clock convergence time of the 50,000-timestep training horizon \citep{Dey2025}.
 
+\paragraph{Phase 3: Hyperparameter Optimization and Trajectory Rollouts}
+Given the high-dimensional nature of the 21-lever continuous action space, the Proximal Policy Optimization (PPO) model was calibrated with highly specific hyperparameters to prevent policy collapse. 
+
+To ensure the neural network gathered sufficient environmental feedback before updating its weights, the rollout buffer was expanded (\texttt{n\_steps = 1024}) coupled with a larger batch size (\texttt{batch\_size = 128}). This guarantees that the agent observes a full quarterly trajectory before executing a gradient update. Furthermore, an Entropy Coefficient (\texttt{ent\_coef = 0.01}) was injected into the loss function. This mathematical constraint actively discourages premature convergence, forcing the AI to maintain a healthy rate of exploration before "locking in" to a finalized budget allocation strategy \citep{Raffin2021}.
+
+\vspace{0.5cm} 
 \begin{algorithm}[H]
-\caption{The Mayor Agent Training Algorithm}
+\caption{The Multi-Core DRL Training Pipeline}
 \label{alg:drl_training_english}
 \begin{algorithmic}[1]
-\State \textbf{Starting Information Needed:} The Simulation Gymnasium Environment (Bacolod), and the Total Number of Practice Steps (e.g., 200,000)
+\State \textbf{Input Constraints:} 
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ The \texttt{BacolodGymEnv} simulation, $N_{cpu} = 4$ processing cores, and a target horizon of 50,000 algorithmic timesteps.\strut}
 \Statex
-\State \textbf{Step 1: Set up the Simulation Worlds}
-\State Create the primary simulation environment where the Mayor agent will actively practice
-\State Create a separate, identical simulation environment strictly used for testing the Mayor agent
+\State \textbf{Step 1: Environment Vectorization (Multiprocessing)}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Sub-Process Spawning:} Fork the main Python thread into 4 independent worker processes.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Instantiation:} Load a complete, identical instance of the municipality (thousands of households, budgets, and variables) into each of the 4 processing cores.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Monitoring:} Wrap the vectorized environment in a \texttt{VecMonitor} to systematically log episode rewards and simulation lengths to Tensorboard.\strut}
 \Statex
-\State \textbf{Step 2: Create the Mayor agent's Learner}
-\State Initialize the Mayor agent
-\State Give the Mayor agent its learning parameters (set a steady learning speed and tell it to prioritize long-term success over short-term gains)
+\State \textbf{Step 2: Neural Network Initialization (PPO)}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Initialize the Actor-Critic Multi-Layer Perceptron (\texttt{"MlpPolicy"}).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Apply the stabilized hyperparameters: Learning Rate ($0.0003$), Trajectory Rollout ($1024$ steps), and Entropy Coefficient ($0.01$) to ensure persistent exploration.\strut}
 \Statex
-\State \textbf{Step 3: Set up the Testing and Saving System (Quality Control)}
-\State Set the Mayor agent's ``Highest Score'' on record to the lowest possible starting value
+\State \textbf{Step 3: Execution of the Learning Loop}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Parallel Data Collection:} The Mayor Agent simultaneously plays out different budgetary strategies across all 4 municipal simulations.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Batch Updating:} After every 1,024 steps, aggregate the successes and failures from all 4 cores. Calculate the neural gradients and update the Mayor's underlying policy weights.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Repeat this cycle continuously until the 50,000 timestep threshold is reached.\strut}
 \Statex
-\State \textit{Set up a rule to trigger every 2,000 practice steps:} 
-\State \quad Pause the Mayor agent's training and give it a test in the testing environment 
-\State \quad Calculate its ``Current Score'' based on how well it managed the municipality
-\State \quad \If{the Current Score is better than the recorded Highest Score}
-\State \quad \quad Update the Highest Score to match this new Current Score
-\State \quad \quad Save a permanent copy of this specific Mayor agent (so we never lose our best-performing version)
-\State \quad \EndIf
-\Statex
-\State \textbf{Step 4: Begin the Training}
-\State Let the Mayor agent practice for the full 200,000 steps, running the automatic testing and saving system in the background
+\State \textbf{Step 4: Serialization}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Serialize and export the fully trained neural network weights (\texttt{hudrl\_bacolod.zip}) to disk for deterministic evaluation and real-time visualization.\strut}
 \end{algorithmic}
 \end{algorithm}

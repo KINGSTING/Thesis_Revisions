@@ -14,19 +14,20 @@ Computationally, the Barangay Agent serves as the primary data aggregator for th
 \end{equation}
 This aggregated metric is crucial; it triggers the ``Habit Shield'' for the households (as detailed in Section 3.3.1) and is subsequently passed to the centralized \texttt{BacolodModel} to form the 17-dimensional State Space ($S_t$) evaluated by the AI Mayor \citep{TianReview2024}.
 
-\paragraph{Part 2: Autonomous Local Budget Execution (Micro-Interventions)}
-
-While the Mayor Agent dynamically shifts municipal funds, the Barangay Agent continuously executes a static baseline policy using its own hardcoded local budget. This ensures that even if the AI Mayor completely abandons a barangay, the community retains a baseline level of autonomous governance \citep{Nishimura2022}. This local budget is partitioned into Information/Education (IEC) and Enforcement operations:
+\paragraph{Part 2: Autonomous Base Layer Implementation (The Three Local Levers)}
+While the Mayor Agent dynamically shifts municipal funds, the Barangay Agent continuously executes a static baseline policy using its localized budget allocation profile (e.g., 34\% IEC, 33\% Enforcement, 33\% Incentives). This ensures the community retains baseline governance even if the AI Mayor ignores them:
 
 \begin{enumerate}
-    \item \textbf{Micro-IEC via Greedy Procurement:} Barangay agents lack the financial capacity for mass media. Instead, their daily IEC budget ($B_{local\_iec}$) is converted into grassroots activities using a greedy procurement heuristic. The algorithm prioritizes the most cost-effective method—\textit{Recoridas} (roving announcements, $C_{rec} = \text{\textpeso} 200$)—before allocating residual funds to \textit{Purok} (neighborhood) meetings ($C_{pur} = \text{\textpeso} 1,000$). The resulting computational intensity ($I_{micro}$) applies a daily fractional scalar boost to the Attitude construct of all households within its jurisdiction.
+    \item \textbf{Base IEC (Micro-Interventions):} Barangay agents lack the financial capacity for mass media. Instead, their daily IEC budget is converted into grassroots activities using a greedy procurement heuristic. The algorithm prioritizes \textit{Recoridas} (roving announcements, $C_{rec} = \text{\textpeso} 200$) before allocating residual funds to \textit{Purok} meetings ($C_{pur} = \text{\textpeso} 1,000$). The resulting computational intensity applies a daily fractional scalar boost to the Attitude of all local households.
     
-    \item \textbf{Dynamic Object Instantiation (Tanod Spawning):} To execute local enforcement, the Barangay calculates its maximum affordable headcount based on its local enforcement fund. If the current number of active Tanods is below this threshold, the Barangay Agent dynamically instantiates new \texttt{EnforcementAgent} objects (with \texttt{is\_municipal = False}) and injects them into the spatial grid. It also computes an ``Ambient Fear'' variable ($Base = 0.30$), ensuring citizens maintain a baseline perception of risk even when Tanods are not physically adjacent \citep{Zhao2022}.
+    \item \textbf{Base Enforcement (Tanod Spawning):} To execute local enforcement, the Barangay calculates its maximum affordable headcount based on its local enforcement fund. It dynamically instantiates persistent \texttt{EnforcementAgent} objects (flagged as \texttt{is\_municipal = False}). These Tanods have a strict apprehension capacity of 1 household per patrol and suffer from a 90\% stochastic distraction rate, reflecting their multi-duty nature. Their presence computes an ``Ambient Fear'' variable ($Base = 0.30$) to maintain a baseline perception of risk \citep{Zhao2022}.
+    
+    \item \textbf{Base Incentives (Tier 1 Ledger):} The local incentive fund serves as the primary financial clearinghouse for positive reinforcement \citep{Chen2023}. The baseline computational cost of incentives ($C_{\mathrm{Inc}}$) is determined by $C_{\mathrm{Inc}} = (V_{\mathrm{Reward}} \times N_{\mathrm{Compliant}})$, where $V_{\mathrm{Reward}}$ is a \textpeso 500 subsidy drawn directly from this local pool.
 \end{enumerate}
 
 \paragraph{Part 3: The Cascading Incentive Distribution Protocol}
 
-A major architectural feature of the \texttt{BarangayAgent} is its role as a financial clearinghouse. When a compliant \texttt{HouseholdAgent} attempts to claim a monetary reward, it invokes the barangay's \texttt{redeem\_incentive(amount)} method. 
+A major architectural feature of the \texttt{BarangayAgent} is its role as a financial clearinghouse. When a compliant \texttt{HouseholdAgent} attempts to claim a monetary reward, it invokes the barangay's \texttt{redeem\_incentive(amount)} method.
 
 To accurately simulate the ``stacking effect'' of polycentric governance \citep{Ostrom2010}, this method utilizes a \textit{cascading resource allocation tree}:
 \begin{itemize}

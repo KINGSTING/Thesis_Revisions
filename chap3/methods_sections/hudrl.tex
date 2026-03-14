@@ -1,82 +1,91 @@
-\subsection{Heuristic-Guided Deep Reinforcement Learning (HuDRL)}
 
-To address the high-dimensional resource allocation problem inherent in municipal budgeting, this study develops a \textit{Heuristic-Guided Deep Reinforcement Learning (HuDRL)} framework using the PyTorch-based \texttt{Stable-Baselines3} library \citep{Raffin2021}. While traditional optimization models often struggle with the dynamic, non-linear human behaviors found in waste management \citep{Saif2022}, Deep Proximal Policy Optimization (PPO) provides a robust architecture to approximate an optimal, adaptive governance policy $\pi_\theta(a|s)$ within a continuous action space. By coupling the DRL agent with the Agent-Based Model (ABM), the system evaluates the intricate socio-environmental feedback loops that dictate policy success or failure \citep{Jimenez2025, TianReview2024}.
+To address the high-dimensional resource allocation problem inherent in municipal budgeting, this study develops a \textit{Heuristic-Guided Deep Reinforcement Learning (HuDRL)} framework utilizing the PyTorch-based \texttt{Stable-Baselines3} library \citep{Raffin2021}. While traditional operations research models often struggle with the dynamic, non-linear hysteresis of human behavior \citep{Saif2022}, Deep Proximal Policy Optimization (PPO) provides a robust architecture to approximate an optimal, adaptive governance policy $\pi_\theta(a|s)$ within a continuous action space. 
 
-\subsubsection{Proximal Policy Optimization Architecture}
+To guide the reader through the computational mechanics of this AI agent, this section is divided into four structural components: (1) The Neural Network Architecture, (2) The Markov Decision Process Formulation, (3) Safety-Critical Action Masking Heuristics, and (4) Multi-Objective Reward Shaping.
 
-To operationalize this policy engine, the simulation employs a custom Actor-Critic neural network architecture. PPO is specifically utilized for its mathematical stability; it prevents the agent from making erratic, catastrophic shifts in policy during training by strictly clipping the policy gradient update \citep{Raffin2021}. 
+\subsection{Proximal Policy Optimization (PPO) Architecture}
 
-To effectively process the multi-modal state vector, the artificial intelligence is split into two distinct but cooperative Multi-Layer Perceptrons (MLPs):
+To operationalize the policy engine, the simulation employs a custom Actor-Critic neural network architecture. PPO is specifically utilized for its mathematical stability; it prevents the agent from making erratic, catastrophic shifts in municipal policy during training by strictly clipping the policy gradient update \citep{Raffin2021}. 
+
+To effectively process the multi-modal state vector, the artificial intelligence is bifurcated into two distinct but cooperative Multi-Layer Perceptrons (MLPs):
 \begin{itemize}
-    \item \textbf{The Actor Network (The Decision Maker):} This network functions as the executive authority. It evaluates the current socio-environmental state of the city and outputs a specific action—deciding exactly how to divide the quarterly budget across different barangays and intervention types.
-    \item \textbf{The Critic Network (The Evaluator):} Functioning as the internal advisor, this network evaluates the current state and predicts the long-term expected success (the Value) of the Actor's proposed strategy. By continuously grading the Actor's choices, the Critic guides the learning process toward sustainable governance rather than short-term fixes \citep{Mousavi2021}.
+    \item \textbf{The Actor Network (The Executive):} This network evaluates the current socio-environmental state of the city and outputs a specific continuous action vector—deciding exactly how to divide the quarterly budget across different barangays and intervention types.
+    \item \textbf{The Critic Network (The Evaluator):} Functioning as the internal advisor, this network predicts the long-term expected success (the Value Function) of the Actor's proposed strategy. By continuously grading the Actor's choices, the Critic guides the learning process toward sustainable, long-term governance rather than short-term reactionary fixes \citep{Mousavi2021}.
 \end{itemize}
 
-Both the Actor and Critic networks utilize two fully connected hidden layers comprised of 64 neurons each. This depth achieves a necessary computational balance: lightweight enough for rapid simulation, yet dense enough to process complex variables. These layers employ Rectified Linear Unit (ReLU) activation functions, which are highly effective at capturing the non-linear "tipping points" of human behavior—allowing the network to mathematically understand that minor increases in funding may yield zero behavioral change until a critical threshold is violently crossed \citep{Centola2018}.
+Both the Actor and Critic networks utilize two fully connected hidden layers comprised of 64 neurons each. This depth achieves a necessary computational balance: lightweight enough for rapid simulation epochs, yet dense enough to process complex socio-economic variables. These layers employ Rectified Linear Unit (ReLU) activation functions, which are highly effective at capturing the non-linear "tipping points" of human behavior—allowing the network to computationally map that minor increases in funding may yield zero behavioral change until a critical threshold is crossed \citep{Centola2018}.
 
-\subsubsection{Markov Decision Process (MDP) Formulation}
+\subsection{Markov Decision Process (MDP) Formulation}
 
 \paragraph{State Representation ($S_t$)}
-The state space $S_t \in \mathbb{R}^{17}$ constitutes the comprehensive observation vector accessible to the LGU Mayor Agent at the onset of each quarterly decision epoch $t$, formalized as:
+The state space $S_t \in \mathbb{R}^{17}$ constitutes the comprehensive observation vector accessible to the DRL agent at the onset of each quarterly decision epoch $t$, formalized as:
 \begin{equation}
     S_t = [\mathbf{C}_{1...7}, \mathbf{A}_{1...7}, B_{\mathrm{norm}}, T_{\mathrm{norm}}, P_{\mathrm{cap}}]
     \label{eq:state_vector}
 \end{equation}
 \addequation{17-Dimensional State Vector Representation}
 
-\noindent This vector provides a holistic, normalized snapshot of the municipality. It includes the real-time compliance rate ($\mathbf{C}$) and average intrinsic attitude ($\mathbf{A}$) for all seven constituent barangays. It tracks the normalized remaining balance of the annual fund ($B_{\mathrm{norm}}$) and the current temporal progress of the simulation ($T_{\mathrm{norm}}$). Crucially, it incorporates Political Capital ($P_{\mathrm{cap}}$), which acts as a dynamic constraint tracking public approval.
+\noindent This vector provides a holistic, normalized snapshot of the municipality. It includes the real-time compliance rate ($\mathbf{C}$) and average intrinsic attitude ($\mathbf{A}$) for all seven constituent barangays. It tracks the normalized remaining balance of the annual fund ($B_{\mathrm{norm}}$) and the current temporal progress of the simulation ($T_{\mathrm{norm}}$). Crucially, it incorporates Political Capital ($P_{\mathrm{cap}}$), acting as a dynamic constraint that tracks public approval of the Mayor's punitive actions.
 
-\paragraph{Action Space ($A_t$) and Budget Constraint}
-The continuous action space ($A_t \in \mathbb{R}^{21}$) dictates the simultaneous allocation of resources across three levers (IEC, Enforcement, Incentives) for all seven barangays. In municipal governance, the most absolute constraint is the finite nature of public funds. To mathematically enforce this without clipping the neural network's gradients, the raw output vector ($A_{\mathrm{raw}}$) is processed through a \textit{Temperature-Scaled Softmax} function ($\tau = 10.0$):
+\paragraph{Action Space ($A_t$) and Budget Normalization}
+The continuous action space ($A_t \in [-1, 1]^{21}$) dictates the simultaneous allocation of resources across three levers (IEC, Enforcement, Incentives) for all seven barangays. In municipal governance, the most absolute constraint is the finite nature of public funds. To mathematically enforce this without clipping the neural network's gradients, the raw output vector ($A_{\mathrm{raw}}$) is processed through a \textit{Temperature-Scaled Softmax} function ($\tau = 5.0$) before being converted to financial capital:
 \begin{equation}
    A_{\mathrm{final}, i} = \frac{\exp(\tau \cdot A_{\mathrm{raw}, i})}{\sum_{j=1}^{21} \exp(\tau \cdot A_{\mathrm{raw}, j})} \cdot B_{\mathrm{Quarterly}}
    \label{eq:softmax_constraint}
 \end{equation}
 \addequation{Temperature-Scaled Softmax Budget Constraint}
-This exponential scaling aggressively amplifies the AI's highest confidences, forcing it to make polarized, decisive investments rather than spreading funds too thinly. The normalization mathematically guarantees that the sum of all allocated funds exactly equals the Quarterly Budget Cap ($\sum A_{\mathrm{final}} \le B_{\mathrm{Quarterly}}$) \citep{Abdallah2021}.
+This exponential temperature scaling ($\tau=5.0$) aggressively amplifies the AI's highest confidences, forcing it to make polarized, decisive investments (concentration of forces) rather than spreading funds too thinly \citep{Abdallah2021}. The normalization mathematically guarantees that the sum of all allocated funds exactly equals the Quarterly Budget Cap ($\sum A_{\mathrm{final}} \le B_{\mathrm{Quarterly}}$).
 
-\paragraph{Multi-Objective Reward Function ($R_{\mathrm{total}}$)}
-The agent is guided by a composite reward function designed to balance environmental outcomes, fiscal responsibility, and social acceptability \citep{Hertweck2023Values}:
-\begin{equation}
-    R_{\mathrm{total}} = R_{\mathrm{Base}} + R_{\mathrm{Jackpot}} + R_{\mathrm{Focus}} - P_{\mathrm{Waste}} \pm P_{\mathrm{Cap}}
-    \label{eq:total_reward}
-\end{equation}
-\addequation{Composite Multi-Objective Reward Function}
-The AI receives a base reward for global compliance ($R_{\mathrm{Base}}$). However, to solve the \textit{Sparse Reward Problem}, heuristic "breadcrumbs" are added. The agent receives a massive $R_{\mathrm{Jackpot}}$ (+200) if global compliance breaches the 70\% threshold. It earns a Focus bonus ($R_{\mathrm{Focus}}$) for heavily funding the worst-performing barangay, and suffers an Efficiency Penalty ($P_{\mathrm{Waste}}$) if it allocates excess funds to a barangay that has already crossed the 70\% target.
+\subsection{Addressing Sparse Rewards via Safety-Critical Action Masking}
 
-\subsubsection{Addressing Behavioral Inertia: The Triage Heuristic}
-In a standard, unguided PPO environment, an agent explores this massive action space at random. Because overcoming community-wide behavioral inertia requires a critical mass of intervention to trigger a ``Social Tipping Point'' \citep{Nyborg2024}, random exploration rarely yields a sudden increase in compliance, causing agents to converge to a ``Status Quo'' local optimum.
+A fundamental challenge in applying Deep Reinforcement Learning to complex socio-ecological systems is the \textit{Sparse Reward Problem} \citep{Vecerik2018}. In a standard, unguided PPO environment, the agent explores its 21-dimensional action space at random. Because overcoming community-wide behavioral inertia requires a massive concentration of resources to trigger a ``Social Tipping Point'' \citep{Nyborg2024}, random exploration rarely yields a sudden increase in compliance, causing unguided agents to rapidly converge to a ``Status Quo'' local optimum characterized by equitable, but ultimately ineffective, resource distribution.
 
-To overcome this, the HuDRL framework integrates a domain-specific "Triage Logic" heuristic before the Softmax normalization step. This acts as a saliency filter \citep{Alphonso2024}, forcibly categorizing barangays into strategic states.
+Furthermore, deploying an unrestrained AI in a public policy simulation poses risks of "resource starvation" for critical sectors \citep{Alphonso2024}. To overcome these computational and ethical challenges, the HuDRL framework integrates domain-specific hardcoded logic before the Softmax step. This acts as a \textbf{Safety-Critical Action Mask}, forcefully overriding the neural network's raw output to prevent municipal collapse during the AI's early exploration phase.
 
 \begin{algorithm}[H]
-\caption{The Mayor Agent's Heuristic Triage Logic}
+\caption{The Mayor Agent's Triage \& Safety Override Heuristics}
 \label{alg:hudrl_triage_english}
 \begin{algorithmic}[1]
-\State \textbf{Input Data:}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ The AI's raw proposed action vector (21 values).\strut}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Real-time compliance data for all 7 Barangays.\strut}
+\State \textbf{Input Data:} The AI's raw proposed action vector (21 values) and real-time compliance array.
 \Statex
-\State \textbf{Step 1: The 70\% Graduation Rule (Identify Solved Areas)}
+\State \textbf{Rule 1: The 70\% Graduation Mechanism (Preventing Waste)}
 \For{Each Barangay in the Municipality}
     \If{Barangay Compliance Rate $\ge$ 70\%}
         \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Budget Slash:} Multiply the AI's proposed budget allocation for this specific barangay by $0.01$ (reducing it by 99\%).\strut}
-        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} This prevents the AI from becoming a "Victim of Success" and wasting municipal funds maintaining an area where social norms have already locked in the behavior.\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Prevents the AI from becoming a "Victim of Success" by wasting funds on areas where strong social norms have already locked in the segregation habit \citep{Corcoran2020}.\strut}
     \EndIf
 \EndFor
 \Statex
-\State \textbf{Step 2: Calculate Final Budget Distribution}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Take the adjusted raw values and pass them through the Temperature-Scaled Softmax equation.\strut}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ This automatically redirects the funds stripped from the "Graduated" barangays and funnels them heavily into the remaining struggling barangays.\strut}
+\State \textbf{Rule 2: The Phase-Shift Crisis Guardrail (Forced Equity)}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Identify the "Weakest Performer" (the barangay with the lowest current compliance).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the total raw action sum of the entire municipality.\strut}
+\If{The AI's proposed allocation for the Weakest Performer is $< 50\%$ of the total sum}
+    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Heuristic Override:} Artificially inflate the allocation tensor for this specific barangay to mathematically guarantee a minimum of $50\%$ of the total quarterly budget.\strut}
+    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Ensures that heavily struggling sectors are never starved of funds during the AI's randomized exploration phase, enforcing a baseline of municipal equity \citep{ZhengAI2022}.\strut}
+\EndIf
 \Statex
-\State \textbf{Step 3: Evaluate \& Update (Reward Shaping)}
-\If{The AI successfully focused its budget on a struggling area and increased its compliance}
-    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ Grant a massive scaling reward multiplier.\strut}
-\EndIf
-\If{The AI attempted to spend more than 10\% of the budget on a "Graduated" area}
-    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ Apply a negative penalty to teach the AI to abandon solved zones.\strut}
-\EndIf
+\State \textbf{Rule 3: Softmax Normalization}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Pass the overridden, adjusted values through the Temperature-Scaled Softmax equation to normalize the final output to exactly 100\% of the budget.\strut}
 \end{algorithmic}
 \end{algorithm}
 
 This heuristic shaping forces the agent to explore the ``Sequential Saturation'' strategy—overwhelming a single problematic area with resources until social norms shift, before redirecting funds to the next \citep{Cheng2021}.
+
+\subsection{Multi-Objective Reward Shaping}
+
+To train the PPO model effectively, the environment must translate the complex outcomes of the ABM into a scalar reward signal. The HuDRL agent is guided by a composite, multi-objective reward function $R_{t}$ designed to balance environmental outcomes, fiscal efficiency, and social acceptability \citep{Hertweck2023Values}:
+
+\begin{equation}
+    R_{t} = R_{\mathrm{Base}} + R_{\mathrm{Jackpot}} + R_{\mathrm{Focus}} - P_{\mathrm{Waste}} \pm P_{\mathrm{Cap}}
+    \label{eq:total_reward}
+\end{equation}
+\addequation{Composite Multi-Objective Reward Function}
+
+Computationally, these components are calculated as follows at the end of each quarterly epoch:
+\begin{enumerate}
+    \item \textbf{Base Reward ($R_{\mathrm{Base}}$):} The agent receives a baseline reward linked directly to the municipality's global segregation rate ($Global \times 10.0$).
+    \item \textbf{Performance Jackpot ($R_{\mathrm{Jackpot}}$):} To explicitly teach the AI the value of its interventions, it receives a massive scalar multiplier if compliance increases in a targeted barangay: $R_{\mathrm{Jackpot}} = (\text{Allocation Ratio} \times \text{Compliance Gain}) \times 100.0$.
+    \item \textbf{Focus Bonus ($R_{\mathrm{Focus}}$):} Reinforcing the 50\% Crisis Guardrail, the AI is granted a bonus for organically choosing to fund the weakest barangay ($R_{\mathrm{Focus}} = \text{Weakest Allocation Ratio} \times 5.0$).
+    \item \textbf{Efficiency Penalty ($P_{\mathrm{Waste}}$):} If the AI attempts to spend more than 10\% of the budget on a "Graduated" barangay (compliance $>70\%$), it suffers a mathematical penalty proportional to the wasted funds ($P_{\mathrm{Waste}} = \text{Wasted Allocation Ratio} \times 10.0$).
+    \item \textbf{Political Capital Modifier ($P_{\mathrm{Cap}}$):} To penalize draconian strategies, the reward is modulated by the Mayor's public approval rating: $(P_{\mathrm{Cap}} - 0.5) \times 2.0$. This generates a negative penalty if approval drops below 50\%, forcing the AI to balance enforcement with educational campaigns.
+\end{enumerate}

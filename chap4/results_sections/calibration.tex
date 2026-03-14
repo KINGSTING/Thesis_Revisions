@@ -1,0 +1,48 @@
+Model calibration served as a critical computational validation step. Before the introduction of the Deep Reinforcement Learning (DRL) optimization policies, it was imperative to ensure that the simulation accurately reproduced the empirical ``Status Quo'' of the Municipality of Bacolod at $t=0$. 
+
+\subsection{Addressing Statistical Divergence and Reporting Bias}
+A significant algorithmic challenge identified during the initialization phase was the severe statistical divergence between the compliance rates self-reported by local officials and the macro-level reality established by the Municipal Environment and Natural Resources Office (MENRO) audit. Aggregating the micro-level interview data suggested a municipal compliance rate exceeding 50\%—with localities like Binuni and Demologan reporting unrealistic peaks of 95\% and 60\%, respectively. However, the objective municipal-wide waste characterization study conducted by MENRO confirmed a functional segregation rate of only 10\% to 15\% (refer to Appendix \ref{appendix:menro_interview}).
+
+Utilizing the unverified, inflated self-reports would introduce severe model discrepancy and render the AI's optimization tasks computationally trivial. This divergence quantitatively captured the ``Act vs.\ Reality'' gap described by \cite{Yazawa2025} and the phenomenon of Socially Desirable Responding (SDR) \citep{Geiger2021}, where respondents conflate theoretical policy awareness with actual on-the-ground practice. Consequently, the micro-level survey data was deemed methodologically unreliable for establishing the initial state space ($S_0$) of the simulation, and the MENRO audit ($\approx 12.5\%$) was selected as the ground-truth calibration target.
+
+\subsection{Algorithmic Correction of Initial Compliance States}
+To ensure the Agent-Based Model reflected true baseline conditions, the initialization parameters in \texttt{barangay\_config.py} were systematically calibrated downward. Table \ref{tab:calibration_data} details the algorithmic correction applied to the raw interview data to align the local nodes with the municipal reality.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Algorithmic Calibration of Self-Reported vs.\ Baseline Compliance Rates}
+    \label{tab:calibration_data}
+    \small
+    \begin{tabular}{l c c p{6.5cm}}
+        \toprule
+        \textbf{Barangay Node} & \textbf{Self-Reported} & \textbf{Calibrated ($t=0$)} & \textbf{Primary Calibration Justification} \\
+        \midrule
+        Brgy Babalaya     & 100\% & 15.0\% & Adjusted for lack of persistent funding/monitoring. \\
+        Brgy Binuni       & 95\%  & 15.0\% & Decoupled theoretical awareness from physical practice. \\
+        Brgy Mati         & 70\%  & 14.0\% & Corrected for high habit decay rate in agrarian zones. \\
+        Brgy Liangan East & 65\%  & 14.0\% & Smoothed transient project-based spikes (Eco-bricks). \\
+        Brgy Demologan    & 60\%  & 14.0\% & Standardized to the municipal empirical baseline. \\
+        Brgy Ezperanza    & 20\%  & 13.5\% & Aligned with the middle-class control group variance. \\
+        Brgy Poblacion    & 2\%   & 2.0\%  & \textbf{Anchor Point} (Aligned perfectly with MENRO Audit). \\
+        \bottomrule
+    \end{tabular}
+    
+    \vspace{1ex}
+    \raggedright
+    \footnotesize
+    \textit{Note: ``Self-Reported'' refers to raw rates claimed during Key Informant Interviews (Appendix \ref{ch:appendix_b}). ``Calibrated'' refers to the initialized compliance state within the ABM, mathematically tuned to match the aggregate municipal segregation rate of $\approx 12.5\%$ verified by MENRO.}
+\end{table}
+
+This calibration was executed through three specific analytical pivots:
+\begin{itemize}
+    \item \textbf{Decoupling Awareness from Practice (Binuni):} Officials reported a near-perfect compliance rate of 95\%. However, initializing the simulation at this level resulted in immediate global compliance exceeding 40\%, bypassing the behavioral friction the DRL was designed to solve. The simulation logic posited that the 95\% reflected \textit{awareness}. As noted by \cite{Paigalan2025}, positive attitudes frequently coexist with poor practices, creating an ``Intention-Action Gap'' that the model explicitly corrected by dropping the initialization to 15\%.
+    \item \textbf{Smoothing Transient Spikes (Liangan East):} The reported 65\% compliance was driven by a temporary Eco-brick initiative. Because project-based compliance is historically transient without continuous fiscal injection \citep{Camarillo2021}, the system initialized Liangan East at 14\% to model the habituated ``Status Quo'' before the DRL agent assumed budgetary control.
+    \item \textbf{The Urban Anchor Point (Poblacion):} The only data point where qualitative self-reporting matched the quantitative MENRO audit was Barangay Poblacion (2\%). Because both metrics converged, this served as the simulation's \textit{Anchor Point}. This validated the ``Urban Resource Trap'' theory: high population density and anonymity dissolve social pressure, defaulting to non-compliance regardless of existing legal frameworks \citep{Villanueva2021}.
+\end{itemize}
+
+\subsection{Stochastic Seeding and Mathematical Validation}
+To reconcile the remaining micro-level bias with the verified macro-level ground truth, the initialized states for the remaining barangays were assigned stochastically. Rather than falsely assuming homogeneous behavior by hard-coding a static 12.5\% across all 4,795 agents, the initialization parameters were drawn from a bounded uniform distribution, $U(0.11, 0.15)$. 
+
+In Agent-Based Modeling, utilizing stochastic initialization bounded by verified empirical data is a standard practice for uncertainty quantification \citep{McCulloch2022, Fischer2025}. The mathematical expected value ($\mu$) of this specific distribution anchors tightly to the $\approx 12.5\%$ MENRO baseline. This technique allowed the model to introduce realistic heterogeneous variance (noise) among the different barangay grids while strictly preserving the global starting state.
+
+This distributional parameterization was critical for the structural validity of the Deep Reinforcement Learning environment. As \cite{Ding2024} emphasize, ABMs are highly sensitive to initial parameterization; failing to align these vectors with empirical reality prevents the simulation from yielding physically meaningful quantities. By anchoring the randomization to this conservative baseline, headless simulation benchmarks successfully stabilized at a Global Average Compliance of $\approx 12.5\%$ at $t = 0$. This mathematically proved the structural validity of the ABM, ensuring the subsequent DRL agent was optimizing its policies against a rigorously realistic scenario rather than a mathematically trivial one.

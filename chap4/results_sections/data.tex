@@ -1,0 +1,106 @@
+The validity of the Agent-Based Model (ABM) relied strictly on the empirical grounding of its initialization matrices. Before the Heuristic-Guided Deep Reinforcement Learning (HuDRL) agent could be trained, real-world data gathered from the Municipality of Bacolod—comprising legislative documents, census data, and key informant interviews—were quantitatively translated to define the state space, constraints, and reward structures of the simulation environment. 
+
+\subsection{Macro-Level Legislative and Financial Bounds}
+The extraction of financial data from the Municipal Environment and Natural Resources Office (MENRO) and Appropriation Ordinance No. 2024-01 established the absolute boundaries of the simulation's action space. The environment was strictly bounded by a \textpeso 1,500,000 annual Solid Waste Management (SWM) budget, which mathematically constrained the Mayor Agent's quarterly optimization limit ($B_q$) to \textpeso 375,000. 
+
+Furthermore, operational constraints were dictated by regional economic realities. Incorporating the Region X Daily Minimum Wage of \textpeso 400 dictated that deploying a single municipal enforcer for a 66-day active quarter consumed \textpeso 26,400. Computationally, this established a ``Personnel Trap'' within the simulation; if the budget was consumed entirely by enforcement salaries, the action space for Information, Education, and Communication (IEC) campaigns collapsed to zero, quantitatively reflecting the operational bottlenecks identified by \cite{Nishimura2022}.
+
+\subsection{Meso-Level Spatial and Demographic Initialization}
+The simulation grid was populated using exact household census data to ensure proportional spatial representation. The environment initialized 4,795 discrete \texttt{HouseholdAgent} objects. The translation of qualitative interview data (Appendix B) into quantitative arrays revealed profound heterogeneity across the seven constituent barangays, creating a highly non-convex optimization landscape for the DRL agent. 
+
+Table \ref{tab:barangay_demographics} details the extracted demographic density, localized Internal Revenue Allotments (IRA), and the empirically derived income stratification profiles injected into the simulation at $t=0$.
+
+\begin{table}[H]
+    \centering
+    \caption{Barangay Demographic, Financial, and Income Initialization Matrices}
+    \label{tab:barangay_demographics}
+    \small 
+    \begin{tabular}{l r r c c c c}
+        \toprule
+        & & {Annual} & {MENRO Audit} & \multicolumn{3}{c}{{Income Profile (\%)}} \\
+        \cmidrule(lr){5-7}
+        {Barangay} & {Households} & {Budget (\textpeso)} & {Compliance} & {Low} & {Mid} & {High} \\
+        \midrule
+        Brgy Poblacion    & 1,534 & 200,000 & 2\%  & 70 & 25 & 5 \\
+        Brgy Liangan East & 608   & 30,000  & 65\% & 40 & 40 & 20 \\
+        Brgy Ezperanza    & 574   & 90,000  & 20\% & 20 & 50 & 30 \\
+        Brgy Binuni       & 507   & 126,370 & 95\% & 50 & 30 & 20 \\
+        Brgy Demologan    & 463   & 21,000  & 60\% & 80 & 15 & 5 \\
+        Brgy Babalaya     & 171   & 15,000  & 100\% & 80 & 10 & 10 \\
+        Brgy Mati         & 165   & 80,000  & 70\% & 90 & 5  & 5 \\
+        \bottomrule
+    \end{tabular}
+    \vspace{1ex}
+    
+    \raggedright
+    \footnotesize
+    \textit{Note: Income profiles derived from Appendix B interviews. Low-income agents trigger a higher scalar multiplier ($\gamma$) for financial sensitivity within the ABM utility function.}
+\end{table}
+
+The parameterization process identified distinct socioeconomic typologies that fundamentally altered the marginal utility of money within the simulation:
+\begin{itemize}
+    \item \textbf{The Urban Resource Trap (Poblacion):} Despite possessing the highest absolute local budget (\textpeso 200,000), Poblacion suffered from the lowest per-capita spending power due to its massive population ($N=1,534$). Bound by its ``Police State'' profile, 60\% of its budget was locked into enforcement to maintain basic order, mathematically capping its baseline compliance at approximately 2\%.
+    \item \textbf{The Wealthy Anomaly (Binuni):} Operating with \textpeso 126,370 for only 507 households, Binuni enjoyed the highest per-capita fiscal surplus. This allowed for a balanced 40/40/20 allocation profile, providing sufficient liquidity to overcome high behavioral friction.
+    \item \textbf{The Subsistence Trap (Babalaya \& Demologan):} Representing the economic floor of the municipality, 80\% of households in these zones were classified as low-income. Operating on micro-budgets (\textpeso 15,000 to \textpeso 21,000), up to 90\% of their funds were consumed by bare-minimum enforcement honoraria, rendering autonomous IEC and incentive distributions mathematically impossible without external municipal augmentation.
+\end{itemize}
+
+\subsection{Micro-Level Behavioral Matrices and the Intention-Action Gap}
+The foundational psychological parameters for the household agents were derived through a synthesis of empirical Knowledge, Attitude, and Practices (KAP) data from riverside and coastal barangays in Northern Mindanao \citep{Paigalan2025}. 
+
+The extraction of this data revealed a significant ``Intention-Action Gap'' \citep{Geiger2021}. Consequently, agents were initialized with a relatively high mean Attitude ($A_0 \approx 0.66$) but a drastically lower physical compliance rate. Table \ref{tab:kap_translation} details the normalized translation of the raw KAP survey data into the continuous floating-point variables utilized by the ABM.
+
+\begin{table}[H]
+    \centering
+    \captionsetup{font={bf, small}} 
+    \caption{Translation of KAP Survey Data into ABM Initialization Variables}
+    \label{tab:kap_translation}
+    \small
+    \renewcommand{\arraystretch}{1.15} 
+    \begin{tabularx}{\textwidth}{ 
+        >{\raggedright\arraybackslash}p{2.8cm} 
+        >{\raggedright\arraybackslash}p{3.2cm} 
+        c 
+        c 
+        >{\raggedright\arraybackslash}X 
+    }
+        \toprule
+        \textbf{ABM Parameter} & \textbf{Source Variable} & \makecell{\textbf{Mean} \\ (1-5)} & \makecell{\textbf{Norm.} \\ (0-1)} & \textbf{Computational Impact} \\
+        \midrule
+        Agent Knowledge ($K_0$) & Awareness of Programs & 3.27 & 0.65 & Sets the baseline resistance to Attitude decay. \\
+        Agent Attitude ($A_0$) & Attitude on Labeling & 3.32 & 0.66 & Initializes the continuous internal motivation vector. \\
+        Training Sensitivity ($S_t$) & Need for Training & 3.41 & 0.68 & Acts as a scalar multiplier for IEC campaign effectiveness. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Beyond initial attitudes, the data extraction dictated the specific Theory of Planned Behavior (TPB) weights assigned to each sector, as detailed in Table \ref{tab:behavioral_parameters}. 
+
+\begin{table}[H]
+    \centering
+    \caption{Calibrated Behavioral Weights and Base-Layer Allocation Strategies}
+    \label{tab:behavioral_parameters}
+    \resizebox{\textwidth}{!}{ 
+    \begin{tabular}{l c c c c c c c c}
+        \toprule
+        & \multicolumn{4}{c}{{Agent Behavior Parameters}} & & \multicolumn{3}{c}{{Base Budget Allocation (\%)}} \\
+        \cmidrule(lr){2-5} \cmidrule(lr){7-9}
+        {Barangay} & {Attitude ($w_a$)} & {Norms ($w_{sn}$)} & {Control ($PBC$)} & {Decay ($\delta$)} & & {Enf} & {Inc} & {IEC} \\
+        \midrule
+        Binuni       & 0.65 & 0.80 & 0.65 & 0.02 & & 40 & 40 & 20 \\
+        Ezperanza    & 0.40 & 0.70 & 0.50 & 0.03 & & 50 & 30 & 20 \\
+        Babalaya     & 0.60 & 0.90 & 0.70 & 0.05 & & 90 & 5  & 5 \\
+        Liangan East & 0.65 & 0.60 & 0.50 & 0.04 & & 25 & 65 & 10 \\
+        Poblacion    & 0.55 & 0.20 & 0.40 & 0.03 & & 60 & 20 & 20 \\
+        Demologan    & 0.60 & 0.60 & 0.50 & 0.05 & & 85 & 10 & 5 \\
+        Mati         & 0.60 & 0.50 & 0.40 & 0.10 & & 30 & 50 & 20 \\
+        \bottomrule
+    \end{tabular}
+    }
+    \vspace{1ex}
+    
+    \raggedright
+    \footnotesize
+    \textit{Note: Agent behavior parameters correspond to TPB weights: $w_a$ (Attitude), $w_{sn}$ (Social Norms), $PBC$ (Perceived Behavior Control), and $\delta$ (Compliance Decay Rate). Budget allocation percentages reflect the hardcoded local strategy under the Status Quo scenario.}
+\end{table}
+
+The variance in these parameters mathematically defined the unique behavioral friction of each environment. For example, Poblacion exhibited an ``Urban Isolation'' profile, characterized by the lowest Social Norm weight ($w_{sn} = 0.20$). Computationally, this rendered spatial compliance from Moore neighborhood queries mathematically ineffective at triggering social tipping points. Conversely, Mati exhibited the highest motivation decay rate ($\delta = 0.10$), indicating that computational IEC investments were rapidly eroded as agrarian agents reverted to traditional disposal practices. By injecting this high-fidelity institutional and psychological data, the simulation ensured that the DRL agent was trained against a highly realistic, heterogeneous population matrix rather than a uniform mathematical grid.

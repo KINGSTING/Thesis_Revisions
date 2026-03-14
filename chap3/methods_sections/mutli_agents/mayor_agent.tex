@@ -8,16 +8,28 @@ Computationally, the \texttt{MayorAgent} acts as the structural bridge between t
 
 At the start of each quarter ($t \pmod{90} == 0$), the Mayor Agent pauses local micro-executions to observe the global state vector (aggregated compliance, average attitudes, remaining annual budget, and political capital). It queries the HuDRL algorithm, receiving a continuous action vector representing a normalized budget allocation strategy. \textit{(Note: The specific neural network architecture, state-space constraints, and triage heuristics governing how the AI calculates this vector are extensively detailed in Section 3.4)}. Once received, the Mayor Agent immediately translates these abstract floating-point values into physical municipal interventions.
 
-\paragraph{Part 2: Budget Translation and Actuation Pipelines}
-
-The continuous action vector is partitioned and executed across three distinct operational pipelines, designed to override or supplement local barangay limitations:
+\paragraph{Part 2: Budget Translation and Macro-Intervention Levers}
+The AI's action vector is partitioned and executed across the same three policy levers utilized by the Barangays, but at a massively scaled municipal capacity \citep{Ibanez2022}:
 
 \begin{enumerate}
-    \item \textbf{Macro-IEC Translation (Mass Media):} When the AI allocates funds to a specific barangay's education sector, the Mayor Agent bypasses grassroots methods and invests in macro-level mass media. The allocation is partitioned using a greedy knapsack heuristic \citep{TianReview2024}. The agent first maximizes the purchase of local radio airtime ($C_{radio} = \text{\textpeso} 500$), capped at 60 broadcasts per quarter. Any residual budget is funneled into large-scale municipal assembly events ($C_{event} = \text{\textpeso} 5,000$). The resulting computational campaign intensity triggers an immediate, direct mutation on the \texttt{HouseholdAgents} in that jurisdiction, artificially boosting their Attitude ($A$) by up to $+0.15$ and Social Norms ($SN$) by $+0.075$.
+    \item \textbf{Macro-IEC (Mass Media Campaigns):} When the AI allocates funds to a barangay's IEC sector, the Mayor bypasses grassroots methods and invests in mass media. The allocation ($B_{lgu\_iec}$) funds broad-reach radio broadcasts ($C_{rad} = \text{\textpeso} 500$) and large-scale assembly events ($C_{evt} = \text{\textpeso} 5,000$). The intensity of municipal IEC ($I_{macro}$) is bounded by target saturation levels:
+    \begin{align}
+        n_{rad} &= \min \left( T_{rad}, \left\lfloor \frac{B_{lgu\_iec}}{C_{rad}} \right\rfloor \right) \\
+        rem_{lgu} &= \max \left( 0, B_{lgu\_iec} - (n_{rad} \times C_{rad}) \right) \\
+        n_{evt} &= \min \left( T_{evt}, \left\lfloor \frac{rem_{lgu}}{C_{evt}} \right\rfloor \right) \\
+        I_{macro} &= \min \left( 1.0, \omega_{rad} \left( \frac{n_{rad}}{T_{rad}} \right) + \omega_{evt} \left( \frac{n_{evt}}{T_{evt}} \right) \right)
+    \end{align}
+    This intensity instantly artificially boosts the Attitude ($A$) and Social Norms ($SN$) of households in the targeted jurisdiction.
     
-    \item \textbf{Municipal Strike Force Spawning:} To execute localized crackdowns, enforcement funds are translated into active ``Strike Force'' personnel. The Mayor calculates the affordable headcount based on the regional minimum wage for a 66-day quarter ($C_{enf\_agent} = \text{\textpeso} 26,400$). The agent dynamically instantiates these high-capacity \texttt{EnforcementAgents} (\texttt{is\_municipal = True}) into the spatial grid. To prevent memory bloat and simulate task force realities, they are assigned a strict 30-day temporal contract constraint ($T_{contract} = 30$). These municipal inspectors possess a 100\% daily patrol rate and issue severe \textpeso 1,000 citations.
+    \item \textbf{Macro-Enforcement (LGU Strike Force) and Object Destruction:} To execute localized crackdowns, enforcement funds are translated into elite ``Strike Force'' personnel. Unlike local Tanods, these agents are hired as temporary shock troops. Assuming the Region X minimum daily wage ($W_{Daily} = \text{\textpeso}400$) and a concentrated 30-day deployment window, the municipal enforcement cost ($C_{\mathrm{Enf}}$) is linearly tied to human capital:
+    \begin{equation}
+        C_{\mathrm{Enf}} = (N_{\mathrm{Enforcers}} \times W_{\mathrm{Daily}} \times 30)
+    \end{equation}
+    The Mayor dynamically instantiates these high-capacity \texttt{EnforcementAgents} (flagged as \texttt{is\_municipal = True}) and injects them into the grid. They bypass the distraction filter (achieving a 100\% daily patrol rate), execute up to 25 apprehensions per tick, and issue severe \textpeso 1,000 citations \citep{Wang2023}. 
     
-    \item \textbf{Economic Augmentation (Municipal Incentives):} Funds allocated to positive reinforcement are channeled directly into the target \texttt{BarangayAgent}'s Tier 2 financial ledger (as detailed in Section 3.3.3). This ensures the barangay has the liquidity to process citizens' \textpeso 500 reward claims, effectively utilizing municipal funds to prevent local budget exhaustion.
+    Crucially, these agents are bound by their strict 30-day limit enforced via computational object destruction. During each daily tick, the agent decrements its internal \texttt{contract\_days} integer. Upon reaching zero, the object invokes a self-destruct sequence (\texttt{self.model.grid.remove\_agent()}), physically deleting itself from the spatial grid. This mechanical constraint prevents the AI Mayor from permanently locking down a barangay with a single payment. While the Strike Force generates an immediate spike in compliance via the "Fear Override," their sudden deletion guarantees a rapid behavioral collapse in subsequent ticks unless the AI learns to transition the community toward intrinsic motivation (IEC) or expends further budget in the next quarter.
+    
+    \item \textbf{Macro-Incentives (Economic Augmentation):} Funds allocated to positive reinforcement are channeled directly into the target \texttt{BarangayAgent}'s Tier 2 financial ledger. This ensures the barangay has the liquidity to process citizen reward claims without exhausting their own constrained local funds.
 \end{enumerate}
 
 \paragraph{Part 3: Political Capital Maintenance (Survival Mechanics)}
