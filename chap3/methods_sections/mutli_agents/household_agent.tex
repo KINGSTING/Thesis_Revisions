@@ -36,31 +36,24 @@ The model also captures complex psychological feedbacks such as ``psychological 
 
 Standard Agent-Based Models often suffer from hyper-reactivity, exhibiting unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To accurately simulate the real-world stability of established habits, this study mathematically models ``Cultural Inertia''—where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit \citep{Corcoran2020}.
 
-To achieve this, the standard attitude update function is refined by a dynamic damping factor ($D_{\mathrm{factor}}$), suggesting that established social norms act as a buffer against the rapid erosion of compliance \citep{Andre2021}:
+To achieve this, the model implements a ``Social Norm Shield'' governed by localized compliance thresholds, effectively shifting the behavioral driver from transient attitudes to structural peer pressure \citep{Andre2021}. This shield operates through two distinct programmatic stages:
 
-\begin{equation}
-    A_{t+1} = A_t - (\delta \times D_{\mathrm{factor}})
-\end{equation}
-\addequation{Attitude Decay and Damping Function}
-
-The damping factor is governed by the strength of local social norms ($SN$) through two distinct stages:
 \begin{itemize}
-    \item \textbf{Stage 1: Bayanihan Activation (The 40\% Floor):} Triggered when barangay compliance surpasses 40\%, representing an emergent community spirit that slows the erosion of positive norms, ensuring perceived social pressure does not drop to zero \citep{Nishimura2022}.
-    \item \textbf{Stage 2: Norm Lock-in (The 70\% Tipping Point):} Occurs when compliance exceeds 70\%, representing deep cultural habituation where segregation becomes the default state \citep{Jimenez2025}. This reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions \citep{Centola2018, Nyborg2024}. 
+    \item \textbf{Stage 1: Bayanihan Activation (The 40\% Floor):} Triggered when barangay compliance surpasses 40\%, representing an emergent community spirit. To prevent total mathematical collapse during the DRL agent's early exploration phase, an absolute floor is implemented. Even if enforcement ceases entirely, spatial peer pressure prevents compliance from dropping below this line. This simulates the internalized ``moral obligation'' and residual cultural memory identified in regional waste management studies \citep{Nishimura2022}.
+    \item \textbf{Stage 2: Norm Lock-in (The 70\% Tipping Point):} Once a localized node breaches the 70\% compliance threshold, the behavior transitions from incentive-driven to norm-driven. The simulation executes a deterministic hard-lock on the Subjective Norm weight ($w_{sn} = 0.90$), preventing further dynamic decay and simulating cultural hysteresis. This reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions that actively resist degradation \citep{Centola2018, Nyborg2024}.
 \end{itemize}
 
-Mathematically, this damping effect is expressed as a piecewise function:
+Mathematically, this mechanism replaces standard dynamic decay with a conditional piecewise lock on the Subjective Norm variable:
 
 \begin{equation}
-    D_{\mathrm{factor}} = 
+    w_{sn}(t) = 
     \begin{cases} 
-        0.1 & \text{if } SN > 0.70 \text{ (Stage 2: Strong Norms / Internalized)} \\
-        0.5 & \text{if } SN > 0.40 \text{ (Stage 1: Bayanihan Activation)} \\
-        1.0 & \text{otherwise (Weak Norms / Standard Decay)}
+        0.90 & \text{if } \text{Compliance}_{\mathrm{local}} \ge 0.70 \text{ (Stage 2: Norm Lock-in)} \\
+        \max(w_{sn}(t_0), 0.40) & \text{if } \text{Compliance}_{\mathrm{local}} \ge 0.40 \text{ (Stage 1: Bayanihan Floor)} \\
+        w_{sn}(t_0) & \text{otherwise (Weak Norms / Standard Behavior)}
     \end{cases}
 \end{equation}
-\addequation{Dynamic Damping Factor for Behavioral Inertia}
-
+\addequation{Deterministic Hard-Lock for Subjective Norms}
 
 \subsubsection{Computational Implementation and State Transitions}
 
@@ -144,6 +137,6 @@ Unlike local sensitivity analyses that alter one variable at a time, the Sobol m
 \end{algorithmic}
 \end{algorithm}
 
-The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights ($w_a, w_{sn}, w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the algorithmic decision-making without empirical justification. Additionally, operational constraints such as Base Effort and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.02]$, respectively. 
+The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights ($w_a, w_{sn}, w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the algorithmic decision-making without empirical justification. Additionally, operational constraints such as Base Effort and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.015]$, respectively. 
 
 By calculating the $S_1$ and $S_T$ indices, the analysis isolates which specific computational parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters mathematically validates whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation, ensuring the subsequent Deep Reinforcement Learning (DRL) agent is optimizing against a structurally sound and ecologically valid virtual population \citep{TianReview2024}.

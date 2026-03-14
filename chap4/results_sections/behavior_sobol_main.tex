@@ -1,0 +1,48 @@
+\section{Mechanisms of Behavior Change and Structural Sensitivity}
+
+To evaluate the structural validity and predictive reliability of the developed Agent-Based Model (ABM), a variance-based Global Sensitivity Analysis (GSA) was executed using the Sobol method \citep{Sobol2001}. Unlike local sensitivity analysis—which alters one variable at a time—GSA simultaneously perturbs the entire multi-dimensional input space, allowing for the quantification of both direct effects and non-linear interactions. This computational stress-testing phase involved executing hundreds of parameterized simulation runs, varying the five core Theory of Planned Behavior (TPB) parameters ($w_a, w_{sn}, w_{pbc}, c_{\text{effort}}, \delta$) by $\pm 20\%$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Sobol.png}
+    \caption{Global Sensitivity Analysis Results illustrating First-Order ($S_1$) and Total-Order ($S_T$) Sobol Indices for behavioral parameters.}
+    \label{fig:sobol_analysis}
+\end{figure}
+
+The extraction of the Sobol indices, illustrated in Figure \ref{fig:sobol_analysis}, provided a profound mathematical validation of the simulation's underlying psychosocial architecture, specifically identifying the levers of change the HuDRL agent would later exploit.
+
+\subsection{The ``Convenience Barrier'' and the Absolute Dominance of Physical Friction}
+
+The most significant revelation of the GSA was the absolute dominance of the Base Cost of Effort ($c_{\text{effort}}$) as the primary driver of system variance. This parameter yielded a massive Total-Order index ($S_T$) that eclipsed all other variables, accounting for approximately 83\% of the variance in global compliance rates ($S_1 \approx 0.83$). 
+
+This mathematically proves the ``Convenience Hypothesis'': in the context of Bacolod, the physical inconvenience of segregating waste—represented by temporal, physical, and cognitive friction—is the ultimate bottleneck. Computationally, this suggests that regardless of a household's pro-environmental beliefs ($w_a$), if the effort threshold exceeds their perceived utility, the behavior will fail \citep{Corcoran2020}. This finding serves as a rigorous indictment of awareness-only policies; the AI learned that it could not simply ``educate'' away physical friction. Instead, it had to fundamentally alter the individual utility calculus by using Enforcement to make non-compliance costlier and Incentives to make compliance more rewarding \citep{Chen2023, Yazawa2025}.
+
+\subsection{The ``Value-Action Gap'' and the Intention-Action Trap}
+
+A critical corollary to the dominance of effort was the near-zero sensitivity of the Attitude ($w_a$) and Perceived Behavioral Control ($w_{pbc}$) parameters. While traditional municipal strategies focus heavily on Information, Education, and Communication (IEC) campaigns, the model demonstrates a state of diminishing returns on education. This is a computational realization of the ``Value-Action Gap'' or ``Intention-Action Trap'' \citep{Liao2024, Zhao2022}.
+
+The GSA confirms that residents likely already understand the ecological importance of R.A. 9003, but the policy framework fails to bridge the gap where knowledge turns into physical action. Passive awareness campaigns that target attitude and peer pressure are mathematically insufficient to drive compliance if the systemic effort ($c_{\text{effort}}$) remains unaddressed by the LGU. Consequently, the HuDRL agent's strategic pivot away from IEC in its early phases was not a disregard for education, but a recognition that the most effective lever for immediate behavioral shifts lies in structural and extrinsic motivators rather than intrinsic appeals \citep{Badua2022}.
+
+\subsection{Social Norms, Cultural Inertia, and the Tipping Point Mechanism}
+
+The simulation revealed that while individual attitudes were weak drivers, Social Norms ($w_{sn}$) functioned as a powerful, non-linear multiplier ($S_1 \approx 0.35$). This sensitivity validated the DRL agent's discovery of the ``Sequential Saturation'' strategy. Social Norms create a state of ``Cultural Inertia''; when compliance is low, peer influence reinforces non-compliance \citep{Andre2021}.
+
+However, the DRL agent identified a critical ``Tipping Point'' (modeled at $\approx$ 70\% compliance) where social influence flips from a barrier to a facilitator \citep{Centola2018}. Once this threshold is crossed, the behavior becomes self-reinforcing via the ``Social Norm Shield.'' This explains the ``Graduation Effect'' observed in the HuDRL results: once a barangay was saturated with resources and pushed past the 70\% mark, it maintained high compliance even after the agent reduced funding to a minimal ``Maintenance Mode.'' This confirms the \textit{Threshold Hypothesis} in Philippine governance—collective action becomes sustainable and cost-effective only after a critical mass internalizes the mandate, allowing the LGU to rotate its limited capital to the next target \citep{Nishimura2022}.
+
+\subsection{Density-Dependent Resistance and the Urban Resource Trap}
+
+The analysis further identified a severe struggle in high-density zones like Barangay Poblacion, revealing the mechanism of ``Density-Dependent Resistance.'' With 1,534 households, any municipal budget allocation is subject to massive dilution. This confirms the \textit{Urban Resource Trap} \citep{Villanueva2021}, where high population density and urban anonymity dissolve the impact of standard monitoring and social pressure.
+
+In these environments, standard, equitable resource distribution is mathematically destined to fail because the enforcement visibility never reaches the threshold required to break the inertia of non-compliance. The HuDRL agent’s success in Poblacion required a ``Shock and Awe'' approach—temporarily diverting nearly 50\% of the entire municipal budget to a single node to achieve an enforcement intensity capable of overcoming urban anonymity. This aligns with findings by \citet{Badua2022} that overcoming the operational burdens of large, anonymous populations requires an intensity threshold that human-designed, ``fair'' distribution strategies can never achieve.
+
+\subsection{Non-Linear Interactivity and Habit Decay}
+
+Finally, the GSA provided proof of massive non-linear interactivity ($S_T \gg S_1$). Specifically, the delta between the First-Order and Total-Order indices for $c_{\text{effort}}$ proves that a household's threshold for effort does not exist in a vacuum; it is heavily entangled with income sensitivity, social pressures, and local enforcement levels. 
+
+Surprisingly, the Habit Decay rate ($\delta$) exhibited minimal influence on overall variance. This provides a critical sociological insight: citizens in Bacolod are not failing to segregate because they ``forget'' the rules over time; they are actively and rationally choosing not to comply because the physical effort remains consistently too high. 
+
+\subsection{Discussion: Limitations and the Informal Economy}
+
+While the ABM demonstrates the theoretical efficiency of AI-optimized enforcement, the ``Net Cost'' ($C_{Net}$) of non-compliance in the real world is often distorted by the informal economy. As established in the key informant interviews, practices such as localized bribery or ``tipping'' collection personnel to bypass the ``no segregation, no collection'' rule can artificially lower the perceived cost of non-compliance. 
+
+If a nominal bribe effectively bypasses the official penal structure, it undermines the utility calculus established by the DRL strategy. This implies that for the HuDRL policies to be effective in reality, the LGU must couple its resource allocation with strict auditing of collection crews and the elimination of informal bypasses. Without ensuring that the simulation's enforcement parameters ($E$) match on-the-ground reality, the ``Convenience Barrier'' will remain an insurmountable obstacle to municipal sustainability.

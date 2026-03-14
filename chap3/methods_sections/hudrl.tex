@@ -59,9 +59,13 @@ Furthermore, deploying an unrestrained AI in a public policy simulation poses ri
 \State \textbf{Rule 2: The Phase-Shift Crisis Guardrail (Forced Equity)}
 \State \parbox[t]{0.9\linewidth}{$\rightarrow$ Identify the "Weakest Performer" (the barangay with the lowest current compliance).\strut}
 \State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the total raw action sum of the entire municipality.\strut}
-\If{The AI's proposed allocation for the Weakest Performer is $< 50\%$ of the total sum}
-    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Heuristic Override:} Artificially inflate the allocation tensor for this specific barangay to mathematically guarantee a minimum of $50\%$ of the total quarterly budget.\strut}
-    \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Ensures that heavily struggling sectors are never starved of funds during the AI's randomized exploration phase, enforcing a baseline of municipal equity \citep{ZhengAI2022}.\strut}
+\If{The municipality's Global Compliance is $< 40\%$ (Collapse Zone)}
+    \If{The AI's proposed allocation for the Weakest Performer is $< 50\%$ of the total sum}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Heuristic Override:} Artificially inflate the allocation tensor for this specific barangay to mathematically guarantee a minimum of $50\%$ of the total quarterly budget.\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Ensures that heavily struggling sectors are never starved of funds during the AI's randomized exploration phase, enforcing a baseline of municipal equity \citep{ZhengAI2022}.\strut}
+    \EndIf
+\Else
+    \State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Lift Guardrail:} Allow the AI to distribute fractional maintenance budgets freely across the grid to sustain social norms.\strut}
 \EndIf
 \Statex
 \State \textbf{Rule 3: Softmax Normalization}

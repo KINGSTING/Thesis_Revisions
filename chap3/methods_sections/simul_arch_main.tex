@@ -9,7 +9,7 @@ The simulation utilizes a dual-timescale architecture to capture the friction be
     \item \textbf{Daily Micro-Ticks:} At the micro-level, the environment processes daily iterations (1 tick = 1 day). During each tick, \texttt{HouseholdAgents} execute routine interactions, evaluate behavioral friction via their TPB utility functions, and face the stochastic probability of being caught by patrolling \texttt{EnforcementAgents}.
     \item \textbf{Quarterly Policy Epochs:} The macro-level operates on a 90-day epoch. Every 90 ticks, the simulation execution pauses to allow the \texttt{MayorAgent} to interface with the Deep Reinforcement Learning (DRL) policy.
 \end{itemize}
-The total simulation horizon is fixed at $T = 1,080$ ticks (3,600 during training), representing the standard three-year political term of Philippine local officials.
+The total simulation horizon is fixed at $T = 1,080$ ticks (50,000 during training), representing the standard three-year political term of Philippine local officials.
 
 
 

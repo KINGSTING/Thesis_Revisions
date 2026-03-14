@@ -3,39 +3,17 @@
 This study synthesizes data from academic literature, public government statistics, and operational key-informant interviews to parameterize the environment with high ecological validity \citep{McCulloch2022}. The integration of empirical data ensures the Deep Reinforcement Learning (DRL) agent optimizes its policy against a structurally sound representation of the municipality, rather than a synthetic, homogeneous grid.
 
 \subsubsection{Behavioral and Socio-Economic Initialization}
-The foundational psychological parameters for the \texttt{HouseholdAgent} objects were derived through a meta-synthesis of existing pro-environmental behavioral studies \citep{Taraghi2025, Moeini2023}. To ground these parameters locally, initialization variables were calibrated using empirical Knowledge, Attitude, and Practices (KAP) data from riverside barangays in Northern Mindanao \citep{Paigalan2025}, which serve as a robust proxy for the coastal Municipality of Bacolod. 
+The foundational psychological parameters for the \texttt{HouseholdAgent} objects were derived through a meta-synthesis of existing pro-environmental behavioral studies \citep{Taraghi2025, Moeini2023}. To ground these parameters locally, initialization variables were calibrated using empirical Knowledge, Attitude, and Practices (KAP) data from riverside barangays in Northern Mindanao \citep{Paigalan2025}. While Bacolod is a coastal municipality, this regional data serves as a robust socio-institutional proxy, given the shared enforcement of R.A. 9003 and comparable municipal funding constraints. 
 
-To replicate the ``Intention-Action Gap'' frequently observed in developing economies \citep{Yazawa2025, Geiger2021}, agents were initialized with a relatively high Attitude ($A_0 \approx 0.66$) but a significantly lower Baseline Compliance ($B_0 \approx 0.12$ to $0.15$). This deliberate dissonance compels the AI Mayor to discover policies capable of bridging the gap between theoretical awareness and physical action.
+To accurately synthesize this regional proxy data with the hyper-local demographic realities of Bacolod, the simulation strictly delineates between \textit{hidden cognitive dynamics} and \textit{observable physical constraints}. The proxy data was utilized to establish the global psychological means for the agents, confirming a naturally high theoretical awareness and positive disposition toward waste segregation ($A_0 \approx 0.66$). However, to replicate the ``Intention-Action Gap'' frequently observed in developing economies \citep{Yazawa2025, Geiger2021}, this high psychological baseline was mathematically bottlenecked by the objective, municipality-wide waste characterization audit, fixing the initial physical compliance state ($B_0$) to a severe $12.5\%$. 
 
-Beyond baseline attitudes, the simulation architecture ingests highly specific configuration profiles to dictate agent instantiation:
+This deliberate dissonance compels the AI Mayor to discover policies capable of bridging the gap between theoretical awareness and physical action. Beyond baseline attitudes, the simulation architecture ingests highly specific configuration profiles to dictate how individual agents react to the AI's policies over time:
 \begin{itemize}
-    \item \textbf{Income Stratification Profiles:} The model does not assume economic equality. Household agents are initialized with discrete income tiers based on localized demographic ratios. As defined in the utility architecture (Section 3.3.1), this data is computationally vital; it determines the scalar multiplier ($\gamma$) for financial sensitivity, ensuring that punitive fines and monetary incentives mathematically impact households differently based on their economic standing.
-    \item \textbf{Behavioral Weight Profiles:} Rather than applying global variables, the simulation loads distinct Theory of Planned Behavior (TPB) parameter weights (Attitude, Social Norms, Perceived Behavioral Control, Base Effort, and Decay Rates) unique to each barangay's cultural profile. This forces the reinforcement learning environment to begin with a highly noisy, heterogeneous state space.
+    \item \textbf{Income Stratification Profiles:} The model does not assume economic equality. Household agents are initialized with discrete income tiers based on localized municipal demographic ratios. As defined in the utility architecture (Section 3.3.1), this data is computationally vital; it determines the scalar multiplier ($\gamma$) for financial sensitivity, ensuring that punitive fines and monetary incentives mathematically impact households differently based on their economic standing.
+    \item \textbf{Behavioral Weight Scaling:} Rather than applying flat global variables, the high baseline KAP scores derived from \cite{Paigalan2025} are subjected to demographic scaling. The simulation loads distinct Theory of Planned Behavior (TPB) parameter weights (Attitude, Social Norms, Perceived Behavioral Control, Base Effort, and Decay Rates) unique to each barangay's cultural profile. For instance, the high-density center of Poblacion receives an algorithmic penalty to its Social Norm weight to reflect urban anonymity, while low-income agrarian zones exhibit higher compliance decay rates ($\delta$). 
 \end{itemize}
 
-\begin{table}[H]
-    \centering
-    \captionsetup{font={bf, small}} 
-    \caption{Initialization Parameters for Household Agents \citep{Paigalan2025}}
-    \label{tab:initialization_parameters}
-    \small
-    \renewcommand{\arraystretch}{1.15} 
-    \begin{tabularx}{\textwidth}{ 
-        >{\raggedright\arraybackslash}p{2.8cm} 
-        >{\raggedright\arraybackslash}p{3.2cm} 
-        c 
-        c 
-        >{\raggedright\arraybackslash}X 
-    }
-        \toprule
-        \textbf{ABM Parameter} & \textbf{Source Variable} & \makecell{\textbf{Mean} \\ (1-5)} & \makecell{\textbf{Norm.} \\ (0-1)} & \textbf{Contextual Justification} \\
-        \midrule
-        Agent Knowledge ($K_0$) & Awareness of Programs & 3.27 & 0.65 & Moderate awareness of SWM programs but lacking technical depth. \\
-        Agent Attitude ($A_0$) & Attitude on Labeling & 3.32 & 0.66 & Generally positive disposition toward segregation rules. \\
-        Training Sensitivity ($S_t$) & Need for Training & 3.41 & 0.68 & Highly responsive to IEC interventions due to expressed need for training. \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
+By structuring the initialization in this manner, the simulation mathematically proves why the municipality only achieves a $12.5\%$ compliance rate despite the population possessing generally positive environmental attitudes. This forces the reinforcement learning environment to begin with a highly noisy, heterogeneous state space, ensuring the agent learns robust triage rather than exploiting a trivial mathematical environment.
 
 \subsubsection{Socio-demographic and Institutional Constraints}
 The simulated Local Government Unit (LGU) operates under strict physical and fiscal constraints derived directly from institutional audits (e.g., the Municipal Environment and Natural Resources Office and local Appropriation Ordinances). These constraints dictate the bounds of the AI's action space:
