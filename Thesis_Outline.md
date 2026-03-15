@@ -46,23 +46,28 @@ Optimizing the Household Waste Segregation Policy in the Municipality of Bacolod
             [X] Empirical Data Extraction and System Initialization
             [X] Baseline Model Calibration
             [X] Algorithmic Challenges and DRL Refinement
-            [ ] Global Sensitivity Analysis / Sobol Indices
-            [ ] Comparative Policy Simulation Results
-               [ ] Status Quo (No LGU intervention)
-               [ ] Pure Enforcement (Max strike force)
-               [ ] Pure Incentives (Max rewards)
-               [ ] The HuDRL Mayor (The AI's optimized, dynamic budget strategy)
-[ ] Chapter 5:
-            [ ] Mayor Agent's Trainig Performance Discussion
-            [ ] Comparative Analysis of Policty Strategies
-            [ ] The Household Agent's Behavioral Determinant
-[ ] Chapter 6: 
-            [ ] Achieved Objectives
-            [ ] Critique and Limitations
-            [ ] Future Work
-            [ ] Final Remarks
+            [X] Global Sensitivity Analysis / Sobol Indices
+            [X] Comparative Policy Simulation Results
+               [X] Status Quo (No LGU intervention)
+               [X] Pure Enforcement (Max strike force)
+               [X] Pure Incentives (Max rewards)
+               [X] The HuDRL Mayor (The AI's optimized, dynamic budget strategy)
+[X] Chapter 5: Proposed Smart Governance Framework
+            [X] Algorithmic Resource Targeting
+            [X] Friction Reduction and Infrastructure
+            [X] Adaptive Behavioral Mechanics
+            [ ] Predictive Policy Prototyping
+[X] Chapter 6: 
+            [X] Achieved Objectives
+            [X] Critique and Limitations
+            [X] Future Work
+            [X] Final Remarks
                [X] Usage of Generative AI  
+[ ] Table of Results
 
 
-SUGGESTIONS:
+Tasks for the Next Push:
 
+[X] Table of Results Update with new data
+[ ] Policy Recommendation -> Policy Brief
+[ ] 

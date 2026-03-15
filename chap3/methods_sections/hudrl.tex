@@ -38,58 +38,62 @@ This exponential temperature scaling ($\tau=5.0$) aggressively amplifies the AI'
 
 \subsection{Addressing Sparse Rewards via Safety-Critical Action Masking}
 
-A fundamental challenge in applying Deep Reinforcement Learning to complex socio-ecological systems is the \textit{Sparse Reward Problem} \citep{Vecerik2018}. In a standard, unguided PPO environment, the agent explores its 21-dimensional action space at random. Because overcoming community-wide behavioral inertia requires a massive concentration of resources to trigger a ``Social Tipping Point'' \citep{Nyborg2024}, random exploration rarely yields a sudden increase in compliance, causing unguided agents to rapidly converge to a ``Status Quo'' local optimum characterized by equitable, but ultimately ineffective, resource distribution.
+A persistent challenge in deploying Deep Reinforcement Learning (DRL) for complex socio-ecological systems is the \textit{Sparse Reward Problem} \citep{Vecerik2018}. In a standard, unguided Proximal Policy Optimization (PPO) environment, an agent randomly explores its 21-dimensional action space. However, overcoming community-wide behavioral inertia necessitates a critical mass of resources to precipitate a ``Social Tipping Point'' \citep{Nyborg2024}. Consequently, random exploration rarely yields the concentrated investment required for a sudden compliance surge, often causing the unguided agent to prematurely converge on a ``Status Quo'' local optimum---a state of equitable but systemically ineffective resource distribution.
 
-Furthermore, deploying an unrestrained AI in a public policy simulation poses risks of "resource starvation" for critical sectors \citep{Alphonso2024}. To overcome these computational and ethical challenges, the HuDRL framework integrates domain-specific hardcoded logic before the Softmax step. This acts as a \textbf{Safety-Critical Action Mask}, forcefully overriding the neural network's raw output to prevent municipal collapse during the AI's early exploration phase.
+Furthermore, granting an unrestrained AI control within a public policy simulation introduces the ethical and operational risk of ``resource starvation'' for vulnerable sectors \citep{Alphonso2024}. To mitigate these computational and ethical hurdles, the HuDRL framework embeds domain-specific heuristic logic prior to the Softmax activation. Operating as a \textbf{Safety-Critical Action Mask}, this mechanism forcefully overrides the neural network's raw outputs to avert municipal collapse during the agent's highly randomized initial exploration phase.
 
 \begin{algorithm}[H]
 \caption{The Mayor Agent's Triage \& Safety Override Heuristics}
 \label{alg:hudrl_triage_english}
 \begin{algorithmic}[1]
-\State \textbf{Input Data:} The AI's raw proposed action vector (21 values) and real-time compliance array.
+\State \textbf{Input Data:} The agent's raw proposed action vector (21 dimensions) and the real-time compliance array.
 \Statex
-\State \textbf{Rule 1: The 70\% Graduation Mechanism (Preventing Waste)}
+\State \textbf{Rule 1: The 70\% Graduation Mechanism (Waste Prevention)}
 \For{Each Barangay in the Municipality}
     \If{Barangay Compliance Rate $\ge$ 70\%}
-        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Budget Slash:} Multiply the AI's proposed budget allocation for this specific barangay by $0.01$ (reducing it by 99\%).\strut}
-        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Prevents the AI from becoming a "Victim of Success" by wasting funds on areas where strong social norms have already locked in the segregation habit \citep{Corcoran2020}.\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Budget Slash:} Scale the proposed budget allocation for this barangay by $0.01$ (a 99\% reduction).\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Prevents the agent from becoming a ``Victim of Success'' by wasting funds on saturated populations where strong social norms have already locked in the desired behavior \citep{Corcoran2020}.\strut}
     \EndIf
 \EndFor
 \Statex
 \State \textbf{Rule 2: The Phase-Shift Crisis Guardrail (Forced Equity)}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Identify the "Weakest Performer" (the barangay with the lowest current compliance).\strut}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the total raw action sum of the entire municipality.\strut}
-\If{The municipality's Global Compliance is $< 40\%$ (Collapse Zone)}
-    \If{The AI's proposed allocation for the Weakest Performer is $< 50\%$ of the total sum}
-        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Heuristic Override:} Artificially inflate the allocation tensor for this specific barangay to mathematically guarantee a minimum of $50\%$ of the total quarterly budget.\strut}
-        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Ensures that heavily struggling sectors are never starved of funds during the AI's randomized exploration phase, enforcing a baseline of municipal equity \citep{ZhengAI2022}.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Identify the ``Weakest Performer'' (the barangay exhibiting the lowest current compliance).\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Calculate the total raw action sum across the entire municipality.\strut}
+\If{Global Compliance $< 40\%$ (Collapse Zone)}
+    \If{Proposed allocation for Weakest Performer $< 50\%$ of the total sum}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Heuristic Override:} Artificially inflate the allocation tensor for this barangay to mathematically guarantee it receives at least $50\%$ of the quarterly budget.\strut}
+        \State \parbox[t]{0.85\linewidth}{$\rightarrow$ \textit{Rationale:} Enforces worst-first triage and prevents resource starvation in heavily struggling sectors during random exploration, establishing a baseline of municipal equity \citep{ZhengAI2022}.\strut}
     \EndIf
 \Else
-    \State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Lift Guardrail:} Allow the AI to distribute fractional maintenance budgets freely across the grid to sustain social norms.\strut}
+    \State \parbox[t]{0.9\linewidth}{$\rightarrow$ \textit{Lift Guardrail:} Permit the agent to freely distribute fractional maintenance budgets across the grid to sustain newly formed social norms.\strut}
 \EndIf
 \Statex
 \State \textbf{Rule 3: Softmax Normalization}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Pass the overridden, adjusted values through the Temperature-Scaled Softmax equation to normalize the final output to exactly 100\% of the budget.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Process the overridden, adjusted tensor through a Temperature-Scaled Softmax function to ensure the final output strictly normalizes to 100\% of the available budget.\strut}
 \end{algorithmic}
 \end{algorithm}
 
-This heuristic shaping forces the agent to explore the ``Sequential Saturation'' strategy—overwhelming a single problematic area with resources until social norms shift, before redirecting funds to the next \citep{Cheng2021}.
+Algorithm \ref{alg:hudrl_triage_english} grounds the DRL agent within established public administration and economic frameworks. By implementing Rule 1, the model acknowledges the Law of Diminishing Marginal Returns, ensuring the agent does not waste capital converting a stubborn minority when the systemic cost outweighs the benefit. Simultaneously, Rule 2 acts as a localized application of the Theory of Constraints \citep{Goldratt1984}, prioritizing systemic bottlenecks whenever critical compliance failures threaten the municipality. 
+
+Ultimately, this heuristic shaping bounds the action space, relieving the DRL agent of the burden of discovering basic economic principles from scratch. Instead, it forcefully guides the agent to optimize the precise temporal execution of the ``Sequential Saturation'' strategy---overwhelming a single problematic area with resources until social norms shift, before seamlessly pivoting to the next \citep{Cheng2021}.
 
 \subsection{Multi-Objective Reward Shaping}
 
 To train the PPO model effectively, the environment must translate the complex outcomes of the ABM into a scalar reward signal. The HuDRL agent is guided by a composite, multi-objective reward function $R_{t}$ designed to balance environmental outcomes, fiscal efficiency, and social acceptability \citep{Hertweck2023Values}:
 
 \begin{equation}
-    R_{t} = R_{\mathrm{Base}} + R_{\mathrm{Jackpot}} + R_{\mathrm{Focus}} - P_{\mathrm{Waste}} \pm P_{\mathrm{Cap}}
+    R_{t} = R_{\mathrm{Base}} + R_{\mathrm{Jackpot}} + R_{\mathrm{Focus}} - P_{\mathrm{Waste}} + \Phi_{\mathrm{cap}}
     \label{eq:total_reward}
 \end{equation}
 \addequation{Composite Multi-Objective Reward Function}
 
 Computationally, these components are calculated as follows at the end of each quarterly epoch:
 \begin{enumerate}
-    \item \textbf{Base Reward ($R_{\mathrm{Base}}$):} The agent receives a baseline reward linked directly to the municipality's global segregation rate ($Global \times 10.0$).
+    \item \textbf{Base Reward ($R_{\mathrm{Base}}$):} The agent receives a baseline reward linked directly to the municipality's global segregation rate ($\text{Global Compliance} \times 10.0$).
     \item \textbf{Performance Jackpot ($R_{\mathrm{Jackpot}}$):} To explicitly teach the AI the value of its interventions, it receives a massive scalar multiplier if compliance increases in a targeted barangay: $R_{\mathrm{Jackpot}} = (\text{Allocation Ratio} \times \text{Compliance Gain}) \times 100.0$.
     \item \textbf{Focus Bonus ($R_{\mathrm{Focus}}$):} Reinforcing the 50\% Crisis Guardrail, the AI is granted a bonus for organically choosing to fund the weakest barangay ($R_{\mathrm{Focus}} = \text{Weakest Allocation Ratio} \times 5.0$).
-    \item \textbf{Efficiency Penalty ($P_{\mathrm{Waste}}$):} If the AI attempts to spend more than 10\% of the budget on a "Graduated" barangay (compliance $>70\%$), it suffers a mathematical penalty proportional to the wasted funds ($P_{\mathrm{Waste}} = \text{Wasted Allocation Ratio} \times 10.0$).
-    \item \textbf{Political Capital Modifier ($P_{\mathrm{Cap}}$):} To penalize draconian strategies, the reward is modulated by the Mayor's public approval rating: $(P_{\mathrm{Cap}} - 0.5) \times 2.0$. This generates a negative penalty if approval drops below 50\%, forcing the AI to balance enforcement with educational campaigns.
+    \item \textbf{Efficiency Penalty ($P_{\mathrm{Waste}}$):} If the AI attempts to spend more than 10\% of the budget on a ``Graduated'' barangay (compliance $>70\%$), it suffers a mathematical penalty proportional to the wasted funds ($P_{\mathrm{Waste}} = \text{Wasted Allocation Ratio} \times 10.0$).
+    \item \textbf{Political Capital Modifier ($\Phi_{\mathrm{cap}}$):} To penalize draconian strategies, the reward is modulated by the Mayor's public approval rating: $\Phi_{\mathrm{cap}} = (P_{\mathrm{cap}} - 0.5) \times 2.0$. This generates a negative penalty if approval drops below 50\%, forcing the AI to balance enforcement with educational campaigns. 
 \end{enumerate}
+
+While the terminal Jackpot ($+100.0$) is a \textit{sparse} signal intended to reinforce successful long-term outcomes, the Political Capital Modifier is a \textit{dense} signal applied to the total cumulative return. Consequently, a sustained negative $\Phi_{\mathrm{cap}}$ resulting from excessive fines creates a systemic drag on the agent's expected value ($G_t$), forcing the PPO algorithm to optimize for strategies that avoid the 0.10 Political Collapse threshold.

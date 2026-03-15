@@ -12,7 +12,19 @@ The core decision logic of the \texttt{HouseholdAgent} is governed by a dynamic 
 \end{equation}
 \addequation{Household Utility of Segregation Function}
 
-In this formulation, $w_A(t)$ represents the temporal evolution of the agent's internal valuation, functioning as a decay model that increases in response to educational campaigns and decays stochastically in their absence to simulate ``public forgetting'' \citep{Trushna2024}. The social component, $SN_{\mathrm{local}}$, is an endogenous variable derived from the observed compliance rate of the agent's immediate spatial neighborhood \citep{Liao2024}. To account for inherent uncertainty in human decision-making, $\epsilon$ introduces Gaussian stochastic noise ($\mu=0, \sigma=0.05$), ensuring the model reflects real-world behavioral variance \citep{Subedi2025}.
+Where the decision to segregate is a stochastic process driven by the following parameters:
+
+\begin{description}
+    \item[$w_A(t) A$] \textbf{Attitude Component:} Represents the internal motivation. $A$ is the dynamic sentiment score (boosted by IEC campaigns), while $w_A$ is the psychological weight the agent assigns to personal belief.
+    \item[$w_{SN}(t) SN_{\mathrm{local}}$] \textbf{Social Norm Component:} The influence of the community. $SN_{\mathrm{local}}$ is the local compliance rate of neighbors, and $w_{SN}$ is the susceptibility to peer pressure, which scales non-linearly via the State-Dependent Piecewise Function.
+    \item[$w_{PBC}(t) PBC$] \textbf{Perceived Behavioral Control:} The agent's belief in their capability to segregate, representing access to resources (e.g., bins or collection points).
+    \item[$C_{\mathrm{Net}}$] \textbf{Net Cost of Effort:} The physical and economic friction of segregation ($c_{\text{effort}}$) minus any active financial incentives ($I$) provided by the Mayor Agent ($C_{\mathrm{Net}} = c_{\text{effort}} - I$).
+    \item[$\epsilon$] \textbf{Stochastic Noise:} A Gaussian noise term $(\mu=0.0, \sigma=0.05)$ modeling the inherent unpredictability of human decision-making.
+\end{description}
+
+In the utility function, a household's internal disposition toward waste segregation is represented by two distinct variables: the Attitude score ($A$) and its corresponding psychological weight ($w_A$). The weight ($w_A$) represents the intrinsic importance an individual places on their own personal beliefs relative to external factors like peer pressure or penalties. This weight remains a relatively stable baseline trait for each agent.
+
+Conversely, the Attitude score itself ($A$) is highly dynamic and represents the agent's current level of positive sentiment toward segregation. The value of $A$ increases directly in response to municipal Information, Education, and Communication (IEC) campaigns allocated by the Mayor Agent. Following an IEC boost, the Attitude score ($A$) decays stochastically over time, modeling the psychological reality that the impact of public awareness campaigns fades without continuous reinforcement..
 
 A critical computational innovation in this model is the derivation of $C_{\mathrm{Net}}$, the net behavioral cost, which translates abstract psychological friction into a computable scalar:
 
@@ -34,26 +46,27 @@ The model also captures complex psychological feedbacks such as ``psychological 
 
 \subsubsection{Modeling Behavioral Inertia: Social Shields and Norm Internalization}
 
-Standard Agent-Based Models often suffer from hyper-reactivity, exhibiting unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To accurately simulate the real-world stability of established habits, this study mathematically models ``Cultural Inertia''—where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit \citep{Corcoran2020}.
+Standard Agent-Based Models often suffer from hyper-reactivity, exhibiting unrealistic behavioral decay where compliance collapses immediately upon the cessation of external stimuli. To accurately simulate the real-world stability of established habits, this study mathematically models ``Cultural Inertia''---where a behavior transitions from a calculated, incentive-driven decision to an internalized social habit \citep{Corcoran2020}.
 
-To achieve this, the model implements a ``Social Norm Shield'' governed by localized compliance thresholds, effectively shifting the behavioral driver from transient attitudes to structural peer pressure \citep{Andre2021}. This shield operates through two distinct programmatic stages:
+To achieve this without relying on complex path-dependent variables, the model implements a ``Social Norm Shield'' using a state-dependent piecewise function. This shield categorizes community behavior into distinct cultural states based on current localized compliance thresholds, effectively shifting the behavioral driver from transient attitudes to structural peer pressure \citep{Andre2021}. The model operates through the following programmatic states:
 
 \begin{itemize}
-    \item \textbf{Stage 1: Bayanihan Activation (The 40\% Floor):} Triggered when barangay compliance surpasses 40\%, representing an emergent community spirit. To prevent total mathematical collapse during the DRL agent's early exploration phase, an absolute floor is implemented. Even if enforcement ceases entirely, spatial peer pressure prevents compliance from dropping below this line. This simulates the internalized ``moral obligation'' and residual cultural memory identified in regional waste management studies \citep{Nishimura2022}.
-    \item \textbf{Stage 2: Norm Lock-in (The 70\% Tipping Point):} Once a localized node breaches the 70\% compliance threshold, the behavior transitions from incentive-driven to norm-driven. The simulation executes a deterministic hard-lock on the Subjective Norm weight ($w_{sn} = 0.90$), preventing further dynamic decay and simulating cultural hysteresis. This reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions that actively resist degradation \citep{Centola2018, Nyborg2024}.
+    \item \textbf{Established Culture (The 70\% Tipping Point):} Once a localized node breaches the 70\% compliance threshold, the behavior transitions from incentive-driven to norm-driven. The simulation executes a deterministic hard-lock on the Subjective Norm weight ($w_{sn} = 0.90$). This state represents strong cultural inertia and reflects ``critical mass'' theory, where minority behaviors cascade into majority conventions that actively resist degradation \citep{Centola2018, Nyborg2024}.
+    \item \textbf{Transitional State (The 40\% Bayanihan Floor):} When compliance is between 40\% and 69\%, the system models an emergent community spirit. To prevent total mathematical collapse during the DRL agent's early exploration phase, an absolute floor is implemented. Even if enforcement ceases entirely, spatial peer pressure prevents the social norm weight from dropping below a baseline. This simulates the internalized ``moral obligation'' and residual cultural memory identified in regional waste management studies \citep{Nishimura2022}.
+    \item \textbf{Systemic Failure (Below 40\%):} If compliance fails to reach or drops below 40\%, the social shield collapses. At this stage, structural peer pressure is virtually non-existent, and the community relies entirely on external enforcement and transient attitudes to drive compliance.
 \end{itemize}
 
-Mathematically, this mechanism replaces standard dynamic decay with a conditional piecewise lock on the Subjective Norm variable:
+Mathematically, this mechanism replaces standard dynamic decay with a state-dependent piecewise function that locks or floors the Subjective Norm variable based on the current environment:
 
 \begin{equation}
     w_{sn}(t) = 
     \begin{cases} 
-        0.90 & \text{if } \text{Compliance}_{\mathrm{local}} \ge 0.70 \text{ (Stage 2: Norm Lock-in)} \\
-        \max(w_{sn}(t_0), 0.40) & \text{if } \text{Compliance}_{\mathrm{local}} \ge 0.40 \text{ (Stage 1: Bayanihan Floor)} \\
-        w_{sn}(t_0) & \text{otherwise (Weak Norms / Standard Behavior)}
+        0.90 & \text{if } \text{Compliance}_{\mathrm{local}} \ge 0.70 \text{ (Established Culture)} \\
+        \max(w_{sn}(t_0), 0.40) & \text{if } 0.40 \le \text{Compliance}_{\mathrm{local}} < 0.70 \text{ (Transitional State)} \\
+        w_{sn}(t_0) & \text{otherwise (Systemic Failure)}
     \end{cases}
 \end{equation}
-\addequation{Deterministic Hard-Lock for Subjective Norms}
+\addequation{State-Dependent Piecewise Function for Subjective Norms}
 
 \subsubsection{Computational Implementation and State Transitions}
 
