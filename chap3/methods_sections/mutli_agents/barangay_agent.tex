@@ -19,12 +19,48 @@ While the Mayor Agent dynamically shifts municipal funds, the Barangay Agent con
 
 \begin{enumerate}
     \item \textbf{Base IEC (Micro-Interventions):} Barangay agents lack the financial capacity for mass media. Instead, their daily IEC budget is converted into grassroots activities using a greedy procurement heuristic. The algorithm prioritizes \textit{Recoridas} (roving announcements, $C_{rec} = \text{\textpeso} 200$) before allocating residual funds to \textit{Purok} meetings ($C_{pur} = \text{\textpeso} 1,000$). The resulting computational intensity applies a daily fractional scalar boost to the Attitude of all local households.
-    
-    \item \textbf{Base Enforcement (Tanod Spawning):} To execute local enforcement, the Barangay calculates its maximum affordable headcount based on its local enforcement fund. It dynamically instantiates persistent \texttt{EnforcementAgent} objects (flagged as \texttt{is\_municipal = False}). These Tanods have a strict apprehension capacity of 1 household per patrol and suffer from a 90\% stochastic distraction rate, reflecting their multi-duty nature. Their presence computes an ``Ambient Fear'' variable ($Base = 0.30$) to maintain a baseline perception of risk \citep{Zhao2022}.
-    
-    \item \textbf{Base Incentives (Tier 1 Ledger):} The local incentive fund serves as the primary financial clearinghouse for positive reinforcement \citep{Chen2023}. The baseline computational cost of incentives ($C_{\mathrm{Inc}}$) is determined by $C_{\mathrm{Inc}} = (V_{\mathrm{Reward}} \times N_{\mathrm{Compliant}})$, where $V_{\mathrm{Reward}}$ is a \textpeso 500 subsidy drawn directly from this local pool.
+    \begin{equation}
+        N_{\text{rec}} = \min\left(30, \left\lfloor \frac{Budget_{\text{IEC}}}{200} \right\rfloor \right)
+        \label{eq:n_rec}
+    \end{equation}
+
+    \begin{equation}
+        N_{\text{pur}} = \min\left(3, \left\lfloor \frac{\max(0, Budget_{\text{IEC}} - (N_{\text{rec}} \times 200))}{1000} \right\rfloor \right)
+        \label{eq:n_pur}
+    \end{equation}
+
+    \begin{equation}
+        I_{\text{IEC}} = \min\left(1.0, \ 0.5\left(\frac{N_{\text{rec}}}{30}\right) + 0.5\left(\frac{N_{\text{pur}}}{3}\right)\right)
+        \label{eq:i_iec}
+    \end{equation}
+
+    \noindent \textit{where:}
+    \begin{itemize}
+        \item $N_{\text{rec}}$: The number of \textit{Recoridas} (roving grassroots announcements) funded and scheduled by the barangay for the given quarter.
+        \item $N_{\text{pur}}$: The number of \textit{Purok} meetings (neighborhood assemblies) funded and scheduled by the barangay.
+        \item $Budget_{\text{IEC}}$: The localized financial budget (in Philippine Pesos) strictly allocated to the barangay for Information, Education, and Communication campaigns.
+        \item $I_{\text{IEC}}$: The Base IEC Intensity. This is a fractional scalar ranging from $0.0$ to $1.0$ that represents the combined computational strength of the barangay's local educational campaigns. It is used to apply a daily boost to the intrinsic environmental attitude of local households.
+        \item $200$ ($C_{\text{rec}}$): The financial cost to conduct a single \textit{Recorida} (e.g., fuel for the barangay patrol vehicle).
+        \item $30$: The maximum target limit for \textit{Recoridas} per quarter (representing roughly one announcement every 3 days).
+        \item $1000$ ($C_{\text{pur}}$): The financial cost to conduct a single \textit{Purok} meeting (e.g., snacks, printed materials, and logistical setup).
+        \item $3$: The maximum target limit for \textit{Purok} meetings per quarter (representing one major meeting per month).
+        \item $0.5$: The equal mathematical weight ($50\%$) assigned to both \textit{Recoridas} and \textit{Purok} meetings when computing the final $I_{\text{IEC}}$ scalar, ensuring neither method completely dominates the intensity calculation.
+    \end{itemize}
+
+    \item \textbf{Base Enforcement (Tanod Spawning):} To execute local enforcement, the Barangay calculates its maximum affordable headcount based on its local enforcement fund. It dynamically instantiates persistent \texttt{EnforcementAgent} objects (flagged as \texttt{is\_municipal = False}). These Tanods have a strict apprehension capacity of 1 household per patrol and suffer from a 90\% stochastic distraction rate, reflecting their multi-duty nature. Their presence computes an ``Ambient Fear'' variable ($Base = 0.30$) to maintain a baseline perception of risk \citep{Zhao2022}. Cost of Enforcements will be deducted from the barangays fund, where $N_{\mathrm{Enforcers}}$ is the number of base enforcers (tanods) deployed, $W_{\mathrm{Daily}}$ is the minimum daily wage of a personnel in contract of service in Region X and $30$ as the days in contract of service.
+    \begin{equation}
+        C_{\mathrm{Enf}} = (N_{\mathrm{Enforcers}} \times W_{\mathrm{Daily}} \times 30)
+    \end{equation}
+    \label{eq:cost_of_enforcement}
+    \vspace{-20pt} 
+    \item \textbf{Base Incentives (Tier 1 Ledger):} The local incentive fund serves as the primary financial clearinghouse for positive reinforcement \citep{Chen2023}. The baseline computational cost of incentives ($C_{\mathrm{Inc}}$) is determined by the Equation \ref{eq:cost_of_incentives}, where  $N_{\mathrm{Compliant}}$ are the number of compliant \texttt{HouseholdAgents} and $V_{\mathrm{Reward}}$ is a \textpeso 500 subsidy drawn directly from this local pool.
+    \begin{equation}
+        C_{\mathrm{Inc}} = (V_{\mathrm{Reward}} \times N_{\mathrm{Compliant}})
+    \end{equation}
+    \label{eq:cost_of_incentives}
 \end{enumerate}
 
+\vspace{-45pt} % Adjust this number (e.g., -10pt, -20pt) to your liking
 \paragraph{Part 3: The Cascading Incentive Distribution Protocol}
 
 A major architectural feature of the \texttt{BarangayAgent} is its role as a financial clearinghouse. When a compliant \texttt{HouseholdAgent} attempts to claim a monetary reward, it invokes the barangay's \texttt{redeem\_incentive(amount)} method.

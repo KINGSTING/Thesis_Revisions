@@ -19,6 +19,22 @@ The AI's action vector is partitioned and executed across the same three policy 
         n_{evt} &= \min \left( T_{evt}, \left\lfloor \frac{rem_{lgu}}{C_{evt}} \right\rfloor \right) \\
         I_{macro} &= \min \left( 1.0, \omega_{rad} \left( \frac{n_{rad}}{T_{rad}} \right) + \omega_{evt} \left( \frac{n_{evt}}{T_{evt}} \right) \right)
     \end{align}
+
+    \noindent \textit{Where:}
+    \begin{itemize}
+        \item $B_{lgu\_iec}$: The municipal budget allocation (in Philippine Pesos) injected by the AI Mayor specifically into a target barangay's IEC sector.
+        \item $n_{rad}$: The calculated number of broad-reach radio broadcasts successfully funded by the municipal allocation.
+        \item $rem_{lgu}$: The residual municipal budget remaining after funding the target number of radio broadcasts, which cascades down to fund larger events.
+        \item $n_{evt}$: The calculated number of large-scale assembly events successfully funded using the residual municipal budget.
+        \item $I_{macro}$: The Macro-Level IEC Intensity. A fractional scalar (ranging from $0.0$ to $1.0$) representing the combined computational impact and reach of the municipal mass media campaign.
+        \item $A$ and $SN$: The intrinsic Attitude and Subjective Norms of the targeted households, which receive an immediate artificial boost from the $I_{macro}$ intervention.
+        \item $500$ ($C_{rad}$): The financial cost (in Philippine Pesos) to air a single broad-reach radio broadcast.
+        \item $5000$ ($C_{evt}$): The financial cost (in Philippine Pesos) to organize and host a single large-scale municipal assembly event.
+        \item $T_{rad}$: The target saturation limit for radio broadcasts, representing the maximum effective number of broadcasts per quarter before encountering diminishing returns.
+        \item $T_{evt}$: The target saturation limit for large-scale assembly events per quarter.
+        \item $\omega_{rad}$ and $\omega_{evt}$: The mathematical weights assigned to the radio broadcasts and assembly events, respectively. These dictate their proportional influence when calculating the final overall intensity ($I_{macro}$).
+    \end{itemize}
+
     This intensity instantly artificially boosts the Attitude ($A$) and Social Norms ($SN$) of households in the targeted jurisdiction.
     
     \item \textbf{Macro-Enforcement (LGU Strike Force) and Object Destruction:} To execute localized crackdowns, enforcement funds are translated into elite ``Strike Force'' personnel. Unlike local Tanods, these agents are hired as temporary shock troops. Incorporating the Region X Daily Minimum Wage of \textpeso 400 dictated that deploying a single municipal enforcer on a strict 30-day temporal contract consumed exactly \textpeso 12,000. The municipal enforcement cost ($C_{\mathrm{Enf}}$) is linearly tied to human capital:

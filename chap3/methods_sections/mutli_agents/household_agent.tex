@@ -75,6 +75,8 @@ While the preceding equations establish the theoretical bounds of the agent, the
 \subparagraph{Part 1: State Vector Initialization:} 
 Upon instantiation, each agent is assigned a fixed demographic parameter (Income Level) and a continuously updating psychological state vector $S_{hh} = \langle A, SN, PBC \rangle$. To prevent synthetic uniformity, the initial state vector is populated using stochastic Gaussian sampling bounded by the agent's assigned behavioral profile \citep{Fischer2025}. For instance, agents initialized as "Compliant" derive their base attitude from $A \sim \mathcal{U}(0.75, 0.90)$, whereas "Non-Compliant" agents are seeded from $A \sim \mathcal{U}(0.10, 0.40)$.
 
+While the \texttt{BEHAVIOR\_PROFILES} provide the foundational centroids for each sector, individual agents are instantiated via stochastic Gaussian sampling to ensure population heterogeneity. Specifically, the weight parameters ($w_a, w_{sn}, w_{pbc}$) of a Household Agent are derived from $\mathcal{N}(\mu, \sigma^2)$, where $\mu$ is the fixed barangay config value and $\sigma = 0.05$. This prevents mathematical uniformity and allows the simulation to capture the localized variance inherent in human social systems.
+
 \subparagraph{Part 2: Spatial Queries (Moore Neighborhood Algorithm):} 
 The calculation of Social Norms ($SN_{\mathrm{local}}$) relies on spatial data. During execution, the agent utilizes a Moore Neighborhood search algorithm with a radius of $r=1$, querying adjacent grid cells in $O(k)$ time, where $k \le 8$ cells. The local compliance ratio $R_{local}$ is computed as:
 \begin{equation}

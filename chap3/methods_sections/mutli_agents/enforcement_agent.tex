@@ -24,7 +24,21 @@ The algorithmic movement of the enforcer relies on a finite state machine bifurc
     \item \textbf{State $S_1$ (Chase Mode):} If the $O(r^2)$ spatial query detects a non-compliant \texttt{HouseholdAgent} within the scanning radius, the enforcer dynamically calculates a directed spatial vector toward the closest violator to execute an intervention \citep{Zhao2022}.
 \end{itemize}
 
-\paragraph{Part 3: Algorithmic Execution of Punitive Patrols}
+\paragraph{Part 3: Systemic Feedback and the Probability of Detection}
+
+Crucially, the physical presence of these agents generates a systemic macro-level feedback loop. While the enforcers act strictly locally, their aggregate presence dynamically alters the environment. Following the daily deployment phase, the simulation calculates the barangay's macro-level Perceived Probability of Detection ($P_{\mathrm{Detection}}$) by taking the ratio of the total inspection capacity ($C_{\mathrm{Quarterly}}$) of all currently active enforcers against the total household population:
+
+\begin{equation}
+    P_{\mathrm{Detection}} = \min\left(1.0, \frac{\sum C_{\mathrm{Quarterly}}}{N_{\mathrm{Households}}}\right)
+    \label{eq:prob_detection}
+\end{equation}
+\addequation{Macro-level Perceived Probability of Detection}
+
+This updated scalar is broadcasted back to the \texttt{HouseholdAgent} objects, dynamically increasing the anticipated financial risk within their utility calculations. 
+
+This spatial limitation profoundly reflects the logistical realities of municipal governance. Local Government Units (LGUs) rarely have the manpower to achieve $P_{\mathrm{Detection}} = 1.0$ \citep{Abordo2025}. Consequently, the probability of a household being caught is not absolute; it is a highly localized phenomenon dependent on spatial proximity and the enforcer's stochastic patrol route. This mechanism organically generates the dynamic, fluctuating risk profile experienced by citizens, ensuring that the deterrent effect of punitive policies is realistically constrained by the physical capacity of the simulated law enforcement \citep{Jimenez2025}.
+
+\paragraph{Part 4: Algorithmic Execution of Punitive Patrols}
 
 During each simulation step, the deployed agent employs this randomized monitoring strategy, selecting a discrete sample of households up to its assigned capacity limit. If a household is flagged as non-compliant, the enforcer invokes the household's \texttt{get\_fined()} method, triggering the psychological and economic mutations detailed in Section 3.3.1. 
 
@@ -62,17 +76,3 @@ Algorithm \ref{alg:enforcement_patrol_english} details the step-by-step heuristi
 \EndFor
 \end{algorithmic}
 \end{algorithm}
-
-\paragraph{Part 4: Systemic Feedback and the Probability of Detection}
-
-Crucially, the physical presence of these agents generates a systemic macro-level feedback loop. While the enforcers act strictly locally, their aggregate presence dynamically alters the environment. Following the daily deployment phase, the simulation calculates the barangay's macro-level Perceived Probability of Detection ($P_{\mathrm{Detection}}$) by taking the ratio of the total inspection capacity ($C_{\mathrm{Quarterly}}$) of all currently active enforcers against the total household population:
-
-\begin{equation}
-    P_{\mathrm{Detection}} = \min\left(1.0, \frac{\sum C_{\mathrm{Quarterly}}}{N_{\mathrm{Households}}}\right)
-    \label{eq:prob_detection}
-\end{equation}
-\addequation{Macro-level Perceived Probability of Detection}
-
-This updated scalar is broadcasted back to the \texttt{HouseholdAgent} objects, dynamically increasing the anticipated financial risk within their utility calculations. 
-
-This spatial limitation profoundly reflects the logistical realities of municipal governance. Local Government Units (LGUs) rarely have the manpower to achieve $P_{\mathrm{Detection}} = 1.0$ \citep{Abordo2025}. Consequently, the probability of a household being caught is not absolute; it is a highly localized phenomenon dependent on spatial proximity and the enforcer's stochastic patrol route. This mechanism organically generates the dynamic, fluctuating risk profile experienced by citizens, ensuring that the deterrent effect of punitive policies is realistically constrained by the physical capacity of the simulated law enforcement \citep{Jimenez2025}.

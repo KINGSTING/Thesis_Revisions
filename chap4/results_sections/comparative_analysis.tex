@@ -135,7 +135,7 @@ The comparative analysis of the simulation trajectories unequivocally demonstrat
     \vspace{0.2cm}
     \begin{minipage}{0.9\textwidth}
         \footnotesize
-        \textit{Note: Global Compliance is calculated as the true population-weighted mean of the segregation rates across the seven constituent barangays, accurately reflecting the impact of high-density areas. While static policies stagnate deeply within the Collapse Zone ($<40\%$), the Adaptive Strategy forces a massive early-stage behavioral shift and successfully maintains asymptotic stability ($>90\%$) through Year 3. The Pure Enforcement scenario was terminated at Quarter 2 due to the Mayor Agent breaching the critical Political Capital threshold (0.10).}
+        \textit{Note: Global Compliance is calculated as the true population-weighted mean of the segregation rates across the seven constituent barangays, accurately reflecting the impact of high-density areas.}
     \end{minipage}
 \end{table}
 
@@ -148,21 +148,13 @@ Similarly, the simulation revealed the inherent behavioral ceilings of single-in
 In the Pure Enforcement scenario, the uniform distribution of penal resources meant that dense urban centers like Barangay Poblacion simply overwhelmed the available enforcers, a phenomenon consistent with the \textit{Urban Resource Trap} \citep{Villanueva2021}. The probability of a non-compliant household being caught remained statistically insignificant, neutralizing the deterrent effect of the policy \citep{Badua2022}. Conversely, the Pure Incentives scenario failed due to the diminishing per-capita value of rewards \citep{MuZhang2021}. When a fixed municipal budget is divided equally among a large population, the individual payout drops below the household's ``Cost of Effort'' ($c_{\text{effort}}$) threshold, rendering the financial motivation insufficient to overcome the logistical inconvenience of waste sorting \citep{Chen2023, Corcoran2020}.
 
 \subsection{Sequential Saturation: The HuDRL Advantage}
-In stark contrast, the HuDRL Agent successfully navigated these socio-economic trade-offs by dynamically shifting resources, achieving an exceptional terminal Global Compliance Rate of 98.23\% by Quarter 12 \citep{Dey2025, ZhengAI2022}. This represents a massive deviation from the stagnant, linear trajectories of the static models. 
+In stark contrast, the HuDRL Agent successfully navigated these socio-economic trade-offs by dynamically shifting resources, achieving an exceptional terminal Global Compliance Rate of 90.45\% by Quarter 12 \citep{Dey2025, ZhengAI2022}. This represents a massive deviation from the stagnant, linear trajectories of the static models. 
 
 Rather than suffering from a slow exploration phase, the adaptive strategy broke the municipality's inertia almost immediately, surging to 73.65\% compliance by the end of Year 1. This overwhelming success is attributed directly to the agent's discovery of the ``Sequential Saturation'' logic. The AI recognized that overcoming the urban density barrier required abandoning the heuristic of simultaneous, equal distribution. Instead, the agent utilized sequential dominance---concentrating its budget to artificially induce a behavioral tipping point in specific barangays \citep{Centola2018, Nyborg2024}, locking in compliance through social norms \citep{Andre2021}, and subsequently reallocating those funds to besiege the next resistant population center \citep{Nishimura2022}. This dynamic phasing proved that in resource-constrained LGUs, the timing and concentration of capital are far more critical than the absolute budget size \citep{Jimenez2025}.
 
 \subsection{Synthesis of Policy Trajectories and Systemic Stability}
 
 As visually synthesized in Figure \ref{fig:comparison_graph}, plotting the four policy regimes on a single temporal axis provides definitive mathematical proof of the HuDRL agent's strategic superiority. The comparative graph vividly illustrates the behavioral ceilings that trap traditional, human-designed administrative strategies, offering three profound computational takeaways that directly answer the core research questions of this study:
-
-\begin{figure}[htbp]
-\centering
-% Ensure the filename matches exactly (case-sensitive on Overleaf/Linux)
-\includegraphics[width=\textwidth]{images/comparison_policy_strategy.png}
-\caption{Comparison Analysis of Political Strategies}
-\label{fig:comparison_graph}
-\end{figure}
 
 \begin{itemize}
     \item \textbf{The Stagnation of Static Equality:} Both the \textit{Status Quo} and \textit{Pure Incentives} trajectories form flat, horizontal asymptotes deep within the systemic ``Collapse Zone'' ($<40\%$ compliance). The graph graphically demonstrates that continuously pouring money into a socio-ecological system evenly over 12 quarters does not cumulatively build behavioral change. Because the diluted, per-capita intensity of the intervention never breaches the critical threshold required to overcome the physical Cost of Effort ($c_{\text{effort}}$), the system's baseline inertia effortlessly absorbs the LGU's budget, resulting in permanent, expensive stagnation.
@@ -171,6 +163,14 @@ As visually synthesized in Figure \ref{fig:comparison_graph}, plotting the four 
     
     \item \textbf{The Asymptotic Stability of HuDRL (Logistic Growth):} In stark contrast to the baseline models, the HuDRL trajectory traces a distinct S-curve (logistic growth), which is characteristic of successful innovation diffusion and threshold models in network science \citep{Centola2018}. The steep upward gradient in the first four quarters visually represents the AI's ``Sequential Saturation'' triage phase, where it aggressively targeted and forced compliance in the most heavily resistant urban nodes. Once the 70\% Social Tipping Point was breached municipality-wide, the curve beautifully flattens into a sustained, highly stable plateau ($>90\%$), representing the AI's transition into a low-cost ``Maintenance Mode.''
 \end{itemize}
+
+\begin{figure}[htbp]
+\centering
+% Ensure the filename matches exactly (case-sensitive on Overleaf/Linux)
+\includegraphics[width=\textwidth]{images/comparison_policy_strategy.png}
+\caption{Comparison Analysis of Political Strategies}
+\label{fig:comparison_graph}
+\end{figure}
 
 \subsection{Final Policy Implications for the Local Government Unit}
 
