@@ -31,31 +31,33 @@ Computationally, the HuDRL's performance is evaluated via a complex reward funct
 
 \vspace{0.5cm} 
 \begin{algorithm}[H]
-\caption{The Coupled ABM-RL Main Simulation Loop}
-\label{alg:main_loop}
+\caption{The Coupled ABM-RL Main Simulation Loop (Plain English)}
+\label{alg:main_loop_english}
 \begin{algorithmic}[1]
-\State \textbf{Setup:} Initialize $50 \times 50$ Non-Toroidal Grid; Set Annual Budget = \textpeso 1.5M.
-\State \textbf{Instantiation:} Spawn 7 Barangay Agents and $N$ Household Agents based on census data.
-\For{Each Day $t \in \{1, \dots, 1080\}$}
-    \Statex \textbf{// Phase 1: The AI Decision Bridge}
-    \If{$t \pmod{90} == 0$}
-        \State \parbox[t]{0.88\linewidth}{Extract 17D State Vector $S_t$ (Compliance, Attitudes, Budget, Political Capital).\strut}
-        \State \parbox[t]{0.88\linewidth}{Query HuDRL Policy: $Action \leftarrow \text{PPO\_Predict}(S_t)$.\strut}
-        \State \parbox[t]{0.88\linewidth}{Translate 21D vector into 7-Barangay Budget blue-print.\strut}
-        \State \parbox[t]{0.88\linewidth}{\textbf{Reset:} Clear all household reward-eligibility flags for the new quarter.\strut}
+\State \textbf{Setup:} Create a 50 by 50 flat map and set the starting yearly budget to \textpeso 1.5 million.
+\State \textbf{Instantiation:} Create 7 Barangay agents and populate the map with household agents using real census numbers.
+\For{every single day from Day 1 to Day 1080 (roughly 3 years)}
+    \Statex \textbf{// Phase 1: Quarterly AI Planning}
+    \If{it is the end of the quarter (every 90 days)}
+        \State \parbox[t]{0.88\linewidth}{Gather the current situation: check people's compliance, attitudes, remaining budget, and the Mayor's political support.\strut}
+        \State \parbox[t]{0.88\linewidth}{Ask the AI to decide the next best action based on this current situation.\strut}
+        \State \parbox[t]{0.88\linewidth}{Convert the AI's decision into a new budget plan for the 7 Barangays.\strut}
+        \State \parbox[t]{0.88\linewidth}{\textbf{Reset:} Clear all household reward trackers to start fresh for the new quarter.\strut}
     \EndIf
-    \Statex \textbf{// Phase 2: Micro-Level Behavioral Execution}
-    \For{Each Barangay Agent}
-        \State \parbox[t]{0.88\linewidth}{Execute local baseline operations (Tanod Spawning \& Recorida).\strut}
+    \Statex \textbf{// Phase 2: Daily City Life}
+    \For{each Barangay}
+        \State \parbox[t]{0.88\linewidth}{Carry out daily tasks like sending out local patrols (Tanods) and making public announcements (Recorida).\strut}
     \EndFor
-    \For{Each Household Agent}
-        \State \parbox[t]{0.88\linewidth}{Calculate $U_{\mathrm{segregate}}$ based on local social norms and fear of fines.\strut}
-        \State \parbox[t]{0.88\linewidth}{Update internal state: \texttt{is\_compliant} $\leftarrow$ \{True, False\}.\strut}
+    \For{each Household}
+        \State \parbox[t]{0.88\linewidth}{Weigh the decision to segregate trash by comparing community peer pressure against the fear of getting fined.\strut}
+        \State \parbox[t]{0.88\linewidth}{Decide to either follow the rules (Compliant) or ignore them (Non-compliant).\strut}
     \EndFor
-    \Statex \textbf{// Phase 3: Spatial Enforcement \& Accounting}
-    \State \parbox[t]{0.88\linewidth}{Enforcement agents patrol and issue fines $\rightarrow$ Update Budget.\strut}
-    \State \parbox[t]{0.88\linewidth}{Update Mayor's Political Capital based on enforcement severity.\strut}
-    \If{Political Capital $\le 0.10$} \textbf{Terminate:} (Political Collapse Penalty) \EndIf
+    \Statex \textbf{// Phase 3: Enforcement and Consequences}
+    \State \parbox[t]{0.88\linewidth}{Enforcers patrol the map, catch violators, and collect fines (which get added back to the budget).\strut}
+    \State \parbox[t]{0.88\linewidth}{Update the Mayor's political support (fining people too harshly lowers support).\strut}
+    \If{the Mayor's political support drops to 10\% or lower} 
+        \State \textbf{Stop the simulation:} The local government has collapsed due to low public support.
+    \EndIf
 \EndFor
 \end{algorithmic}
 \end{algorithm}
