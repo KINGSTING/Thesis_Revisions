@@ -10,7 +10,12 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+# Ignore all PDFs (prevents tracking your compiled thesis)
 *.pdf
+
+# EXCEPT the PDFs inside your appendix folders
+!appA/*.pdf
+!appD/*.pdf
 
 ## OS-specific files
 .DS_Store
