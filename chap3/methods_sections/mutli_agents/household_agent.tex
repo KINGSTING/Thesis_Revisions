@@ -82,6 +82,7 @@ The calculation of Social Norms ($SN_{\mathrm{local}}$) relies on spatial data. 
 \begin{equation}
     R_{local} = \frac{\sum_{i=1}^{k} \mathbb{I}(\text{neighbor}_i.\text{is\_compliant})}{k}
 \end{equation}
+\addequation{The Local Compliance Ratio Equation}
 If $R_{local}$ crosses the predefined social tipping point of $0.25$, the agent's internal $SN$ weight undergoes an asymmetric scalar multiplication ($SN_{new} = SN_{old} \times 1.30$), triggering a rapid, non-linear computational cascade in community compliance \citep{Centola2018}.
 
 \subparagraph{Part 3: Event-Driven Overrides (\texttt{get\_fined}):} 
@@ -154,4 +155,4 @@ Unlike local sensitivity analyses that alter one variable at a time, the Sobol m
 
 The parameter space was deliberately bounded to reflect plausible ranges of human behavioral drivers derived from existing socio-psychological literature \citep{Meng2018}. The psychological weights ($w_a, w_{sn}, w_{pbc}$) were uniformly bounded between $[0.1, 0.6]$. This wide yet constrained range ensures that no single psychological factor deterministically overpowers the algorithmic decision-making without empirical justification. Additionally, operational constraints such as Base Effort and Attitude Decay were bounded at $[0.1, 0.5]$ and $[0.001, 0.015]$, respectively. 
 
-By calculating the $S_1$ and $S_T$ indices, the analysis isolates which specific computational parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters mathematically validates whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation, ensuring the subsequent Deep Reinforcement Learning (DRL) agent is optimizing against a structurally sound and ecologically valid virtual population \citep{TianReview2024}.
+By calculating the $S_1$ and $S_T$ indices, the analysis isolates which specific computational parameters most heavily dictate systemic outcomes. Identifying these highly sensitive parameters verifies whether the emergent behavioral dynamics of the ABM align with established psychological theories of waste segregation, ensuring the subsequent Deep Reinforcement Learning (DRL) agent is optimizing against a structurally sound and ecologically valid virtual population \citep{TianReview2024}.

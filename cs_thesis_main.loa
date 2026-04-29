@@ -3,6 +3,6 @@
 \contentsline {algorithm}{\numberline {3}{\ignorespaces Global Sensitivity Analysis (Stress-Testing the Simulation)}}{40}{algorithm.3}%
 \contentsline {algorithm}{\numberline {4}{\ignorespaces The Enforcer's Daily Computational Patrol Process}}{44}{algorithm.4}%
 \contentsline {algorithm}{\numberline {5}{\ignorespaces The Barangay's Administrative and Fiscal Loop}}{48}{algorithm.5}%
-\contentsline {algorithm}{\numberline {6}{\ignorespaces The Mayor Agent's Quarterly Intervention Cycle}}{53}{algorithm.6}%
-\contentsline {algorithm}{\numberline {7}{\ignorespaces The Mayor Agent's Triage \& Safety Override Heuristics}}{58}{algorithm.7}%
-\contentsline {algorithm}{\numberline {8}{\ignorespaces The Multi-Core DRL Training Pipeline}}{64}{algorithm.8}%
+\contentsline {algorithm}{\numberline {6}{\ignorespaces The Mayor Agent's Quarterly Intervention Cycle}}{51}{algorithm.6}%
+\contentsline {algorithm}{\numberline {7}{\ignorespaces The Mayor Agent's Triage \& Safety Override Heuristics}}{56}{algorithm.7}%
+\contentsline {algorithm}{\numberline {8}{\ignorespaces The Multi-Core DRL Training Pipeline}}{63}{algorithm.8}%

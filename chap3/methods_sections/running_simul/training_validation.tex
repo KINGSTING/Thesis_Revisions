@@ -43,3 +43,41 @@ To ensure the neural network gathered sufficient environmental feedback before u
 \State \parbox[t]{0.9\linewidth}{$\rightarrow$ Serialize and export the fully trained neural network weights (\texttt{hudrl\_bacolod.zip}) to disk for deterministic evaluation and real-time visualization.\strut}
 \end{algorithmic}
 \end{algorithm}
+
+\section{Hyperparameter Configuration and Network Architecture}
+
+To effectively navigate the complex, 21-dimensional continuous action space of the municipal budgeting environment, the Proximal Policy Optimization (PPO) algorithm—operating within the system's defined heuristic guardrails—was carefully calibrated. The hyperparameters, outlined in Table \ref{tab:hyperparameters}, were selected to balance sample efficiency, gradient stability, and persistent exploration throughout the training lifecycle \citep{Raffin2021}.
+
+The underlying policy and value functions were approximated using a Multi-Layer Perceptron (\texttt{MlpPolicy}) architecture, specifically configured with two hidden layers of 64 units each. This relatively lightweight architecture prevents overfitting while maintaining sufficient representational capacity to map the high-dimensional municipal state space to specific budgetary actions. To overcome the computational bottleneck of simulating thousands of household agents, the environment utilized a \texttt{SubprocVecEnv} wrapper distributed across four CPU cores. Training was conducted over a total horizon of 500,000 timesteps, providing the agent with extensive environmental interactions to refine its resource allocation strategy \citep{Mousavi2021}.
+
+To optimize this architecture, the learning loop was governed by a conservative learning rate of $0.0003$, which, when paired with PPO's default clipping range of $0.20$, prevents destructive, excessively large policy updates \citep{Raffin2021}. During each iteration, the multi-core environment collects trajectories across a horizon (\texttt{n\_steps}) of 1024 timesteps per core, yielding a comprehensive batch of 4,096 experiences per update cycle. This data is then processed in smaller mini-batches of 128 over 10 optimization epochs. Furthermore, the Generalized Advantage Estimation (GAE) parameter ($\lambda = 0.95$) was utilized to strike an optimal balance between bias and variance when estimating the advantage function, ensuring that the credit assignment for specific budgetary interventions remains accurate across lengthy policy rollouts.
+
+Beyond immediate gradient updates, the agent's strategic foresight is controlled by a discount factor ($\gamma$) of $0.99$, compelling the model to prioritize long-term municipal compliance and systemic sustainability over immediate, short-term reward spikes. Because the continuous action space is vast, premature convergence to sub-optimal local minima is a significant risk. To mitigate this, an entropy coefficient (\texttt{ent\_coef}) of $0.01$ was integrated into the loss function. This introduces a mathematical penalty for overly deterministic behavior, effectively forcing the agent to maintain a healthy degree of exploration before locking into a finalized policy structure \citep{Abdallah2021, Raffin2021}.
+
+Finally, a critical element driving this exploration is the multi-objective reward function, scaled by four distinct weights ($\omega_1 = 1.0, \omega_2 = 5.0, \omega_3 = 2.0, \omega_4 = 0.5$). These predefined scalar values act as strict pedagogical boundaries, explicitly prioritizing critical municipal outcomes—such as heavily weighting $\omega_2$ to strongly incentivize regulatory compliance and budget efficiency—while dynamically suppressing less critical infractions. To ensure that the resulting learned policy is statistically robust and not merely an artifact of favorable initialization, the entire 500,000-timestep training pipeline was rigorously evaluated across five distinct random seeds (Seeds 0--4).
+
+\begin{table}[htbp]
+\caption{PPO Hyperparameters and Training Configuration \citep{Abdallah2021, Mousavi2021, Raffin2021}}
+\label{tab:hyperparameters}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Value} \\
+\hline
+Network Architecture & \texttt{MlpPolicy} (2 layers, 64 units) \\
+Learning Rate & $0.0003$ \\
+Batch Size & $128$ \\
+Epochs (\texttt{n\_epochs}) & $10$ \\
+Horizon (\texttt{n\_steps}) & $1024$ \\
+Discount Factor ($\gamma$) & $0.99$ \\
+Entropy Coefficient (\texttt{ent\_coef}) & $0.01$ \\
+Clip Range & $0.20$ (Default) \\
+GAE Parameter ($\lambda$) & $0.95$ (Default) \\
+Reward Weights ($\omega_1, \omega_2, \omega_3, \omega_4$) & $1.0, 5.0, 2.0, 0.5$ \\
+Total Timesteps & $500,000$ \\
+Compute Infrastructure & 4 CPU Cores (\texttt{SubprocVecEnv}) \\
+Random Seeds Evaluated & $5$ (Seeds 0--4) \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}

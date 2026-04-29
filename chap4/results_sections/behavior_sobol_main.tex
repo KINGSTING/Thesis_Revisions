@@ -1,24 +1,39 @@
 
-To evaluate the structural validity and predictive reliability of the developed Agent-Based Model (ABM), a variance-based Global Sensitivity Analysis (GSA) was executed using the Sobol method \citep{Sobol2001}. Unlike local sensitivity analysis—which alters one variable at a time—GSA simultaneously perturbs the entire multi-dimensional input space, allowing for the quantification of both direct effects and non-linear interactions. This computational stress-testing phase involved executing hundreds of parameterized simulation runs, varying the five core Theory of Planned Behavior (TPB) parameters ($w_a, w_{sn}, w_{pbc}, c_{\text{effort}}, \delta$) by $\pm 20\%$.
+Empirical calibration anchored the simulation utilizing the Municipal Environment and Natural Resources Office (MENRO) audits, establishing a valid Status Quo baseline of 12.5\% global compliance across the municipality. This objective benchmark was critical in counteracting the heavily inflated self-reported compliance rates of over 50\% found in preliminary surveys \citep{Paigalan2025}. 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.9\textwidth]{Sobol.png}
-    \caption{Global Sensitivity Analysis Results illustrating First-Order ($S_1$) and Total-Order ($S_T$) Sobol Indices for behavioral parameters.}
-    \label{fig:sobol_analysis}
-\end{figure}
+To formally evaluate the structural validity and predictive reliability of the developed Agent-Based Model (ABM) against this empirical baseline, a variance-based Global Sensitivity Analysis (GSA) was executed using the Sobol method \citep{Sobol2001}. Unlike local sensitivity analysis—which alters one variable at a time—GSA simultaneously perturbs the entire multi-dimensional input space, allowing for the quantification of both direct effects and non-linear interactions. This computational stress-testing phase involved executing 10,000 parameterized simulation samples, varying the core Theory of Planned Behavior (TPB) parameters and behavioral decay rates.
 
-The extraction of the Sobol indices, illustrated in Figure \ref{fig:sobol_analysis}, provided a profound mathematical validation of the simulation's underlying psychosocial architecture. Specifically, the analysis revealed that the Cost of Effort ($c_{\text{effort}}$) accounts for the overwhelming majority of variance in systemic compliance, identifying it as the primary lever of change the Deep Reinforcement Learning (DRL) agent would later need to exploit. 
+\begin{table}[htbp]
+\caption{Sobol Global Sensitivity Indices ($N=10,000$ Samples)}
+\label{tab:sobol_analysis}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Input Parameter} & \textbf{First-Order ($S_{1}$)} & \textbf{Total-Order ($S_{T}$)} \\
+\hline
+Attitude Weight ($w_{A}$) & 0.00 & 0.10 \\
+Subj. Norm Weight ($w_{SN}$) & 0.06 & 0.21 \\
+PBC Weight ($w_{PBC}$) & 0.00 & 0.01 \\
+Cost of Effort ($C_{Effort}$) & 0.79 & 1.06 \\
+Decay Rate ($\lambda_{dec}$) & 0.01 & 0.00 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-Rather than an emergent anomaly, this computational result serves as a direct mathematical validation of the empirical data gathered across the seven barangays. The baseline behavioral profiles of the simulation were strictly calibrated to reflect localized, real-world constraints. For instance, the data indicates a stark inverse correlation between physical friction and compliance: Barangay Poblacion exhibits an extreme effort barrier ($c_{\text{effort}} = 0.75$) due to mixed garbage practices, resulting in a baseline compliance of merely 2\%. Conversely, Barangay Babalaya, where waste segregation is well-practiced and effort is low ($c_{\text{effort}} = 0.40$), maintains a near-perfect 100\% compliance rate. 
+The extraction of the Sobol indices, summarized in Table \ref{tab:sobol_analysis}, provides a profound mathematical validation of the simulation's underlying psychosocial architecture. The analysis unequivocally reveals that the internal Cost of Effort ($C_{Effort}$) is the overwhelmingly dominant driver of household behavior. Yielding a Total-Order index ($S_{T}$) of 1.06 and accounting for 79\% of the variance in global compliance ($S_{1} \approx 0.79$), this parameter mathematically models the well-documented ``Intention-Action gap'': if the internal friction of washing, sorting, and storing waste is too high, households default to non-compliance regardless of their pro-environmental beliefs. 
 
-Therefore, the sensitivity analysis computationally proves that across varying degrees of social norms ($w_{sn}$) and attitudes ($w_{a}$), the physical and economic barrier ($c_{\text{effort}}$) acts as the universal governor of compliance in the municipality. This establishes a critical constraint for the Mayor Agent: to achieve systemic stabilization, the AI cannot simply rely on Information, Education, and Communication (IEC) campaigns to boost psychological metrics. It must dynamically deploy tangible interventions—such as financial incentives or strict penalties—that are mathematically heavy enough to offset the severe $c_{\text{effort}}$ bottlenecks.
+Rather than an emergent computational anomaly, this finding serves as a direct validation of the empirical disparities observed across the seven barangays. The baseline behavioral profiles were strictly calibrated to reflect these localized logistical realities. For instance, empirical data indicates a stark inverse correlation between physical friction and compliance: Barangay Poblacion exhibits an extreme effort barrier ($C_{Effort} = 0.75$) due to entrenched mixed-garbage practices, resulting in a baseline compliance of merely 2\%. Conversely, Barangay Babalaya, where waste segregation is culturally integrated and physical effort is low ($C_{Effort} = 0.40$), maintains a near-perfect 100\% compliance rate. This is highly consistent with recent Philippine barangay-level case studies highlighting structural friction as the primary barrier to ecological solid waste management \citep{Yazawa2025}.
+
+Conversely, the intrinsic Attitude weight ($w_{A}$) exhibited near-zero first-order sensitivity ($S_1 = 0.00$), proving that Information, Education, and Communication (IEC) campaigns suffer from strict diminishing returns if implemented without localized structural support. Interestingly, the Subjective Norm Weight ($w_{SN}$) showed moderate interactive effects ($S_T = 0.21$), suggesting that peer pressure and community \textit{Bayanihan} can influence behavior, but only as a secondary catalyst once the primary $C_{Effort}$ bottleneck is addressed.
+
+Consequently, the sensitivity analysis establishes a critical and mathematically rigid constraint for the Mayor Agent. Because the Deep Reinforcement Learning (DRL) agent in this architecture is constrained by heuristic rules rather than independently discovering an unguided strategy from scratch, the GSA results directly inform its action masking and reward structure. To achieve systemic stabilization, the heuristics dictate that the AI cannot rely on passive IEC campaigns to merely boost psychological metrics. Instead, the agent is forced to dynamically deploy tangible, heavy-handed interventions—such as optimized financial incentives or strict penalties—that carry enough mathematical weight to offset the severe $C_{Effort}$ bottlenecks present in critical areas like Barangay Poblacion.
 
 \subsection{The ``Convenience Barrier'' and the Absolute Dominance of Physical Friction}
 
 The most significant revelation of the GSA was the absolute dominance of the Base Cost of Effort ($c_{\text{effort}}$) as the primary driver of system variance. This parameter yielded a First-Order index ($S_1 \approx 0.79$) and a Total-Order index ($S_T \approx 1.06$) that eclipsed all other variables combined. % (Note: Total-order indices marginally exceeding 1.0 are common artifacts of numerical approximation in Saltelli sampling, but fundamentally indicate that nearly 100\% of systemic variance involves this parameter).
 
-This mathematically proves the ``Convenience Hypothesis'': in the context of Bacolod, the physical inconvenience of segregating waste—represented by temporal, physical, and cognitive friction—is the ultimate bottleneck. Computationally, this suggests that regardless of a household's pro-environmental beliefs, if the effort threshold exceeds their perceived utility, the behavior will fail \citep{Corcoran2020}. The AI learned that it could not simply ``educate'' away physical friction. Instead, it had to fundamentally alter the individual utility calculus by using Enforcement to make non-compliance costlier and Incentives to make compliance more rewarding.
+These results strongly support the ``Convenience Hypothesis'': in the context of Bacolod, the physical inconvenience of segregating waste—represented by temporal, physical, and cognitive friction—is the ultimate bottleneck. Computationally, this suggests that regardless of a household's pro-environmental beliefs, if the effort threshold exceeds their perceived utility, the behavior will fail \citep{Corcoran2020}. The AI learned that it could not simply ``educate'' away physical friction. Instead, it had to fundamentally alter the individual utility calculus by using Enforcement to make non-compliance costlier and Incentives to make compliance more rewarding.
 
 \subsection{The ``Value-Action Gap'' and the Intention-Action Trap}
 
@@ -26,15 +41,35 @@ A critical corollary to the dominance of effort was the near-zero direct sensiti
 
 Interestingly, while Attitude had a negligible direct effect, its Total-Order index ($S_T \approx 0.09$) indicates that its influence is almost entirely driven by non-linear interactions with other variables (likely Cost of Effort and Social Norms). Nevertheless, the GSA confirms that passive awareness campaigns are mathematically insufficient to drive compliance if the systemic effort ($c_{\text{effort}}$) remains unaddressed. Consequently, the HuDRL agent's strategic pivot away from IEC in its early phases was a calculated recognition that the most effective lever for immediate behavioral shifts lies in structural motivators rather than intrinsic appeals.
 
-\subsection{Social Norms and Secondary Systemic Drivers}
+\subsection{Sensitivity Analysis of Social Tipping Points}
+To address the concern that the efficacy of the proposed policy might be contingent upon specific "tuned" behavioral parameters, a hardcoded robustness test was performed. The two primary behavioral thresholds—the compliance floor (\(T_{low}\)) and the social norm tipping point (\(T_{high}\))—were varied across a matrix of nine scenarios (Table \ref{tab:robustness_results}). These scenarios ranged from optimistic social environments (\(T_{high} = 0.60\)) to extreme stubbornness (\(T_{high} = 0.85\)).
 
-The simulation revealed that while individual attitudes were weak drivers, Social Norms ($w_{sn}$) functioned as the second most impactful parameter, albeit heavily dwarfed by effort ($S_1 \approx 0.12, S_T \approx 0.15$). This sensitivity validates the DRL agent's discovery of the ``Sequential Saturation'' strategy. Social norms create a state of ``Cultural Inertia''; when compliance is low, peer influence reinforces non-compliance, but as resources are deployed, social pressure can help stabilize the system \citep{Andre2021}.
+The results demonstrate a high degree of structural resilience in the HuDRL-driven Sequential Saturation strategy. Despite a 25\% increase in the social resistance threshold (\(T_{high}\) shifting from 0.60 to 0.85), the final municipality-wide compliance remained remarkably stable, fluctuating only between 89.83\% and 91.84\%.
 
-Because the interactive effect (the delta between $S_T$ and $S_1$) for Social Norms is relatively small, it suggests its role is direct but secondary. It acts as a supportive mechanism—a ``Social Norm Shield''—that helps maintain compliance only \textit{after} the primary friction of effort has been adequately mitigated by the LGU's interventions. This explains the ``Graduation Effect'' observed in the HuDRL results: once the convenience barrier is lowered and a critical mass is reached, collective action becomes sustainable, allowing the LGU to rotate its limited capital to the next target.
+This stability suggests that the success of the policy is not a finding "tuned" to a specific threshold, but rather a result of the adaptive nature of the Deep Reinforcement Learning agent. The Mayor Agent, utilizing the Proximal Policy Optimization (PPO) algorithm, monitors real-time compliance states and adaptively adjusts the intensity and duration of interventions in each barangay. In "stubborn" scenarios with higher tipping points, the RL agent compensates by sustaining resource allocation until the specific social threshold of the community is surpassed, effectively "locking in" the habit shield regardless of the initial social friction. This robustness confirms that the Sequential Saturation strategy is a structurally valid finding that is resilient to variations in underlying behavioral assumptions.
+
+\begin{table}[htbp]
+\centering
+\caption{Hardcoded Robustness Test Results for Tipping Point Variance}
+\label{tab:robustness_results}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\textbf{Scenario} & \textbf{\(T_{low}\) (Inertia)} & \textbf{\(T_{high}\) (Shield)} & \textbf{Final Compliance (\(C_f\))} \\ \midrule
+1                 & 0.20                           & 0.60                            & 91.00\%                            \\
+2                 & 0.25                           & 0.70                            & 91.80\%                            \\
+3                 & 0.30                           & 0.80                            & 91.22\%                            \\
+4                 & 0.35                           & 0.60                            & 90.68\%                            \\
+5                 & 0.40                           & 0.70                            & 90.45\%                            \\
+6                 & 0.45                           & 0.80                            & 91.00\%                            \\
+7                 & 0.50                           & 0.70                            & 91.84\%                            \\
+8                 & 0.55                           & 0.80                            & 89.83\%                            \\
+9                 & 0.60                           & 0.85                            & 91.35\%                            \\ \bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Non-Linear Interactivity and Habit Decay}
 
-The GSA provided proof of significant non-linear interactivity, particularly concerning the Cost of Effort. The substantial delta between its First-Order and Total-Order indices proves that a household's threshold for effort does not exist in a vacuum; it is heavily entangled with the other psychosocial metrics and the localized environment. 
+The GSA demonstrated significant non-linear interactivity, particularly concerning the Cost of Effort. The substantial delta between its First-Order and Total-Order indices suggests that a household's threshold for effort does not exist in a vacuum; it is heavily entangled with the other psychosocial metrics and the localized environment. 
 
 Conversely, the Habit Decay rate ($\delta$) exhibited near-zero influence on overall variance ($S_1 \approx 0.00, S_T \approx 0.01$). This provides a critical sociological insight: citizens are not failing to segregate because they ``forget'' the rules over time; they are actively and rationally choosing not to comply because the physical effort remains consistently too high. 
 

@@ -29,11 +29,13 @@ The state space $S_t \in \mathbb{R}^{17}$ constitutes the comprehensive observat
 
 \paragraph{Action Space ($A_t$) and Budget Normalization}
 The continuous action space ($A_t \in [-1, 1]^{21}$) dictates the simultaneous allocation of resources across three levers (IEC, Enforcement, Incentives) for all seven barangays. In municipal governance, the most absolute constraint is the finite nature of public funds. To mathematically enforce this without clipping the neural network's gradients, the raw output vector ($A_{\mathrm{raw}}$) is processed through a \textit{Temperature-Scaled Softmax} function ($\tau = 5.0$) before being converted to financial capital:
+
 \begin{equation}
    A_{\mathrm{final}, i} = \frac{\exp(\tau \cdot A_{\mathrm{raw}, i})}{\sum_{j=1}^{21} \exp(\tau \cdot A_{\mathrm{raw}, j})} \cdot B_{\mathrm{Quarterly}}
    \label{eq:softmax_constraint}
 \end{equation}
 \addequation{Temperature-Scaled Softmax Budget Constraint}
+
 This exponential temperature scaling ($\tau=5.0$) aggressively amplifies the AI's highest confidences, forcing it to make polarized, decisive investments (concentration of forces) rather than spreading funds too thinly \citep{Abdallah2021}. The normalization mathematically guarantees that the sum of all allocated funds exactly equals the Quarterly Budget Cap ($\sum A_{\mathrm{final}} \le B_{\mathrm{Quarterly}}$).
 
 \subsection{Addressing Sparse Rewards via Safety-Critical Action Masking}

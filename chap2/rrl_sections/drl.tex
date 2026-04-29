@@ -18,9 +18,9 @@ This phenomenon created a \textit{Sparse Reward Environment}, which necessitated
 \subsection{Heuristic-Guided Exploration}
 \label{subsec:hurl}
 
-To overcome the inefficiency of random exploration in sparse environments, recent literature advocated for \textit{Heuristic-Guided Reinforcement Learning (HuRL)}. \cite{Cheng2021} defined HuRL as the integration of domain-specific rules to prune the action space, allowing the agent to focus on ``promising'' regions of the solution landscape.
+To overcome the inefficiency of random exploration in sparse environments, recent literature advocated for \textit{Heuristic-Guided Deep Reinforcement Learning (HuDRL)}. \cite{Cheng2021} defined HuDRL as the integration of domain-specific rules to prune the action space, allowing the agent to focus on ``promising'' regions of the solution landscape.
 
-Crucially, HuRL did not replace the learning process; it accelerated it. As noted by \cite{Vecerik2018} in their work published in AAAI, heuristics acted as ``saliency filters'' that directed the agent's attention to relevant state-variables (e.g., non-compliant areas) while leaving the optimization of \textit{intensity} and \textit{duration} to the neural network. This hybrid approach—combining human domain knowledge with machine optimization—was proven to outperform pure ``tabula rasa'' learning in resource-constrained environments \citep{Nair2018}. 
+Crucially, HuDRL did not replace the learning process; it accelerated it. As noted by \cite{Vecerik2018} in their work published in AAAI, heuristics acted as ``saliency filters'' that directed the agent's attention to relevant state-variables (e.g., non-compliant areas) while leaving the optimization of \textit{intensity} and \textit{duration} to the neural network. This hybrid approach—combining human domain knowledge with machine optimization—was observed to outperform pure ``tabula rasa'' learning in resource-constrained environments \citep{Nair2018}. 
 
 \subsection{Reward Shaping}
 \label{subsec:reward_shaping}

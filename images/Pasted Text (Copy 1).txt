@@ -1,0 +1,9 @@
+@article{mesa2023,
+  title={Mesa: Agent-based modeling in Python},
+  author={Kazil, Jackie and Masad, David and Crooks, Andrew},
+  journal={Journal of Open Source Software},
+  volume={5},
+  number={52},
+  pages={2042},
+  year={2020}
+}

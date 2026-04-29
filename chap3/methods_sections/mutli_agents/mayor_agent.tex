@@ -6,7 +6,7 @@ The \texttt{MayorAgent} serves as the centralized executive entity within the si
 
 Computationally, the \texttt{MayorAgent} acts as the structural bridge between the simulated Agent-Based Model (ABM) environment and the external PyTorch-based neural network. To simulate the administrative realities of municipal governance, the agent does not evaluate policy daily. Instead, its \texttt{step()} function enforces a strict 90-day (quarterly) temporal epoch \citep{Akbarpour2021}. 
 
-At the start of each quarter ($t \pmod{90} == 0$), the Mayor Agent pauses local micro-executions to observe the global state vector (aggregated compliance, average attitudes, remaining annual budget, and political capital). It queries the HuDRL algorithm, receiving a continuous action vector representing a normalized budget allocation strategy. \textit{(Note: The specific neural network architecture, state-space constraints, and triage heuristics governing how the AI calculates this vector are extensively detailed in Section 3.4)}. Once received, the Mayor Agent immediately translates these abstract floating-point values into physical municipal interventions.
+At the start of each quarter ($t \pmod{90} == 0$), the Mayor Agent pauses local micro-executions to observe the global state vector (aggregated compliance, average attitudes, remaining annual budget, and political capital). It queries the HuDRL algorithm, receiving a continuous action vector representing a normalized budget allocation strategy. Once received, the Mayor Agent immediately translates these abstract floating-point values into physical municipal interventions.
 
 \paragraph{Part 2: Budget Translation and Macro-Intervention Levers}
 The AI's action vector is partitioned and executed across the same three policy levers utilized by the Barangays, but at a massively scaled municipal capacity \citep{Ibanez2022}:
@@ -18,48 +18,48 @@ The AI's action vector is partitioned and executed across the same three policy 
         rem_{lgu} &= \max \left( 0, B_{lgu\_iec} - (n_{rad} \times C_{rad}) \right) \\
         n_{evt} &= \min \left( T_{evt}, \left\lfloor \frac{rem_{lgu}}{C_{evt}} \right\rfloor \right) \\
         I_{macro} &= \min \left( 1.0, \omega_{rad} \left( \frac{n_{rad}}{T_{rad}} \right) + \omega_{evt} \left( \frac{n_{evt}}{T_{evt}} \right) \right)
+        \label{eq:macro_iec_logic}
     \end{align}
+    \addequation{Municipal IEC Intensity and Resource Partitioning}
 
     \noindent \textit{Where:}
     \begin{itemize}
-        \item $B_{lgu\_iec}$: The municipal budget allocation (in Philippine Pesos) injected by the AI Mayor specifically into a target barangay's IEC sector.
-        \item $n_{rad}$: The calculated number of broad-reach radio broadcasts successfully funded by the municipal allocation.
-        \item $rem_{lgu}$: The residual municipal budget remaining after funding the target number of radio broadcasts, which cascades down to fund larger events.
-        \item $n_{evt}$: The calculated number of large-scale assembly events successfully funded using the residual municipal budget.
-        \item $I_{macro}$: The Macro-Level IEC Intensity. A fractional scalar (ranging from $0.0$ to $1.0$) representing the combined computational impact and reach of the municipal mass media campaign.
-        \item $A$ and $SN$: The intrinsic Attitude and Subjective Norms of the targeted households, which receive an immediate artificial boost from the $I_{macro}$ intervention.
-        \item $500$ ($C_{rad}$): The financial cost (in Philippine Pesos) to air a single broad-reach radio broadcast.
-        \item $5000$ ($C_{evt}$): The financial cost (in Philippine Pesos) to organize and host a single large-scale municipal assembly event.
-        \item $T_{rad}$: The target saturation limit for radio broadcasts, representing the maximum effective number of broadcasts per quarter before encountering diminishing returns.
-        \item $T_{evt}$: The target saturation limit for large-scale assembly events per quarter.
-        \item $\omega_{rad}$ and $\omega_{evt}$: The mathematical weights assigned to the radio broadcasts and assembly events, respectively. These dictate their proportional influence when calculating the final overall intensity ($I_{macro}$).
+        \item $B_{lgu\_iec}$: The municipal budget allocation injected by the AI Mayor.
+        \item $n_{rad}$ and $n_{evt}$: The number of radio broadcasts and assembly events funded.
+        \item $rem_{lgu}$: The residual municipal budget used in the allocation cascade.
+        \item $I_{macro}$: The resulting Macro-Level IEC Intensity scalar.
+        \item $T_{rad}$ and $T_{evt}$: Target saturation limits for broadcasts and events.
     \end{itemize}
 
-    This intensity instantly artificially boosts the Attitude ($A$) and Social Norms ($SN$) of households in the targeted jurisdiction.
-    
-    \item \textbf{Macro-Enforcement (LGU Strike Force) and Object Destruction:} To execute localized crackdowns, enforcement funds are translated into elite ``Strike Force'' personnel. Unlike local Tanods, these agents are hired as temporary shock troops. Incorporating the Region X Daily Minimum Wage of \textpeso 400 dictated that deploying a single municipal enforcer on a strict 30-day temporal contract consumed exactly \textpeso 12,000. The municipal enforcement cost ($C_{\mathrm{Enf}}$) is linearly tied to human capital:
+    \item \textbf{Macro-Enforcement (LGU Strike Force) and Object Destruction:} To execute localized crackdowns, enforcement funds are translated into elite ``Strike Force'' personnel. Deploying a single municipal enforcer on a strict 30-day temporal contract consumes exactly \textpeso 12,000 (based on Region X minimum wage). The municipal enforcement cost ($C_{\mathrm{Enf}}$) is linearly tied to human capital:
     \begin{equation}
         C_{\mathrm{Enf}} = (N_{\mathrm{Enforcers}} \times W_{\mathrm{Daily}} \times 30)
+        \label{eq:macro_enf_cost}
     \end{equation}
-    The Mayor dynamically instantiates these high-capacity \texttt{EnforcementAgents} (flagged as \texttt{is\_municipal = True}) and injects them into the grid. They bypass the distraction filter (achieving a 100\% daily patrol rate), execute up to 25 apprehensions per tick, and issue severe \textpeso 1,000 citations \citep{Wang2023}. 
+    \addequation{Municipal Strike Force Deployment Cost Calculation}
     
-    Crucially, these agents are bound by their strict 30-day limit enforced via computational object destruction. During each daily tick, the agent decrements its internal \texttt{contract\_days} integer. Upon reaching zero, the object invokes a self-destruct sequence (\texttt{self.model.grid.remove\_agent()}), physically deleting itself from the spatial grid. This mechanical constraint prevents the AI Mayor from permanently locking down a barangay with a single payment. While the Strike Force generates an immediate spike in compliance via the "Fear Override," their sudden deletion guarantees a rapid behavioral collapse in subsequent ticks unless the AI learns to transition the community toward intrinsic motivation (IEC) or expends further budget in the next quarter.
+    The Mayor dynamically instantiates these high-capacity \texttt{EnforcementAgents} (flagged as \texttt{is\_municipal = True}). They achieve a 100\% daily patrol rate, execute up to 25 apprehensions per tick, and issue severe \textpeso 1,000 citations \citep{Wang2023}. Crucially, these agents are bound by their strict 30-day limit enforced via computational object destruction. Upon reaching zero, the object invokes a self-destruct sequence (\texttt{self.model.grid.remove\_agent()}), physically deleting itself from the spatial grid. 
     
-    \item \textbf{Macro-Incentives (Economic Augmentation):} Funds allocated to positive reinforcement are channeled directly into the target \texttt{BarangayAgent}'s Tier 2 financial ledger. This ensures the barangay has the liquidity to process citizen reward claims without exhausting their own constrained local funds.
+    \item \textbf{Macro-Incentives (Economic Augmentation):} Funds allocated to positive reinforcement are channeled directly into the target \texttt{BarangayAgent}'s Tier 2 financial ledger, ensuring liquidity for citizen reward claims.
 \end{enumerate}
 
 \paragraph{Part 3: Political Capital Maintenance (Survival Mechanics)}
 
-To prevent the AI from adopting a computationally optimal but socially disastrous draconian strategy, the Mayor Agent is bound by a "Political Capital" constraint \citep{Hertweck2023}. 
+To prevent the AI from adopting a computationally optimal but socially disastrous draconian strategy, the Mayor Agent is bound by a ``Political Capital'' constraint \citep{Hertweck2023}. Every municipal fine (exceeding \textpeso 500) levied by the Strike Force triggers an interrupt that applies a fractional deduction to the Mayor's public approval rating:
+\begin{equation}
+    \Delta PC = -0.00010 \times N_{fines}
+    \label{eq:political_capital_decay}
+\end{equation}
+\addequation{Political Capital Decay via Punitive Enforcement}
 
-In the model, every municipal fine (exceeding \textpeso 500) levied by the Strike Force triggers an event-driven interrupt that applies a fractional deduction to the Mayor's global public approval rating ($\Delta PC = -0.00010$). While municipal enforcement guarantees an immediate spike in segregation via the "Fear Override", it rapidly burns through this capital. If the Mayor's Political Capital drops below the critical threshold of $0.10$, the \texttt{BacolodModel} forces a premature termination of the simulation instance. This simulates a "Political Collapse" due to extreme public backlash, aggressively penalizing the AI during the training phase.
+If the Mayor's Political Capital drops below the critical threshold of $0.10$, the \texttt{BacolodModel} forces a premature termination of the simulation due to ``Political Collapse.''
 
 \paragraph{Part 4: Inter-Agent Communication Topology}
 
 The resulting multi-level architecture forms a closed, bi-directional computational feedback loop, officially grounding the ABM as a Markov Decision Process (MDP) \citep{Kompella2020}:
 \begin{itemize}
-    \item \textbf{Bottom-Up Aggregation:} At the micro-level, Household Agents calculate their utility and update their binary compliance state. The Barangay Agents act as meso-level data nodes, aggregating these individual states into localized metrics ($R_{comp}$) and passing them to the centralized environment.
-    \item \textbf{Top-Down Actuation:} The Mayor Agent observes this environment, consults the external DRL policy, and deploys financial capital downward. This capital physically alters the simulation grid (spawning new enforcement objects) or directly mutates the internal psychological variables of the households, forcing a new behavioral reaction for the next decision epoch.
+    \item \textbf{Bottom-Up Aggregation:} Barangay Agents aggregate individual states into localized metrics ($R_{comp}$) and pass them to the centralized model.
+    \item \textbf{Top-Down Actuation:} The Mayor Agent consults the external DRL policy and deploys financial capital downward to alter the grid or mutate household variables.
 \end{itemize}
 
 \vspace{0.5cm} 
@@ -72,20 +72,20 @@ The resulting multi-level architecture forms a closed, bi-directional computatio
 \Statex
 \State \textbf{Step 1: The AI Consultation (Occurs every 90 Days)}
 \State \parbox[t]{0.9\linewidth}{$\rightarrow$ Pause the simulation and transmit the city's current status to the HuDRL Artificial Intelligence.\strut}
-\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Receive a finalized, mathematically optimized budget blueprint allocating funds across the 7 barangays.\strut}
+\State \parbox[t]{0.9\linewidth}{$\rightarrow$ Receive a finalized, mathematically optimized budget blueprint.\strut}
 \Statex
 \State \textbf{Step 2: Execute Budget Actuations (Top-Down Flow)}
 \For{every Barangay in the municipality}
-    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Information Campaigns:} If funds are allocated to IEC, purchase radio airtime and fund large events. Instantly broadcast a motivation boost to all households in this barangay.\strut}
-    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Strike Force Deployment:} If funds are allocated to Enforcement, calculate how many elite inspectors can be hired. Spawn them into the barangay's grid on a strict 30-day contract.\strut}
-    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Incentive Augmentation:} If funds are allocated to Rewards, deposit the money directly into the local Barangay's ledger to subsidize citizen payouts.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Information Campaigns:} Purchase radio airtime and fund large events to boost household motivation.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Strike Force Deployment:} Spawn elite inspectors into the grid on strict 30-day contracts.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ \textit{Incentive Augmentation:} Subsidize local Barangay ledgers for citizen payouts.\strut}
 \EndFor
 \Statex
 \State \textbf{Step 3: Monitor Survival Constraints}
-\If{the Mayor's Political Capital (Approval Rating) $\le 10\%$}
-    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Trigger an immediate simulation halt. The administration has collapsed due to excessive punitive measures and public resentment.\strut}
+\If{the Mayor's Political Capital $\le 10\%$}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Trigger an immediate simulation halt due to administrative collapse.\strut}
 \Else
-    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Resume the simulation. Allow households and enforcers to interact with the newly altered environment for the next 90 days.\strut}
+    \State \parbox[t]{0.88\linewidth}{$\rightarrow$ Resume the simulation for the next 90-day decision epoch.\strut}
 \EndIf
 \end{algorithmic}
 \end{algorithm}
