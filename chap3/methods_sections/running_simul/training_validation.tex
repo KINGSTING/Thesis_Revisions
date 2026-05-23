@@ -44,7 +44,7 @@ To ensure the neural network gathered sufficient environmental feedback before u
 \end{algorithmic}
 \end{algorithm}
 
-\section{Hyperparameter Configuration and Network Architecture}
+\subsection{Hyperparameter Configuration and Network Architecture}
 
 To effectively navigate the complex, 21-dimensional continuous action space of the municipal budgeting environment, the Proximal Policy Optimization (PPO) algorithm—operating within the system's defined heuristic guardrails—was carefully calibrated. The hyperparameters, outlined in Table \ref{tab:hyperparameters}, were selected to balance sample efficiency, gradient stability, and persistent exploration throughout the training lifecycle \citep{Raffin2021}.
 
@@ -57,13 +57,13 @@ Beyond immediate gradient updates, the agent's strategic foresight is controlled
 Finally, a critical element driving this exploration is the multi-objective reward function, scaled by four distinct weights ($\omega_1 = 1.0, \omega_2 = 5.0, \omega_3 = 2.0, \omega_4 = 0.5$). These predefined scalar values act as strict pedagogical boundaries, explicitly prioritizing critical municipal outcomes—such as heavily weighting $\omega_2$ to strongly incentivize regulatory compliance and budget efficiency—while dynamically suppressing less critical infractions. To ensure that the resulting learned policy is statistically robust and not merely an artifact of favorable initialization, the entire 500,000-timestep training pipeline was rigorously evaluated across five distinct random seeds (Seeds 0--4).
 
 \begin{table}[htbp]
-\caption{PPO Hyperparameters and Training Configuration \citep{Abdallah2021, Mousavi2021, Raffin2021}}
+\centering
+\caption{PPO Hyperparameters and Training Configuration}
 \label{tab:hyperparameters}
-\begin{center}
-\begin{tabular}{|l|l|}
-\hline
+\begin{tabular}{l l}
+\toprule
 \textbf{Parameter} & \textbf{Value} \\
-\hline
+\midrule
 Network Architecture & \texttt{MlpPolicy} (2 layers, 64 units) \\
 Learning Rate & $0.0003$ \\
 Batch Size & $128$ \\
@@ -77,7 +77,6 @@ Reward Weights ($\omega_1, \omega_2, \omega_3, \omega_4$) & $1.0, 5.0, 2.0, 0.5$
 Total Timesteps & $500,000$ \\
 Compute Infrastructure & 4 CPU Cores (\texttt{SubprocVecEnv}) \\
 Random Seeds Evaluated & $5$ (Seeds 0--4) \\
-\hline
+\bottomrule
 \end{tabular}
-\end{center}
 \end{table}

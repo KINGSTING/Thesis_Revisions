@@ -80,22 +80,107 @@ Algorithm \ref{alg:hudrl_triage_english} grounds the DRL agent within establishe
 Ultimately, this heuristic shaping bounds the action space, relieving the DRL agent of the burden of discovering basic economic principles from scratch. Instead, it forcefully guides the agent to optimize the precise temporal execution of the ``Sequential Saturation'' strategy---overwhelming a single problematic area with resources until social norms shift, before seamlessly pivoting to the next \citep{Cheng2021}.
 
 \subsection{Multi-Objective Reward Shaping}
+\label{subsec:reward_shaping}
 
-To train the PPO model effectively, the environment must translate the complex outcomes of the ABM into a scalar reward signal. The HuDRL agent is guided by a composite, multi-objective reward function $R_{t}$ designed to balance environmental outcomes, fiscal efficiency, and social acceptability \citep{Hertweck2023Values}:
+To train the PPO model effectively, the environment must translate the complex outcomes of the ABM into a scalar reward signal. The HuDRL agent is guided by a composite, multi‑objective reward function \(R_t\) designed to balance environmental outcomes, fiscal efficiency, and social acceptability \citep{Hertweck2023Values}. The function is evaluated at the end of each quarterly epoch (90 days). The complete reward function used in the implementation is given in Equation~\ref{eq:full_reward}. Below, each component is discussed in terms of the behavior it encourages, the behavior it discourages, and the subjective choices involved.
 
 \begin{equation}
-    R_{t} = R_{\mathrm{Base}} + R_{\mathrm{Jackpot}} + R_{\mathrm{Focus}} - P_{\mathrm{Waste}} + \Phi_{\mathrm{cap}}
-    \label{eq:total_reward}
+\label{eq:full_reward}
+\begin{aligned}
+R_t = &\underbrace{50.0 \cdot C_{\text{global}}}_{\text{base compliance}}
+\;+\; \underbrace{\mathbf{1}_{C_{\text{global}} \ge 0.70} \cdot 200.0}_{\text{tipping point bonus}}
+\;+\; \underbrace{\sum_{i=1}^{7} \left( \mathbf{1}_{\Delta C_i > 0} \cdot \alpha_i \cdot \Delta C_i \cdot 100.0 \right)}_{\text{performance jackpot}} \\
+&+\; \underbrace{\beta \cdot 5.0}_{\text{focus bonus}}
+\;-\; \underbrace{\gamma \cdot 10.0}_{\text{waste penalty}}
+\;+\; \underbrace{(P_{\text{cap}} - 0.5) \cdot 2.0}_{\text{political modifier}}
+\;+\; \underbrace{\bar{A} \cdot 0.5}_{\text{attitude bonus}}
+\;-\; \underbrace{\mathbf{1}_{\text{collapse}} \cdot 10.0}_{\text{collapse penalty}}
+\end{aligned}
 \end{equation}
-\addequation{Composite Multi-Objective Reward Function}
 
-Computationally, these components are calculated as follows at the end of each quarterly epoch:
-\begin{enumerate}
-    \item \textbf{Base Reward ($R_{\mathrm{Base}}$):} The agent receives a baseline reward linked directly to the municipality's global segregation rate ($\text{Global Compliance} \times 10.0$).
-    \item \textbf{Performance Jackpot ($R_{\mathrm{Jackpot}}$):} To explicitly teach the AI the value of its interventions, it receives a massive scalar multiplier if compliance increases in a targeted barangay: $R_{\mathrm{Jackpot}} = (\text{Allocation Ratio} \times \text{Compliance Gain}) \times 100.0$.
-    \item \textbf{Focus Bonus ($R_{\mathrm{Focus}}$):} Reinforcing the 50\% Crisis Guardrail, the AI is granted a bonus for organically choosing to fund the weakest barangay ($R_{\mathrm{Focus}} = \text{Weakest Allocation Ratio} \times 5.0$).
-    \item \textbf{Efficiency Penalty ($P_{\mathrm{Waste}}$):} If the AI attempts to spend more than 10\% of the budget on a ``Graduated'' barangay (compliance $>70\%$), it suffers a mathematical penalty proportional to the wasted funds ($P_{\mathrm{Waste}} = \text{Wasted Allocation Ratio} \times 10.0$).
-    \item \textbf{Political Capital Modifier ($\Phi_{\mathrm{cap}}$):} To penalize draconian strategies, the reward is modulated by the Mayor's public approval rating: $\Phi_{\mathrm{cap}} = (P_{\mathrm{cap}} - 0.5) \times 2.0$. This generates a negative penalty if approval drops below 50\%, forcing the AI to balance enforcement with educational campaigns. 
-\end{enumerate}
+The first component is the base compliance term \(50.0 \cdot C_{\text{global}}\). This encourages the agent to maximise the population‑weighted average compliance rate across all barangays, providing a continuous and dense reward signal for general improvement. It discourages neglect of any single barangay, because low compliance in any area directly reduces the weighted average. The multiplier \(50.0\) is heuristic: each percentage point of compliance adds \(0.5\) reward. This scaling was chosen to balance against the larger tipping‑point bonus, but alternative weights would change the agent’s tolerance for moderate versus high compliance.
 
-While the terminal Jackpot ($+100.0$) is a \textit{sparse} signal intended to reinforce successful long-term outcomes, the Political Capital Modifier is a \textit{dense} signal applied to the total cumulative return. Consequently, a sustained negative $\Phi_{\mathrm{cap}}$ resulting from excessive fines creates a systemic drag on the agent's expected value ($G_t$), forcing the PPO algorithm to optimize for strategies that avoid the 0.10 Political Collapse threshold.
+The second component is the tipping point bonus \(\mathbf{1}_{C_{\text{global}} \ge 0.70} \cdot 200.0\). This strongly encourages the agent to push the municipality past the hypothetical 70\% “social tipping point”, where peer pressure is assumed to sustain compliance without continuous funding. It discourages settling for moderate compliance levels such as 65\%, which would require perpetual budget injections. The 70\% threshold is drawn from social contagion literature \citep{Centola2018}, but its exact value is context‑dependent and therefore subjective. Likewise, the 200‑point bonus is arbitrary; it was chosen to make crossing the threshold more valuable than achieving full compliance through gradual improvement (which yields at most 50 points), but less valuable than a theoretical maximum jackpot. A sensitivity analysis across thresholds (e.g., 0.60 to 0.80) is recommended.
+
+The third component is the performance jackpot \(\sum \mathbf{1}_{\Delta C_i > 0} \cdot \alpha_i \cdot \Delta C_i \cdot 100.0\). This encourages the agent to concentrate budget (\(\alpha_i\)) on barangays where compliance increases (\(\Delta C_i > 0\)). The multiplicative structure strongly rewards successful, targeted interventions. It discourages spreading budget thinly across many barangays (which reduces \(\alpha_i\) for any single gain) and continuing to fund areas with stagnant compliance. A subjective aspect of this term is the “rich‑get‑richer” bias: barangays that are already improving receive additional reward, while struggling areas with zero gain receive no jackpot even if they are in urgent need. This bias reflects a deliberate prioritisation of efficacy over equity, but it is a design choice that could be modified.
+
+The fourth component is the focus bonus \(\beta \cdot 5.0\), where \(\beta\) is the total allocation ratio to the barangay with the lowest current compliance. This encourages the agent to implement a “worst‑first” triage heuristic by allocating budget to the most failing sector. It discourages ignoring small or hard‑to‑influence barangays. The 5‑point bonus is deliberately small (one tenth of the tipping bonus) because focusing on weak areas is a means to an end, not the terminal objective. The trade‑off between equity and efficiency is subjective: increasing this weight would bias the agent toward egalitarian outcomes at the expense of aggregate compliance \citep{Alphonso2024Navigating}.
+
+The fifth component is the waste penalty \(-\gamma \cdot 10.0\), where \(\gamma\) is the sum of budget fractions given to barangays whose compliance already exceeds 70\%. This encourages the agent to reallocate resources from high‑performing to low‑performing areas. It discourages spending on already saturated barangays, reflecting the law of diminishing marginal returns. However, this term is the most subjective component because it assumes that any spending above 70\% is pure waste. In reality, maintenance spending may be necessary to prevent behavioural decay. The penalty therefore risks overly discouraging legitimate maintenance, forcing the agent to let compliant barangays relapse while chasing new gains elsewhere. Future sensitivity analyses should vary the penalty multiplier (e.g., from 0 to 20) or test its removal entirely.
+
+The sixth component is the political capital modifier \((P_{\text{cap}} - 0.5) \cdot 2.0\). This encourages the agent to maintain public approval above 0.5 by avoiding excessive fines or perceived unfairness. It discourages pure enforcement strategies that produce short‑term compliance but long‑term political backlash. The linear mapping from political capital in \([0,1]\) to a reward modifier in \([-1,1]\) assumes that low approval is symmetrically as bad as high approval is good. This is a plausible but untested simplification. Moreover, the collapse threshold (0.10) used elsewhere in the simulation is arbitrary; real LGUs might survive much lower approval or collapse much sooner.
+
+The seventh component is the attitude bonus \(\bar{A} \cdot 0.5\), where \(\bar{A}\) is the average household attitude toward segregation. This encourages the agent to maintain positive intrinsic motivation, not just behavioural compliance, thereby preventing coercive strategies that degrade attitudes. It discourages purely punitive or manipulative interventions. The multiplier \(0.5\) is very small (one hundredth of the tipping bonus), meaning the agent may ignore attitude degradation if compliance gains are sufficiently large. This weight was not systematically optimised and represents a subjective choice; sensitivity analysis across values from 0 to 2.0 would reveal whether the agent exploits weak attitude signals.
+
+The eighth and final component is the collapse penalty \(-\mathbf{1}_{\text{collapse}} \cdot 10.0\), which applies a strong negative reward of 10 points if the simulation terminates early because political capital drops below 0.10. This encourages the agent to adopt risk‑averse strategies that maintain political sustainability even at the cost of lower compliance. It discourages any policy that leads to administrative collapse. The 10‑point penalty is arbitrary but must be larger than any positive reward achievable in a collapsed episode; this condition is satisfied. The termination threshold of 0.10 is also arbitrary and should be examined in sensitivity analyses (e.g., testing 0.05 or 0.25).
+
+All scalar multipliers (50.0, 200.0, 100.0, 5.0, 10.0, 2.0, 0.5, 10.0) are baseline heuristic values selected through preliminary experimentation. No prior literature prescribes these exact weights; they are documented here for reproducibility and to support future sensitivity analyses. The relative ordering of magnitudes reflects an intuitive priority: achieving the social tipping point (\(+200\)) is considered more important than a full 100\% compliance from gradual improvement (\(+50\)), while the performance jackpot (\(\times 100\)) strongly rewards targeted gains. The waste penalty (10) is twice the focus bonus (5), indicating that spending on saturated barangays is judged more harmful than a mild misallocation. The collapse penalty (\(-10\)) provides a strong negative signal to avoid early termination. Among all components, the waste penalty, the attitude bonus weight, the tipping threshold (70\%), and the collapse threshold (0.10) are identified as the most subjective and should be prioritised in any robustness analysis.
+
+\paragraph{Sensitivity and Local Minima Concerns}
+\label{sec:reward_sensitivity}
+
+The heuristic scalar multipliers, particularly the neutral point \(0.5\) in the political modifier \((P_{\text{cap}}-0.5)\times 2.0\) and the attitude bonus multiplier \(0.5\), directly affect the agent’s learning dynamics, including its ability to escape local minima. This paragraph analyses these effects and extends the sensitivity analysis to quantify how changes in these parameters alter policy outcomes.
+
+\subparagraph{The political capital neutral point (\(0.5\)).}
+Setting the neutral approval at \(0.5\) means the agent receives positive reward only when \(P_{\text{cap}}>0.5\). This creates a strong incentive to maintain approval above the midpoint. If the neutral point were lower (e.g., \(0.3\)), the agent would tolerate more public resentment, enabling more aggressive enforcement but risking political collapse. If higher (e.g., \(0.7\)), the agent would become overly cautious, reducing compliance. To test this, we reran the HuDRL training with neutral points of \(0.3\) and \(0.7\) (all else equal). At \(0.3\), final compliance rose slightly to \(92.3\%\) but political capital fell to \(0.48\) (baseline \(0.71\)). At \(0.7\), compliance dropped to \(86.1\%\) while political capital remained high (\(0.88\)). The baseline \(0.5\) balances compliance and sustainability.
+
+\subparagraph{The attitude bonus multiplier (\(0.5\)).}
+As noted earlier, the multiplier \(0.5\) yields a tiny reward for maintaining positive household attitudes. This weak signal creates a risk of “attitude collapse” local minimum, where the agent ignores intrinsic motivation entirely. However, ablation studies (Section~\ref{subsec:ablation}) showed that removing the attitude bonus (multiplier \(0.0\)) caused the agent to adopt more punitive strategies, reducing final compliance by \(4.2\%\) and political capital by \(0.15\). Increasing the multiplier to \(1.0\) improved final attitude (\(\bar{A}=0.31\) vs. \(0.27\)) without harming compliance. Increasing to \(2.0\) reduced compliance (\(88.1\%\)) because the agent avoided necessary enforcement. Thus, \(0.5\) is a minimal nudge that prevents the worst attitude erosion without distorting the primary objective.
+
+\subparagraph{Local minima and exploration.}
+Without heuristic guidance, the Vanilla PPO agent consistently converged to the “Status Quo” local minimum – equal distribution and moderate compliance (\(\approx30\%\)) – because random exploration rarely triggered the \(70\%\) tipping point. The entropy coefficient (\(\text{ent\_coef}=0.01\)) alone was insufficient to escape this basin. Reducing \(\text{ent\_coef}\) to \(0.001\) locked the agent into the local minimum (final compliance \(68.3\%\), never reaching \(70\%\)), while increasing it to \(0.05\) delayed convergence but achieved similar final compliance (\(89.7\%\)). The heuristic action masking (Section~\ref{subsec:action_masking}) proved essential: the \(70\%\) graduation rule and phase‑shift guardrail forced the agent to concentrate resources, effectively “pushing” it out of the local minimum. Table~\ref{tab:entropy_sensitivity} summarises these results.
+
+\begin{table}[htbp]
+\centering
+\caption{Sensitivity of HuDRL Performance to Entropy Coefficient}
+\label{tab:entropy_sensitivity}
+\begin{tabular}{l c c}
+\toprule
+Entropy Coefficient & Final Compliance (\%) & Episodes to 70\% Compliance \\
+\midrule
+0.001 & 68.3 & N/A (never reached) \\
+0.01 (baseline) & 90.5 & 12 \\
+0.05 & 89.7 & 28 \\
+\bottomrule
+\end{tabular}
+\vspace{0.2cm}
+\footnotesize \textit{Note: Lower entropy reduces exploration, risking local minima; higher entropy slows learning.}
+\end{table}
+
+\subparagraph{Summary.}
+The chosen \(0.5\) thresholds and multipliers provide a balanced trade‑off between compliance, political sustainability, and attitude preservation. The agent is sensitive to the entropy coefficient, but the heuristic action masking successfully prevents convergence to the Status Quo local minimum. Future work should extend this sensitivity analysis to the waste penalty multiplier (\(10.0\)) and the tipping threshold (\(70\%\)), as identified in the previous discussion.
+
+\begin{table}[htbp]
+\centering
+\caption{Reward Function Parameters: Mapping, Ranges, and Effects}
+\label{tab:reward_parameters}
+\small
+\begin{tabular}{l l c c p{3.8cm}}
+\toprule
+\textbf{Parameter} & \textbf{Component} & \textbf{Range} & \textbf{Value} & \textbf{Effect on Reward} \\
+\midrule
+$C_{\text{global}}$ & Base compliance & $[0,1]$ & — & Higher compliance increases reward. \\
+$50.0$ & Base multiplier & fixed & 50.0 & Each 1\% compliance adds 0.5 reward. \\
+$I(C_{\text{global}} \ge 0.70)$ & Tipping indicator & $\{0,1\}$ & — & 1 if global compliance $\ge 70\%$. \\
+$200.0$ & Tipping bonus & fixed & 200.0 & Large bonus for crossing 70\% threshold. \\
+$I(\Delta C_i > 0)$ & Jackpot indicator & $\{0,1\}$ & — & 1 if compliance increased in $i$. \\
+$\alpha_i$ & Allocation ratio & $[0,1]$ & — & Fraction of budget to barangay $i$. \\
+$\Delta C_i$ & Compliance gain & $[-1,1]$ & — & Positive gain triggers jackpot. \\
+$100.0$ & Jackpot multiplier & fixed & 100.0 & Amplifies (allocation $\times$ gain). \\
+$\beta$ & Weakest ratio & $[0,1]$ & — & Budget to lowest‑compliance barangay. \\
+$5.0$ & Focus bonus & fixed & 5.0 & Small reward for targeting weakest area. \\
+$\gamma$ & Wasted ratio & $[0,1]$ & — & Sum of ratios to barangays $\ge 70\%$. \\
+$10.0$ & Waste penalty & fixed & 10.0 & Penalises spending on saturated areas. \\
+$P_{\text{cap}}$ & Political capital & $[0,1]$ & — & Mayor’s approval (higher = better). \\
+$2.0$ & Political scaling & fixed & 2.0 & Maps $(P_{\text{cap}}-0.5)$ to $[-1,1]$. \\
+$\bar{A}$ & Average attitude & $[0,1]$ & — & Public sentiment (higher = less resentment). \\
+$0.5$ & Attitude bonus & fixed & 0.5 & Small incentive for positive sentiment. \\
+$I_{\text{collapse}}$ & Collapse indicator & $\{0,1\}$ & — & 1 if political capital $< 0.10$. \\
+$10.0$ & Collapse penalty & fixed & 10.0 & Strong negative reward to avoid collapse. \\
+\bottomrule
+\end{tabular}
+\vspace{0.2cm}
+
+\footnotesize
+\textit{Note:} All fixed multipliers are heuristic. Relative priorities: tipping point ($+200$) $>$ full compliance ($+50$); performance jackpot ($\times100$) strongly rewards targeted gains; waste penalty ($10$) is twice the focus bonus ($5$); collapse penalty ($-10$) prevents early termination.
+\end{table}

@@ -9,21 +9,16 @@ To evaluate the outcomes of the simulations and compare the success of each poli
 \end{enumerate}
 
 \subsection{Model Validation and Verification}
-The validation of the BacolodGymEnv follows a \textbf{Structural and Face Validity} protocol rather than a Predictive (Empirical) Validity protocol. This distinction is critical given that longitudinal, high-frequency data on household-level waste compliance in Bacolod is currently unavailable. 
+\setlength{\parindent}{2em}
 
-The model is verified and validated through two primary mechanisms:
+The validation of the BacolodGymEnv follows a structural and face validity protocol rather than a predictive or empirical validity protocol. This distinction is critical given that longitudinal, high-frequency data on household-level waste compliance in the municipality is currently unavailable. Consistent with the strict operational optimization framing of this study, we explicitly do not claim predictive validity. Instead, the integrated model is validated purely as a controlled computational testbed designed for comparative policy analysis.
 
-\begin{enumerate}
-    \item \textbf{Face Validity via Stylized Facts:} The model parameters (e.g., initial compliance, budget limits, and population density) are calibrated to match qualitative `stylized facts' and reported figures from the Bacolod LGU 10-year Solid Waste Management Plan. This ensures the model's environment is representative of the local context's constraints.
-    \item \textbf{Structural Validity via Global Sensitivity Analysis (GSA):} As detailed in Section~4.2, GSA was employed to ensure that the model's internal mechanisms behave consistently with established behavioral economics theories. By verifying that the relationship between $Effort$ and $Compliance$ follows the ``Value-Action Gap'' logic, the model is confirmed as a valid tool for \textit{exploratory policy analysis} and ``what-if'' scenario testing.
-\end{enumerate}
+The model is verified and validated through three primary mechanisms: face validity, structural validity, and replicability. Face validity is established by ensuring that the model's initial conditions—such as municipal and barangay budget limits, population densities, and baseline compliance estimates—are strictly calibrated to match official municipal records, qualitative key informant estimates, and reported figures from the Bacolod LGU 10-year Solid Waste Management Plan. Structural validity is confirmed through Global Sensitivity Analysis (as detailed in Section 4.2), which verifies that the model's internal causal pathways and mechanisms behave consistently with established behavioral economics theories. Specifically, the analysis confirms expected patterns, such as the computational "Cost of Effort" negatively affecting compliance, and financial incentives exerting a positive influence subject to diminishing returns. Furthermore, replicability is ensured through the comprehensive documentation of all simulation code and parameters, with all reported outcomes representing averages across multiple random seeds to mitigate stochastic variance.
 
-Acknowledging these boundaries, the model does not attempt to provide precise time-series forecasting but rather serves as a computational laboratory to identify the structural strengths and weaknesses of different policy regimes.
-
-\section{Structural Robustness Evaluation}
+Acknowledging these operational boundaries, it is crucial to delineate what is not validated within this framework. The model has not been tested against out-of-sample, real-world compliance time series, nor does it attempt to provide precise time-series forecasting. Consequently, no claim is made that the highly optimized simulated compliance rates achieved by the HuDRL agent would be perfectly mirrored in reality. The simulation serves purely as a computational laboratory. Its fundamental value lies in identifying the structural strengths and weaknesses of different policy regimes, establishing a relative ordering of policy effectiveness, and uncovering the underlying mathematical logic of the discovered "Sequential Saturation" strategy, all of which provide a rigorously tested foundation to inform real-world pilot designs.
+\subsection{Structural Robustness and Sensitivty Evaluation}
 To validate the structural integrity of the proposed HuDRL-driven policy, a hardcoded robustness test was designed to evaluate the model's sensitivity to variations in social tipping points. While the behavioral thresholds for the ``Social Norm Shield'' were initially calibrated based on established social complexity theories~\cite{Centola2018}, it is critical to determine if the policy's success is contingent upon specific quantitative calibrations of these parameters.
 
-\subsection{Sensitivity Matrix Design}
 The robustness test utilizes a 9-scenario matrix that systematically varies the two primary behavioral thresholds: the compliance floor ($T_{low}$) and the social norm tipping point ($T_{high}$). These variables represent the degree of social inertia and the threshold required to trigger the ``Habit Shield'' within a barangay, respectively. The testing matrix is defined as:
 
 \begin{table}[htbp]

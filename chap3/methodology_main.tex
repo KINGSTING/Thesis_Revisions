@@ -4,8 +4,13 @@
 This chapter details the methodological framework constructed to address the identified research gap. To operationalize the study's objective—optimizing dynamic policy under budgetary constraints—this research employed a coupled Agent-Based Modeling (ABM) and Deep Reinforcement Learning (DRL) framework. This integrated approach was specifically chosen for its unique capacity to simulate a complex social system of household compliance while simultaneously modeling the Local Government Unit (LGU) as an adaptive, learning agent. Unlike traditional static scenario analysis, this framework allowed the governing agent to autonomously discover optimal resource allocation strategies over time. This chapter first presents the overall research design, followed by a detailed description of the model's components: the ABM environment and the DRL agent. It then outlines the procedures for model parameterization, validation, and the simulation experiments conducted to generate and evaluate the adaptive policies.
 
 \section{Research Design}
+\setlength{\parindent}{2em}
 
-This study employed a computational simulation research design that integrated Agent-Based Modeling (ABM) with Deep Reinforcement Learning (DRL) optimization. This design created a virtual laboratory for testing Solid Waste Management (SWM) policies, allowing for the autonomous discovery of the optimal resource allocation strategy without the cost and risk of real-world trials. The research followed three main phases: (1) Model parameterization using key-informant interview data and literature synthesis, (2) ABM-DRL development,integration, and training, and (3) Policy scenario simulation and analysis.
+This study employs a computational optimization research design that integrates Agent-Based Modeling (ABM) with Deep Reinforcement Learning (DRL). Rather than attempting to construct a highly detailed digital twin of the municipality, this integrated framework serves as an abstracted, controlled virtual laboratory specifically designed for evaluating the operational performance of competing budget allocation policies. Consequently, the research design explicitly prioritizes internal validity—ensuring comparative fairness and rigorous algorithmic testing across different policy regimes—over external predictive accuracy. The research followed three main phases: (1) model parameterization utilizing key informant interview data and literature synthesis, (2) ABM-DRL development, integration, and training, and (3) policy scenario simulation and comparative analysis.
+
+Several key design choices reflect this strict operational optimization framing. The ABM is deliberately simplified to focus on structural dynamics; household agents utilize a linear utility function coupled with stochastic noise rather than a full, complex cognitive model. Furthermore, the behavioral parameters driving these agents are constrained to fixed ranges drawn from literature and qualitative interviews, rather than being calibrated to longitudinal time-series data. To prevent long-term dependency artifacts within the simulation, the environment systematically resets every quarter for incentive eligibility. Additionally, the multi-objective reward function guiding the DRL agent is explicitly researcher-defined, encoding specific administrative priorities where compliance gains are heavily weighted alongside fiscal efficiency and political capital.
+
+Because of these necessary computational abstractions, all performance evaluations in this study are strictly relative. The HuDRL agent's discovered strategies are systematically compared against established heuristic baselines—namely the Status Quo, Pure Enforcement, and Pure Incentives—rather than against an absolute empirical ground truth. Ultimately, this research design is structured to answer a precise, bounded question: \textit{"Within this specific simulation setup, which of the tested policies yields the highest operational performance?"} It explicitly does not attempt to declare the single "true" optimal real-world policy for the Municipality of Bacolod, but rather provides a rigorously tested, data-driven methodology for policy exploration.
 
 \newpage
 \section{Simulation Architecture}
@@ -17,6 +22,7 @@ This study employed a computational simulation research design that integrated A
 \section{Heuristic-Guided Deep Reinforcement Learning}
 \input{chap3/methods_sections/hudrl.tex}
 
+\newpage
 \section{Running the Simulation}
 \input{chap3/methods_sections/simul_run_main.tex}
 
