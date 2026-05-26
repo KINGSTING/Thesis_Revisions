@@ -39,6 +39,7 @@ The continuous action space ($A_t \in [-1, 1]^{21}$) dictates the simultaneous a
 This exponential temperature scaling ($\tau=5.0$) aggressively amplifies the AI's highest confidences, forcing it to make polarized, decisive investments (concentration of forces) rather than spreading funds too thinly \citep{Abdallah2021}. The normalization mathematically guarantees that the sum of all allocated funds exactly equals the Quarterly Budget Cap ($\sum A_{\mathrm{final}} \le B_{\mathrm{Quarterly}}$).
 
 \subsection{Addressing Sparse Rewards via Safety-Critical Action Masking}
+\label{subsec:action_masking}
 
 A persistent challenge in deploying Deep Reinforcement Learning (DRL) for complex socio-ecological systems is the \textit{Sparse Reward Problem} \citep{Vecerik2018}. In a standard, unguided Proximal Policy Optimization (PPO) environment, an agent randomly explores its 21-dimensional action space. However, overcoming community-wide behavioral inertia necessitates a critical mass of resources to precipitate a ``Social Tipping Point'' \citep{Nyborg2024}. Consequently, random exploration rarely yields the concentrated investment required for a sudden compliance surge, often causing the unguided agent to prematurely converge on a ``Status Quo'' local optimum---a state of equitable but systemically ineffective resource distribution.
 
@@ -116,18 +117,14 @@ The eighth and final component is the collapse penalty \(-\mathbf{1}_{\text{coll
 
 All scalar multipliers (50.0, 200.0, 100.0, 5.0, 10.0, 2.0, 0.5, 10.0) are baseline heuristic values selected through preliminary experimentation. No prior literature prescribes these exact weights; they are documented here for reproducibility and to support future sensitivity analyses. The relative ordering of magnitudes reflects an intuitive priority: achieving the social tipping point (\(+200\)) is considered more important than a full 100\% compliance from gradual improvement (\(+50\)), while the performance jackpot (\(\times 100\)) strongly rewards targeted gains. The waste penalty (10) is twice the focus bonus (5), indicating that spending on saturated barangays is judged more harmful than a mild misallocation. The collapse penalty (\(-10\)) provides a strong negative signal to avoid early termination. Among all components, the waste penalty, the attitude bonus weight, the tipping threshold (70\%), and the collapse threshold (0.10) are identified as the most subjective and should be prioritised in any robustness analysis.
 
-\paragraph{Sensitivity and Local Minima Concerns}
 \label{sec:reward_sensitivity}
 
 The heuristic scalar multipliers, particularly the neutral point \(0.5\) in the political modifier \((P_{\text{cap}}-0.5)\times 2.0\) and the attitude bonus multiplier \(0.5\), directly affect the agent’s learning dynamics, including its ability to escape local minima. This paragraph analyses these effects and extends the sensitivity analysis to quantify how changes in these parameters alter policy outcomes.
 
-\subparagraph{The political capital neutral point (\(0.5\)).}
 Setting the neutral approval at \(0.5\) means the agent receives positive reward only when \(P_{\text{cap}}>0.5\). This creates a strong incentive to maintain approval above the midpoint. If the neutral point were lower (e.g., \(0.3\)), the agent would tolerate more public resentment, enabling more aggressive enforcement but risking political collapse. If higher (e.g., \(0.7\)), the agent would become overly cautious, reducing compliance. To test this, we reran the HuDRL training with neutral points of \(0.3\) and \(0.7\) (all else equal). At \(0.3\), final compliance rose slightly to \(92.3\%\) but political capital fell to \(0.48\) (baseline \(0.71\)). At \(0.7\), compliance dropped to \(86.1\%\) while political capital remained high (\(0.88\)). The baseline \(0.5\) balances compliance and sustainability.
 
-\subparagraph{The attitude bonus multiplier (\(0.5\)).}
 As noted earlier, the multiplier \(0.5\) yields a tiny reward for maintaining positive household attitudes. This weak signal creates a risk of “attitude collapse” local minimum, where the agent ignores intrinsic motivation entirely. However, ablation studies (Section~\ref{subsec:ablation}) showed that removing the attitude bonus (multiplier \(0.0\)) caused the agent to adopt more punitive strategies, reducing final compliance by \(4.2\%\) and political capital by \(0.15\). Increasing the multiplier to \(1.0\) improved final attitude (\(\bar{A}=0.31\) vs. \(0.27\)) without harming compliance. Increasing to \(2.0\) reduced compliance (\(88.1\%\)) because the agent avoided necessary enforcement. Thus, \(0.5\) is a minimal nudge that prevents the worst attitude erosion without distorting the primary objective.
 
-\subparagraph{Local minima and exploration.}
 Without heuristic guidance, the Vanilla PPO agent consistently converged to the “Status Quo” local minimum – equal distribution and moderate compliance (\(\approx30\%\)) – because random exploration rarely triggered the \(70\%\) tipping point. The entropy coefficient (\(\text{ent\_coef}=0.01\)) alone was insufficient to escape this basin. Reducing \(\text{ent\_coef}\) to \(0.001\) locked the agent into the local minimum (final compliance \(68.3\%\), never reaching \(70\%\)), while increasing it to \(0.05\) delayed convergence but achieved similar final compliance (\(89.7\%\)). The heuristic action masking (Section~\ref{subsec:action_masking}) proved essential: the \(70\%\) graduation rule and phase‑shift guardrail forced the agent to concentrate resources, effectively “pushing” it out of the local minimum. Table~\ref{tab:entropy_sensitivity} summarises these results.
 
 \begin{table}[htbp]
@@ -147,7 +144,6 @@ Entropy Coefficient & Final Compliance (\%) & Episodes to 70\% Compliance \\
 \footnotesize \textit{Note: Lower entropy reduces exploration, risking local minima; higher entropy slows learning.}
 \end{table}
 
-\subparagraph{Summary.}
 The chosen \(0.5\) thresholds and multipliers provide a balanced trade‑off between compliance, political sustainability, and attitude preservation. The agent is sensitive to the entropy coefficient, but the heuristic action masking successfully prevents convergence to the Status Quo local minimum. Future work should extend this sensitivity analysis to the waste penalty multiplier (\(10.0\)) and the tipping threshold (\(70\%\)), as identified in the previous discussion.
 
 \begin{table}[htbp]

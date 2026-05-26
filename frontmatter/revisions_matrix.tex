@@ -1,0 +1,96 @@
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{
+    >{\RaggedRight\arraybackslash}p{3.0cm}
+    >{\RaggedRight\arraybackslash}p{4.2cm}
+    >{\RaggedRight\arraybackslash}p{5.0cm}
+    >{\RaggedRight\arraybackslash}p{1.5cm}
+}
+\toprule
+\textbf{Panel} & \textbf{Revision Objective} & \textbf{Action Taken} & \textbf{Page(s)} \\
+\midrule
+\endfirsthead
+
+\multicolumn{4}{c}{{Continued from previous page}} \\
+\toprule
+\textbf{Panel} & \textbf{Revision Objective} & \textbf{Action Taken} & \textbf{Page(s)} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{Continued on next page} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+% --- Asst. Prof. Julieto Perez (4 rows) ---
+\multirow{4}{*}{\parbox[t]{2.8cm}{\raggedright Asst. Prof. Julieto Perez, MSc}}
+& Reframe thesis as operational/optimization study, not full ecological/behavioral realism.
+& Added explicit disclaimers in Abstract, Sections 1.1, 1.5, and 3.1 stating that the ABM is an abstract testbed for policy optimization.
+& 8, 26, 30–31, 47 \\
+\cline{2-4}
+& Add ablation study comparing baseline vs. PPO and other heuristics.
+& Created Section 4.3.3 with Table 4.6 comparing Random, Dirichlet, Greedy, Vanilla DRL, and HuDRL; included statistical tests (t‑test, Cohen’s d).
+& 81–83 \\
+\cline{2-4}
+& Define clear performance metrics and conduct sensitivity analysis.
+& Defined four metrics (Section 3.5.5); performed Global Sensitivity Analysis (Sobol method, Section 4.2) and tipping‑point robustness test (Section 4.2.3).
+& 65, 74–78 \\
+\cline{2-4}
+& Adjust tone and limitations: acknowledge psychometric simplifications and lack of predictive validity.
+& Added extended limitations in Sections 1.5 and 5.3; consistently used qualified language (“within the simulation,” “conditional on assumptions”).
+& 29–31, 129–130 \\
+\midrule
+
+% --- Asst. Prof. Liezil Daberao (3 rows) ---
+\multirow{3}{*}{\parbox[t]{2.8cm}{\raggedright Asst. Prof. Liezil Daberao, MSc}}
+& Explain source, logic, and construction of Table 4.4 (Sobol indices).
+& Added pre‑table paragraph in Section 4.2 detailing parameter selection criteria, literature sources (Paigalan et al., Meng et al.), and interview grounding.
+& 74–75 \\
+\cline{2-4}
+& Correct and interpret Table 4.7; ensure numbers align with simulation results.
+& Verified and corrected compliance numbers; added interpretative text after the table explaining each regime’s performance (Status Quo, Pure Enforcement, Pure Incentives, HuDRL).
+& 92–93 \\
+\cline{2-4}
+& Address numeric indices that exceed theoretical upper bound (e.g., $S_T = 1.06$).
+& Explicitly acknowledged finite‑sample estimation artifact in Section 4.2; explained that values slightly above 1.0 indicate dominant interaction effects.
+& 75 \\
+\midrule
+
+% --- Asst. Prof. Jennifer Joyce Montemayor (4 rows) ---
+\multirow{4}{*}{\parbox[t]{2.8cm}{\raggedright Asst. Prof. Jennifer Joyce Montemayor, MSc}}
+& Write full reward function as a mathematical equation with all multipliers.
+& Presented Equation (3.21) in Section 3.4.4; provided component‑by‑component explanation.
+& 52–56 \\
+\cline{2-4}
+& Create a parameter table mapping each weight to the reward function.
+& Added Table 3.3 (Parameter Mapping) with ranges, values, and effect descriptions.
+& 56 \\
+\cline{2-4}
+& For each reward component, describe behavior encouraged/discouraged and acknowledge subjectivity.
+& Extended Section 3.4.4 with explicit statements for each term; identified the waste penalty and attitude bonus as the most subjective components.
+& 52–56 \\
+\cline{2-4}
+& Address sensitivity to thresholds (e.g., 0.5) and local minima.
+& Added subsection “Sensitivity and Local Minima Concerns” within Section 3.4.4; tested neutral point values (0.3, 0.7) and entropy coefficients (Table 3.2).
+& 54–55 \\
+\midrule
+
+% --- Asst. Prof. John Gieveson Iglupas (3 rows) ---
+\multirow{3}{*}{\parbox[t]{2.8cm}{\raggedright Asst. Prof. John Gieveson Iglupas, MPA}}
+& Frame problem as policy implementation/governance issue; discuss street‑level bureaucracy, political dynamics, CSOs.
+& Added discussion in Section 4.6.1 (“Computational optimality versus political reality”) and Section 5.2 (Policy Brief), citing Carpio (2025), IBON (2026), PIDS (2024, 2025), and acknowledging CSO monitoring role.
+& 98–100, 125–129 \\
+\cline{2-4}
+& Clarify core problem (low compliance, budget constraints, enforcement gaps) and link model insights to policy levers.
+& Created Section 4.6 (Policy Implications) specifying tripartite failure and policy levers identified by the model (sequential saturation, pulsed enforcement, catalytic incentives).
+& 98–102 \\
+\cline{2-4}
+& Distinguish empirical facts from simulated assumptions; emphasize interdisciplinary nature.
+& Added explicit distinction in Section 4.2 (Sobol indices as model properties) and Section 4.5 (conditional findings); discussed interdisciplinary framing in Section 5.3.
+& 75, 96–97, 129–130 \\
+
+\end{longtable}

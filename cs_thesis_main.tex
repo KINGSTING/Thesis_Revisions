@@ -23,6 +23,10 @@
 \usepackage{bm}
 \usepackage{acronym}
 \usepackage{hyperref} % Added to ensure \hypersetup works
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{ragged2e}
+\usepackage{booktabs}
 
 % --- ADDED FOR BOLD CAPTIONS ---
 \usepackage{caption}
@@ -88,7 +92,7 @@
 \faculty{College of Computer Studies}        
 \degree{B.S. in Computer Science}                   
 \doctype{Undergraduate Thesis}                   
-\degreedate{March 2026}                   
+\degreedate{May 2026}                   
 
 %% ******** DOCUMENT SETTINGS *************
 \graphicspath{{./images/}{./chap1/images/}}   
@@ -101,7 +105,11 @@
 \begin{document} % The document starts here
 
 \frontmatter 
+
     \maketitle
+
+    \input{frontmatter/revisions_matrix.tex}
+
     \input{frontmatter/copyright}          
     
     \cleardoublepage 
@@ -153,13 +161,11 @@
     \input{chap2/rrl_main}
     \input{chap3/methodology_main}
     \input{chap4/results_main}
-    \input{chap5/recommendation_main}
-    \input{chap6/conclusions_main}
+    \input{chap5/conclusions_main}
     \appendix
         \input{appA/appendix_a_main}     
         \input{appB/appendix_b_main}   
         \input{appC/tabular_results}
-        \input{appD/policy_recommendation}  
 
 {\backmatter
     \if@openright\cleardoublepage\else\clearpage\fi

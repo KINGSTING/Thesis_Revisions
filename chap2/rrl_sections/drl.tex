@@ -23,7 +23,7 @@ To overcome the inefficiency of random exploration in sparse environments, recen
 Crucially, HuDRL did not replace the learning process; it accelerated it. As noted by \cite{Vecerik2018} in their work published in AAAI, heuristics acted as ``saliency filters'' that directed the agent's attention to relevant state-variables (e.g., non-compliant areas) while leaving the optimization of \textit{intensity} and \textit{duration} to the neural network. This hybrid approach—combining human domain knowledge with machine optimization—was observed to outperform pure ``tabula rasa'' learning in resource-constrained environments \citep{Nair2018}. 
 
 \subsection{Reward Shaping}
-\label{subsec:reward_shaping}
+\label{subsec:reward_shaping_rrl}
 
 A third critical component in modern DRL architectures was \textit{Reward Shaping}, formally introduced by \cite{Ng1999}. Reward shaping involved augmenting the raw environmental signal with intermediate rewards to guide the agent toward desirable behaviors.
 
