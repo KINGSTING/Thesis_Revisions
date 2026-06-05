@@ -1,25 +1,11 @@
-## LaTeX - Output and Auxiliary files
-*.aux
+venv/
+*.xlsx
+*.csv
 *.log
-*.toc
-*.out
-*.nav
-*.snm
-*.bbl
-*.blg
+*.aux
 *.fls
 *.fdb_latexmk
 *.synctex.gz
-# Ignore all PDFs (prevents tracking your compiled thesis)
-*.pdf
+__pycache__/
+*.pyc
 
-# EXCEPT the PDFs inside your appendix folders
-!appA/*.pdf
-!appD/*.pdf
-
-## OS-specific files
-.DS_Store
-Thumbs.db
-
-## If you use VS Code
-.vscode/
