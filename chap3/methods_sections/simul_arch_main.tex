@@ -11,52 +11,126 @@ The simulation utilizes a dual-timescale architecture to capture the friction be
 \end{itemize}
 The total simulation horizon is fixed at $T = 1,080$ ticks (50,000 during training), representing the standard three-year political term of Philippine local officials.
 
-
-
 \subsection{Polycentric Governance: The Coupled ABM-RL Loop}
 
 The model implements a polycentric governance structure as mandated by R.A. 7160 and R.A. 9003 \citep{RA9003, Ostrom2010}. The interaction between these layers is governed by a closed-loop Markov Decision Process (MDP) where the \texttt{MayorAgent} acts as the policy actuator.
 
 \paragraph{The HuDRL Action Space}
-Every 90 days, the Mayor Agent observes a 17-dimensional state vector and outputs a 21-dimensional action vector $\mathcal{A} \in [-1, 1]^{21}$ \citep{TianReview2024}. This vector is partitioned into triplets for each of the seven barangays:
+Every 90 days, the Mayor Agent observes a 17-dimensional state vector and outputs a 21-dimensional action vector \(\mathcal{A}\in [-1, 1]^{21}\) \citep{TianReview2024}. In this continuous action space, `-1` denotes the minimum possible normalized budget share (effectively zero allocation after Temperature-Scaled Softmax normalization) and `+1` denotes the maximum possible raw preference weight a dimension can carry before normalization. These raw values are never used directly as monetary allocations; they pass through a Temperature-Scaled Softmax (Equation 3.20) that maps the entire vector to non-negative proportions summing to 1, which are then scaled by the quarterly budget cap.
+
+This vector is partitioned into consecutive triplets for each of the seven barangays, where each triplet \(A_{B_i}\) corresponds to one barangay:
 \begin{equation}
-    \mathcal{A}_{B_i} = \{ \text{Enforcement Allocation, Incentive Allocation, IEC Allocation} \}
+    A_{B_i} = \{\text{Enforcement Allocation},\ \text{Incentive Allocation},\ \text{IEC Allocation}\}
 \end{equation}
-\addequation{The Action Space Equation}
-This allows the AI to develop highly localized "triage" strategies—for instance, deploying heavy enforcement in low-compliance areas like \textit{Poblacion} while shifting to education-heavy strategies in high-compliance areas like \textit{Binuni}.
+
+For illustration, suppose the Mayor Agent outputs the raw 21-value vector \([-0.42, 0.87, -0.11, -0.30, 0.65, 0.20, \dots]\). The vector is partitioned into consecutive triplets:
+\begin{itemize}
+    \item \textbf{Barangay 1 (Poblacion):} indices 0-2 \(\rightarrow (-0.42, 0.87, -0.11) \xrightarrow{\text{Softmax}} (\text{\textpeso}0.12\text{M}, \text{\textpeso}0.68\text{M}, \text{\textpeso}0.20\text{M})\)
+    \item \textbf{Barangay 2 (Binuni):} indices 3-5 \(\rightarrow (-0.30, 0.65, 0.20) \xrightarrow{\text{Softmax}} (\text{\textpeso}0.14\text{M}, \text{\textpeso}0.54\text{M}, \text{\textpeso}0.32\text{M})\)
+    \item \dots and so on for all 7 barangays.
+\end{itemize}
+Within each triplet, the first element is mapped to Enforcement Allocation, the second to Incentive Allocation, and the third to IEC Allocation for that barangay. This allows the AI to develop highly localized ``triage'' strategies—for instance, deploying heavy enforcement in low-compliance areas like Poblacion while shifting to education-heavy strategies in high-compliance areas like Binuni.
 
 \paragraph{Reward Shaping and Redemption Reset}
-To prevent "policy inertia," the simulation enforces a quarterly \textit{Redemption Status Reset}. Every 90 days, all households' incentive eligibility flags are cleared. Households must re-demonstrate compliance within the new quarter to qualify for municipal rewards. 
+To prevent ``policy inertia,'' the simulation enforces a quarterly \textit{Redemption Status Reset}. Every 90 days, all households' incentive eligibility flags are cleared. Households must re-demonstrate compliance within the new quarter to qualify for municipal rewards. 
 
-Computationally, the HuDRL's performance is evaluated via a complex reward function $R_t$ defined in the \texttt{BacolodGymEnv}. The reward function prioritizes "Jackpot Rewards" for compliance gains while penalizing "Administrative Waste" (over-funding saturated areas) and "Political Collapse" (when approval drops below 10\%).
+Computationally, the HuDRL's performance is evaluated via a complex reward function \(R_{t}\) defined in the \texttt{BacolodGymEnv}. The reward function prioritizes ``Jackpot Rewards'' for compliance gains while penalizing ``Administrative Waste'' (over-funding saturated areas) and ``Political Collapse'' (when approval drops below \(10\%\) ).
+
+% -------------------------------------------------------
+% BEGIN: FINAL DIAGONAL ARROWS POINTING AT ALGO 1
+% -------------------------------------------------------
+\begin{figure}[htbp]
+    \centering
+    \vspace{6pt} 
+    \begin{tikzpicture}[>=stealth, thick, font=\small]
+        % ================= Algorithm (Center) =================
+        % Width 2.8cm = half width 1.4cm. Minimum height 2cm = y -1cm to +1cm.
+        \node[draw, rounded corners, fill=gray!10, text width=2.8cm, align=center, minimum height=2cm, line width=1pt, inner sep=8pt] (algo) at (0,0) {\textbf{Algorithm 1}\\[0.1cm] \footnotesize Populate ABM};
+
+        % ================= Inputs (Left Side) =================
+        % Y-shift set to 1.8cm and -2.2cm. The bottom is lowered so the 5x5 grid is clearly visible.
+        \node[draw, rounded corners, fill=blue!5, text width=3.5cm, align=center, line width=0.8pt, inner sep=6pt] (gridBox) at (-5.2cm, 1.8cm) {\textbf{Spatial Grid:} Array \([50, 50]\)};
+        \node[anchor=north] at (gridBox.south) {
+            \resizebox{2.2cm}{!}{
+                \begin{tabular}{|c|c|c|c|c|}
+                    \hline 0 & 0 & 1 & 1 & 0 \\ \hline
+                    0 & 0 & 1 & 1 & 0 \\ \hline
+                    2 & 2 & 2 & 1 & 0 \\ \hline
+                    0 & 2 & 3 & 3 & 0 \\ \hline
+                    0 & 2 & 3 & 3 & 0 \\ \hline
+                \end{tabular}
+            }
+        };
+
+        \node[draw, rounded corners, fill=blue!5, text width=3.5cm, align=center, line width=0.8pt, inner sep=6pt] (dictBox) at (-5.2cm, -2.2cm) {\textbf{Household Registry:} Python Dict};
+        \node[anchor=north] at (dictBox.south) {
+            \resizebox{3.5cm}{!}{
+                \begin{tabular}{|c|c|c|c|c|}
+                    \hline \textbf{HH ID} & \textbf{Coord} & \textbf{Brgy} & \textbf{Inc} & \textbf{Att} \\ \hline
+                    HH-001 & (4,2) & 1 & Mid & 0.82 \\ \hline
+                    HH-002 & (5,5) & 3 & Low & 0.45 \\ \hline
+                    \(\vdots\) & \(\vdots\) & \(\vdots\) & \(\vdots\) & \(\vdots\) \\ \hline
+                \end{tabular}
+            }
+        };
+
+        % ================= Outputs (Right Side) =================
+        \node[draw, rounded corners, fill=green!5, text width=3.5cm, align=center, line width=0.8pt, inner sep=8pt] (actionBox) at (5.2cm, 0) {\textbf{Action Vector:} \(A_t \in \mathbb{R}^{21}\)};
+        \node[anchor=north] at (actionBox.south) {
+            \resizebox{4.5cm}{!}{
+                \begin{tabular}{|c|c|c|}
+                    \hline \textbf{Brgy 1} & \textbf{Brgy 2} & \dots \\ \hline
+                    Enf / Inc / IEC & Enf / Inc / IEC & \dots \\ \hline
+                \end{tabular}
+            }
+        };
+
+        % ================= Arrows =================
+        % FINAL FIX: Targeting (algo.west) draws the arrow directly to the center of the left border of Algorithm 1.
+        % This bypasses all previous "empty space" bugs and correctly points AT Algo 1.
+        \draw[->, line width=1pt] (gridBox.east) -- (algo.west);
+        \draw[->, line width=1pt] (dictBox.east) -- (algo.west);
+        \draw[->, line width=1pt, shorten >=3pt] (algo.east) -- (actionBox.west);
+    \end{tikzpicture}
+    \vspace{6pt} 
+    \caption{Data Representation: Inputs, processing, and action outputs of Algorithm 1.}
+    \label{fig:data_rep_alg1}
+\end{figure}
+% -------------------------------------------------------
+% END: FINAL DIAGONAL ARROWS POINTING AT ALGO 1
+% -------------------------------------------------------
+
+% --- New Prose Paragraph (Replacing the old bullet points) ---
+\paragraph{Data Representation: Algorithm 1 Input and Output}
+The simulation environment is constructed from two primary input data structures that initialize the agent-based model (ABM). First, the \textbf{Spatial Grid} is represented as a \(50 \times 50\) integer array, where each cell \(c_{ij} \in \{0, 1, ..., 7\}\) corresponds to a physical location within the municipality. The value \(0\) denotes empty space, while integers \(1\) through \(7\) identify the barangay occupying that cell. Second, the \textbf{Household Registry} is a Python dictionary that maps specific grid coordinates to attribute objects for each individual household. Each attribute object holds necessary state variables, including a \texttt{barangay\_id}, a categorical \texttt{income\_level}, a \texttt{baseline\_attitude} score, and a boolean \texttt{is\_compliant} flag. During the simulation execution, Algorithm 1 utilizes these data structures to instantiate the agents and populate the environment dynamically. The algorithm's output is a continuous \textbf{Policy Action} vector, \(A_t \in \mathbb{R}^{21}\), which represents a 21-dimensional budget allocation across the 7 barangays and 3 policy levers. As detailed in Section 3.4.2, this raw action vector undergoes a Temperature-Scaled Softmax normalization to ensure all allocations sum precisely to the quarterly budget cap while prioritizing high-confidence investments based on the agent's policy.
 
 \vspace{0.5cm} 
-\begin{algorithm}[H]
+\begin{algorithm}[htbp]
 \caption{The Coupled ABM-RL Main Simulation Loop (Plain English)}
 \label{alg:main_loop_english}
 \begin{algorithmic}[1]
-\State \textbf{Setup:} Create a 50 by 50 flat map and set the starting yearly budget to \textpeso 1.5 million.
+\State \textbf{Setup:} Create a 50 by 50 flat map (see Figure \ref{fig:data_rep_alg1} for the grid layout) and set the starting yearly budget to \textpeso 1.5 million.
 \State \textbf{Instantiation:} Create 7 Barangay agents and populate the map with household agents using real census numbers.
 \For{every single day from Day 1 to Day 1080 (roughly 3 years)}
-    \Statex \textbf{// Phase 1: Quarterly AI Planning}
+    \State \textbf{// Phase 1: Quarterly AI Planning}
     \If{it is the end of the quarter (every 90 days)}
-        \State \parbox[t]{0.88\linewidth}{Gather the current situation: check people's compliance, attitudes, remaining budget, and the Mayor's political support.\strut}
-        \State \parbox[t]{0.88\linewidth}{Ask the AI to decide the next best action based on this current situation.\strut}
-        \State \parbox[t]{0.88\linewidth}{Convert the AI's decision into a new budget plan for the 7 Barangays.\strut}
-        \State \parbox[t]{0.88\linewidth}{\textbf{Reset:} Clear all household reward trackers to start fresh for the new quarter.\strut}
+        \State Gather the current situation: check people's compliance, attitudes, remaining budget, and the Mayor's political support.
+        \State Ask the AI to decide the next best action based on this current situation.
+        \State Convert the AI's decision into a new budget plan for the 7 Barangays.
+        \State \textbf{Reset:} Clear all household reward trackers to start fresh for the new quarter.
     \EndIf
-    \Statex \textbf{// Phase 2: Daily City Life}
+    \State \textbf{// Phase 2: Daily City Life}
     \For{each Barangay}
-        \State \parbox[t]{0.88\linewidth}{Carry out daily tasks like sending out local patrols (Tanods) and making public announcements (Recorida).\strut}
+        \State Carry out daily tasks like sending out local patrols (Tanods) and making public announcements (Recorida).
     \EndFor
     \For{each Household}
-        \State \parbox[t]{0.88\linewidth}{Weigh the decision to segregate trash by comparing community peer pressure against the fear of getting fined.\strut}
-        \State \parbox[t]{0.88\linewidth}{Decide to either follow the rules (Compliant) or ignore them (Non-compliant).\strut}
+        \State Weigh the decision to segregate trash by comparing community peer pressure against the fear of getting fined.
+        \State Decide to either follow the rules (Compliant) or ignore them (Non-compliant).
     \EndFor
-    \Statex \textbf{// Phase 3: Enforcement and Consequences}
-    \State \parbox[t]{0.88\linewidth}{Enforcers patrol the map, catch violators, and collect fines (which get added back to the budget).\strut}
-    \State \parbox[t]{0.88\linewidth}{Update the Mayor's political support (fining people too harshly lowers support).\strut}
-    \If{the Mayor's political support drops to 10\% or lower} 
+    \State \textbf{// Phase 3: Enforcement and Consequences}
+    \State Enforcers patrol the map, catch violators, and collect fines (which get added back to the budget).
+    \State Update the Mayor's political support (fining people too harshly lowers support).
+    \If{the Mayor's political support drops to 10\% or lower}
         \State \textbf{Stop the simulation:} The local government has collapsed due to low public support.
     \EndIf
 \EndFor

@@ -3,6 +3,8 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: cs_thesis_main.aux
 The style file: apalike.bst
 Database file #1: bibliography.bib
+Warning--I didn't find a database entry for "menro_interview"
+Warning--I didn't find a database entry for "Nyborg2024"
 Warning--can't use both volume and number fields in Hertweck2023Values
 Warning--empty institution in PSA2024
 Warning--empty institution in UNEP2024
@@ -13,36 +15,36 @@ Warning--empty institution in WorldBank2025
 Warning--empty institution in WHO2024
 You've used 108 entries,
             1935 wiz_defined-function locations,
-            1145 strings with 26096 characters,
-and the built_in function-call counts, 46126 in all, are:
-= -- 4399
-> -- 2314
+            1150 strings with 25913 characters,
+and the built_in function-call counts, 45667 in all, are:
+= -- 4370
+> -- 2239
 < -- 57
-+ -- 837
-- -- 806
-* -- 4192
-:= -- 8149
++ -- 807
+- -- 776
+* -- 4132
+:= -- 8060
 add.period$ -- 327
 call.type$ -- 108
-change.case$ -- 944
+change.case$ -- 928
 chr.to.int$ -- 105
 cite$ -- 116
 duplicate$ -- 1564
-empty$ -- 2966
-format.name$ -- 956
-if$ -- 8791
+empty$ -- 2967
+format.name$ -- 926
+if$ -- 8718
 int.to.chr$ -- 4
 int.to.str$ -- 0
 missing$ -- 103
 newline$ -- 543
 num.names$ -- 324
-pop$ -- 765
+pop$ -- 749
 preamble$ -- 1
-purify$ -- 942
+purify$ -- 926
 quote$ -- 0
-skip$ -- 1187
+skip$ -- 1188
 stack$ -- 0
-substring$ -- 3056
+substring$ -- 3059
 swap$ -- 167
 text.length$ -- 11
 text.prefix$ -- 0
@@ -52,4 +54,4 @@ warning$ -- 8
 while$ -- 350
 width$ -- 0
 write$ -- 1396
-(There were 8 warnings)
+(There were 10 warnings)

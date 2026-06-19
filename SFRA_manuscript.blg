@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: SFRA_manuscript.aux
+The style file: apalike.bst
+Database file #1: bibliography.bib
+Warning--can't use both volume and number fields in Hertweck2023Values
+Warning--empty institution in PSA2024
+Warning--empty institution in UNEP2024
+Warning--can't use both volume and number fields in Vecerik2018
+Warning--empty publisher in WorldBank2021
+Warning--empty institution in WorldBank2022
+Warning--empty institution in WorldBank2025
+Warning--empty institution in WHO2024
+You've used 108 entries,
+            1935 wiz_defined-function locations,
+            1145 strings with 26098 characters,
+and the built_in function-call counts, 46126 in all, are:
+= -- 4399
+> -- 2314
+< -- 57
++ -- 837
+- -- 806
+* -- 4192
+:= -- 8149
+add.period$ -- 327
+call.type$ -- 108
+change.case$ -- 944
+chr.to.int$ -- 105
+cite$ -- 116
+duplicate$ -- 1564
+empty$ -- 2966
+format.name$ -- 956
+if$ -- 8791
+int.to.chr$ -- 4
+int.to.str$ -- 0
+missing$ -- 103
+newline$ -- 543
+num.names$ -- 324
+pop$ -- 765
+preamble$ -- 1
+purify$ -- 942
+quote$ -- 0
+skip$ -- 1187
+stack$ -- 0
+substring$ -- 3056
+swap$ -- 167
+text.length$ -- 11
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 638
+warning$ -- 8
+while$ -- 350
+width$ -- 0
+write$ -- 1396
+(There were 8 warnings)
