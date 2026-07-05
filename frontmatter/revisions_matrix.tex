@@ -31,99 +31,99 @@
 \multirow{4}{3.0cm}{\raggedright Asst. Prof. Julieto Perez, MSc}
 & Reframe thesis as operational/optimization study, not full ecological/behavioral realism.
 & Added explicit disclaimers in Abstract, Sections 1.1, 1.5, and 3.1 stating that the ABM is an abstract testbed for policy optimization.
-& 8, 3, 8, 25 \\
+& Abstract (p. i), 3, 8, 26 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Add ablation study comparing baseline vs. PPO and other heuristics.
 & Created Section 4.3.3 with Table 4.6 comparing Random, Dirichlet, Greedy, Vanilla DRL, and HuDRL; included statistical tests (t‑test, Cohen’s d).
-& 81–83 \\
+& 83–85 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Define clear performance metrics and conduct sensitivity analysis.
 & Defined four metrics (Section 3.5.5); performed Global Sensitivity Analysis (Sobol method, Section 4.2) and tipping‑point robustness test (Section 4.2.3).
-& 65, 74–78 \\
+& 67, 76–81 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Adjust tone and limitations: acknowledge psychometric simplifications and lack of predictive validity.
 & Added extended limitations in Sections 1.5 and 5.3; consistently used qualified language (“within the simulation,” “conditional on assumptions”).
-& 8, 108 \\
+& 8, 110 \\
 \midrule
 
 % --- Asst. Prof. Liezil Daberao (11 rows) ---
 \multirow{11}{3.0cm}{\raggedright Asst. Prof. Liezil Daberao, MSc}
 & Explain source, logic, and construction of Table 4.4 (Sobol indices).
 & Added pre‑table paragraph in Section 4.2 detailing parameter selection criteria, literature sources (Paigalan et al., Meng et al.), and interview grounding.
-& 74–75 \\
+& 78 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Correct and interpret Table 4.7; ensure numbers align with simulation results.
 & Verified and corrected compliance numbers; added interpretative text after the table explaining each regime’s performance (Status Quo, Pure Enforcement, Pure Incentives, HuDRL).
-& 92–93 \\
+& 94–95 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Address numeric indices that exceed theoretical upper bound (e.g., $S_T = 1.06$).
 & Explicitly acknowledged finite‑sample estimation artifact in Section 4.2; explained that values slightly above 1.0 indicate dominant interaction effects.
-& 76 \\
+& 78 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Reframe Statement of the Problem (\S~1.2): replace "aims" language with problem‑framing language.
 & Revised opening sentence of \S~1.2 to identify the compliance deficit, absence of allocation framework, and resource limitations.
-& 27 \\
+& 6 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Explain the meaning of bounds in the action vector (\S~3.2.1).
 & Added inline legend in \S~3.2.1 clarifying that \texttt{-1} is the minimum normalized budget share and \texttt{+1} is the maximum preference weight.
-& 48 \\
+& 26 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Provide a concrete example of the action vector partition (\S~3.2.1).
 & Added a worked example of the 21‑d vector partitioned into triplets (Enforcement, Incentive, IEC) for Poblacion and Binuni.
-& 48 \\
+& 26 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Provide visual data representation of Algorithm 1 input/output (Alg.~1).
 & Added Figure 3.1 showing the spatial grid and household registry data structures.
-& 49 \\
+& 27 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Define notation for Uniform and Normal distributions (\S~3.3.1.3).
 & Added Notation Box 3.2 explaining the \(U(\alpha, \beta)\) and \(N(\mu, \sigma^2)\) notation.
-& 54 \\
+& 32 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Provide data representation for Algorithm 2 inputs (Alg.~2).
 & Added Data Representation sidebar in Algorithm 2 listing exact Python‑typed variables: \texttt{income\_level}, \texttt{attitude}, \texttt{w\_SN}, \texttt{C\_effort}.
-& 56 \\
+& 37 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Correct action triplet order and fix citation (\S~3.4.2 \& 3.4.3).
 & Standardized triplet order to (Enforcement, Incentive, IEC). Corrected Nyborg et al. citation to 2016 and added explanatory bridging sentence.
-& 69 \\
+& 47 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Define "Safety‑Critical Action Mask" and specify compliance array size (\S~3.4.3 \& Alg.~7).
 & Grounded the action mask in literature (Cheng, Vecerik, Alphonso). Explicitly defined the compliance array as fixed‑size length 7.
-& 70–71 \\
+& 52 \\
 \midrule
 
 % --- Asst. Prof. Jennifer Joyce Montemayor (4 rows) ---
 \multirow{4}{3.0cm}{\raggedright Asst. Prof. Jennifer Joyce Montemayor, MSc}
 & Write full reward function as a mathematical equation with all multipliers.
 & Presented Equation (3.21) in Section 3.4.4; provided component‑by‑component explanation.
-& 52–56 \\
+& 54–58 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Create a parameter table mapping each weight to the reward function.
 & Added Table 3.3 (Parameter Mapping) with ranges, values, and effect descriptions.
-& 56 \\
+& 58 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & For each reward component, describe behavior encouraged/discouraged and acknowledge subjectivity.
 & Extended Section 3.4.4 with explicit statements for each term; identified the waste penalty and attitude bonus as the most subjective components.
-& 52–56 \\
+& 54–58 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Address sensitivity to thresholds (e.g., 0.5) and local minima.
 & Added subsection “Sensitivity and Local Minima Concerns” within Section 3.4.4; tested neutral point values (0.3, 0.7) and entropy coefficients (Table 3.2).
-& 54–55 \\
+& 56–57 \\
 \midrule
 
 % --- Asst. Prof. John Gieveson Igupas (3 rows) ---
 \multirow{3}{3.0cm}{\raggedright Asst. Prof. John Gieveson Igupas, MPA}
 & Frame problem as policy implementation/governance issue; discuss street‑level bureaucracy, political dynamics, CSOs.
 & Added discussion in Section 4.6.1 (“Computational optimality versus political reality”) and Section 5.2 (Policy Brief), citing Carpio (2025), IBON (2026), PIDS (2024, 2025), and acknowledging CSO monitoring role.
-& 98–102, 104–107 \\
+& 100–103, 106–110 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Clarify core problem (low compliance, budget constraints, enforcement gaps) and link model insights to policy levers.
 & Created Section 4.6 (Policy Implications) specifying tripartite failure and policy levers identified by the model (sequential saturation, pulsed enforcement, catalytic incentives).
-& 98–102 \\
+& 100–103 \\
 \noalign{\vspace{2pt}}\cmidrule(lr){2-4}\noalign{\vspace{2pt}}
 & Distinguish empirical facts from simulated assumptions; emphasize interdisciplinary nature.
 & Added explicit distinction in Section 4.2 (Sobol indices as model properties) and Section 4.5 (conditional findings); discussed interdisciplinary framing in Section 5.3.
-& 74–76, 96, 108 \\
+& 76–81, 96–97, 110 \\
 
 \end{longtable}
