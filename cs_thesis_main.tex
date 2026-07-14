@@ -5,10 +5,11 @@
 \documentclass[oneside,authoryear,round]{um} 
 
 % **************** PACKAGES ******************
+\usepackage[left=1.5in, right=1in, top=1in, bottom=1in]{geometry} % Added for final binding margins
 \usepackage{blindtext}
 \usepackage{pdfpages}  
 \usepackage{booktabs}    
-\usepackage{longtable}   
+\usepackage{longtable}  
 \usepackage{pdflscape}   
 \usepackage{array}       
 \usepackage{ragged2e}    
@@ -33,7 +34,7 @@
 % Define the Peso symbol command (since it is undefined in your logs)
 \providecommand{\textpeso}{\text{₱}}
 
-% --- ADDED FOR BOLD CAPTIONS ---
+% --- ADDED FOR BOLD CAPTIONS ---A
 \usepackage{caption}
 \captionsetup[table]{
     labelfont=bf,      % Makes "Table 2.1" bold
@@ -112,8 +113,6 @@
 \frontmatter 
 
     \maketitle
-
-    \input{frontmatter/revisions_matrix.tex}
 
     \input{frontmatter/copyright}          
     

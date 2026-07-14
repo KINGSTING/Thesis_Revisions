@@ -6,14 +6,14 @@
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Data Representation: Inputs, processing, and action outputs of Algorithm 1.}}{29}{figure.caption.14}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Multi-Level Agent-Based Modeling Diagram}}{31}{figure.caption.16}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Data Representation: Inputs, daily decision logic, and outputs of Algorithm 2.}}{37}{figure.caption.23}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces The Bacolod Multi-View Simulation UI (Interactive Validation Environment)}}{66}{figure.caption.45}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces The Bacolod Multi-View Simulation UI (Interactive Validation Environment)}}{64}{figure.caption.45}%
 \addvspace {10pt}
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Categorization of Systemic Compliance Zones and Stability Thresholds, contrasting the stable convergence of the HuDRL architecture against the policy stagnation of Vanilla PPO.}}{82}{figure.caption.57}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Comparative compliance trajectories under the Status Quo strategy, illustrating the severe bifurcation between low-density and high-density barangays.}}{88}{figure.caption.60}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Compliance trajectories under the Pure Enforcement strategy, illustrating the massive deterrence spike followed by premature simulation termination (Political Collapse).}}{90}{figure.caption.61}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Compliance trajectories under the Pure Incentives strategy, illustrating the severe stagnation caused by rapid budget exhaustion and transactional behavior.}}{91}{figure.caption.62}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Compliance evolution under the HuDRL strategy, demonstrating rapid municipality-wide convergence via the ``Sequential Saturation'' targeting logic.}}{93}{figure.caption.63}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Comparison Analysis of Political Strategies}}{97}{figure.caption.65}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Categorization of Systemic Compliance Zones and Stability Thresholds, contrasting the stable convergence of the HuDRL architecture against the policy stagnation of Vanilla PPO.}}{81}{figure.caption.57}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Comparative compliance trajectories under the Status Quo strategy, illustrating the severe bifurcation between low-density and high-density barangays.}}{87}{figure.caption.60}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Compliance trajectories under the Pure Enforcement strategy, illustrating the massive deterrence spike followed by premature simulation termination (Political Collapse).}}{89}{figure.caption.61}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Compliance trajectories under the Pure Incentives strategy, illustrating the severe stagnation caused by rapid budget exhaustion and transactional behavior.}}{90}{figure.caption.62}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Compliance evolution under the HuDRL strategy, demonstrating rapid municipality-wide convergence via the ``Sequential Saturation'' targeting logic.}}{92}{figure.caption.63}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Comparison Analysis of Political Strategies}}{96}{figure.caption.65}%
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}
