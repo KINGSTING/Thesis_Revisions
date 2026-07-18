@@ -1,10 +1,10 @@
 \changetocdepth {2}
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{Abstract}{v}{section*.2}%
-\contentsline {chapter}{Contents}{vi}{section*.3}%
-\contentsline {chapter}{List of Tables}{xi}{section*.5}%
-\contentsline {chapter}{List of Figures}{xiii}{section*.6}%
-\contentsline {chapter}{List of Equations}{xiv}{section*.7}%
+\contentsline {chapter}{Abstract}{vi}{section*.2}%
+\contentsline {chapter}{Contents}{vii}{section*.3}%
+\contentsline {chapter}{List of Tables}{xii}{chapter*.5}%
+\contentsline {chapter}{List of Figures}{xiv}{chapter*.6}%
+\contentsline {chapter}{List of Equations}{xv}{chapter*.7}%
 \contentsline {chapter}{\chapternumberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Background of the Study}{3}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Statement of the Problem}{6}{section.1.2}%
@@ -22,11 +22,11 @@
 \contentsline {subsection}{\numberline {2.2.2}The Convenience Barrier (Cost of Effort)}{16}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Social Tipping Points and Cultural Inertia}{16}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Policy Behavioral Interventions}{17}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Economic and Regulatory Levers}{18}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.1}Economic and Regulatory Levers}{17}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Educational and Behavioral Levers}{18}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Resource Allocation Heuristics in Public Policy}{19}{subsection.2.3.3}%
 \contentsline {section}{\numberline {2.4}Multi-Level Agent-Based Modeling in Socio-Environmental Systems}{20}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Deep Reinforcement Learning Optimization}{21}{section.2.5}%
+\contentsline {section}{\numberline {2.5}Deep Reinforcement Learning Optimization}{20}{section.2.5}%
 \contentsline {subsection}{\numberline {2.5.1}The ABM as a Markov Decision Process}{21}{subsection.2.5.1}%
 \contentsline {subsection}{\numberline {2.5.2}The Sparse Reward Problem in Policy Optimization}{21}{subsection.2.5.2}%
 \contentsline {subsection}{\numberline {2.5.3}Heuristic-Guided Exploration}{22}{subsection.2.5.3}%
@@ -36,163 +36,164 @@
 \contentsline {chapter}{\chapternumberline {3}Methodology}{26}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Research Design}{26}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Simulation Architecture}{27}{section.3.2}%
-\contentsline {paragraph}{Spatially Explicit Grid Architecture}{27}{section*.10}%
-\contentsline {paragraph}{Dual-Clock Temporal Resolution}{27}{section*.11}%
+\contentsline {paragraph}{Spatially Explicit Grid Architecture}{27}{section*.12}%
+\contentsline {paragraph}{Dual-Clock Temporal Resolution}{27}{section*.13}%
 \contentsline {subsection}{\numberline {3.2.1}Polycentric Governance: The Coupled ABM-RL Loop}{28}{subsection.3.2.1}%
-\contentsline {paragraph}{The HuDRL Action Space}{28}{section*.12}%
-\contentsline {paragraph}{Reward Shaping and Redemption Reset}{29}{section*.13}%
-\contentsline {paragraph}{Data Representation: Algorithm 1 Input and Output}{29}{section*.15}%
+\contentsline {paragraph}{The HuDRL Action Space}{28}{section*.14}%
+\contentsline {paragraph}{Reward Shaping and Redemption Reset}{28}{section*.15}%
+\contentsline {paragraph}{Data Representation: Algorithm 1 Input and Output}{29}{section*.17}%
 \contentsline {section}{\numberline {3.3}Multi-Level Agent-Based Model Development}{30}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}The Household Agent: Behavioral and Computational Architecture}{32}{subsection.3.3.1}%
 \contentsline {subsubsection}{\numberline {3.3.1.1}Theoretical Foundation: The TPB Framework and Utility Architecture}{32}{subsubsection.3.3.1.1}%
 \contentsline {subsubsection}{\numberline {3.3.1.2}Modeling Behavioral Inertia: Social Shields and Norm Internalization}{34}{subsubsection.3.3.1.2}%
 \contentsline {subsubsection}{\numberline {3.3.1.3}Computational Implementation and State Transitions}{35}{subsubsection.3.3.1.3}%
-\contentsline {subparagraph}{Part 1: State Vector Initialization:}{35}{section*.18}%
-\contentsline {paragraph}{Notation Legend:}{35}{section*.19}%
-\contentsline {subparagraph}{Part 2: Spatial Queries (Moore Neighborhood Algorithm):}{36}{section*.20}%
-\contentsline {subparagraph}{Part 3: Event-Driven Overrides (\texttt {get\_fined}):}{36}{section*.21}%
-\contentsline {paragraph}{Part 4: Algorithmic Execution of Household Decisions}{36}{section*.22}%
-\contentsline {paragraph}{Data Representation: Algorithm 2 Input and Output}{36}{section*.24}%
+\contentsline {subparagraph}{Part 1: State Vector Initialization:}{35}{section*.20}%
+\contentsline {paragraph}{Notation Legend:}{35}{section*.21}%
+\contentsline {subparagraph}{Part 2: Spatial Queries (Moore Neighborhood Algorithm):}{36}{section*.22}%
+\contentsline {subparagraph}{Part 3: Event-Driven Overrides (\texttt {get\_fined}):}{36}{section*.23}%
+\contentsline {paragraph}{Part 4: Algorithmic Execution of Household Decisions}{36}{section*.24}%
+\contentsline {paragraph}{Data Representation: Algorithm 2 Input and Output}{36}{section*.26}%
 \contentsline {subsubsection}{\numberline {3.3.1.4}Validation of Household Mechanics: Global Sensitivity Analysis}{38}{subsubsection.3.3.1.4}%
-\contentsline {subsection}{\numberline {3.3.2}The Enforcement Agent: Spatial Dynamics and Punitive Actuation}{39}{subsection.3.3.2}%
-\contentsline {paragraph}{Part 1: Jurisdictional Typology and Temporal Constraints}{39}{section*.25}%
-\contentsline {paragraph}{Part 2: Spatial Computing and Bounded Rationality}{40}{section*.26}%
-\contentsline {paragraph}{Part 3: Systemic Feedback and the Probability of Detection}{40}{section*.27}%
-\contentsline {paragraph}{Part 4: Algorithmic Execution of Punitive Patrols}{41}{section*.28}%
+\contentsline {subsection}{\numberline {3.3.2}The Enforcement Agent: Spatial Dynamics and Punitive Actuation}{40}{subsection.3.3.2}%
+\contentsline {paragraph}{Part 1: Jurisdictional Typology and Temporal Constraints}{40}{section*.27}%
+\contentsline {paragraph}{Part 2: Spatial Computing and Bounded Rationality}{40}{section*.28}%
+\contentsline {paragraph}{Part 3: Systemic Feedback and the Probability of Detection}{41}{section*.29}%
+\contentsline {paragraph}{Part 4: Algorithmic Execution of Punitive Patrols}{41}{section*.30}%
 \contentsline {subsection}{\numberline {3.3.3}The Barangay Agent: Meso-Level Aggregation and Fiscal Execution}{42}{subsection.3.3.3}%
-\contentsline {paragraph}{Part 1: Initialization and Meso-Level State Aggregation}{42}{section*.29}%
-\contentsline {paragraph}{Part 2: Autonomous Base Layer Implementation (The Three Local Levers)}{42}{section*.30}%
-\contentsline {paragraph}{Part 3: The Cascading Incentive Distribution Protocol}{44}{section*.31}%
+\contentsline {paragraph}{Part 1: Initialization and Meso-Level State Aggregation}{43}{section*.31}%
+\contentsline {paragraph}{Part 2: Autonomous Base Layer Implementation (The Three Local Levers)}{43}{section*.32}%
+\contentsline {paragraph}{Part 3: The Cascading Incentive Distribution Protocol}{44}{section*.33}%
 \contentsline {subsection}{\numberline {3.3.4}The Mayor Agent: Macro-Level Intervention and DRL Execution}{45}{subsection.3.3.4}%
-\contentsline {paragraph}{Part 1: The Macro-Level Decision Epoch (The AI Bridge)}{45}{section*.32}%
-\contentsline {paragraph}{Part 2: Budget Translation and Macro-Intervention Levers}{46}{section*.33}%
-\contentsline {paragraph}{Part 3: Political Capital Maintenance (Survival Mechanics)}{47}{section*.34}%
-\contentsline {paragraph}{Part 4: Inter-Agent Communication Topology}{47}{section*.35}%
+\contentsline {paragraph}{Part 1: The Macro-Level Decision Epoch (The AI Bridge)}{46}{section*.34}%
+\contentsline {paragraph}{Part 2: Budget Translation and Macro-Intervention Levers}{46}{section*.35}%
+\contentsline {paragraph}{Part 3: Political Capital Maintenance (Survival Mechanics)}{47}{section*.36}%
+\contentsline {paragraph}{Part 4: Inter-Agent Communication Topology}{47}{section*.37}%
 \contentsline {subsection}{\numberline {3.3.5}Formalization as a Markov Decision Process}{48}{subsection.3.3.5}%
 \contentsline {section}{\numberline {3.4}Heuristic-Guided Deep Reinforcement Learning}{49}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Proximal Policy Optimization (PPO) Architecture}{50}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Markov Decision Process (MDP) Formulation}{50}{subsection.3.4.2}%
-\contentsline {paragraph}{State Representation ($S_t$)}{50}{section*.36}%
-\contentsline {paragraph}{Action Space ($A_t$) and Budget Normalization}{51}{section*.37}%
+\contentsline {paragraph}{State Representation ($S_t$)}{50}{section*.38}%
+\contentsline {paragraph}{Action Space ($A_t$) and Budget Normalization}{51}{section*.39}%
 \contentsline {subsection}{\numberline {3.4.3}Addressing Sparse Rewards via Safety-Critical Action Masking}{51}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Multi-Objective Reward Shaping}{53}{subsection.3.4.4}%
-\contentsline {section}{\numberline {3.5}Running the Simulation}{58}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Inputs and Parameterization}{58}{subsection.3.5.1}%
-\contentsline {subsubsection}{\numberline {3.5.1.1}Behavioral and Socio-Economic Initialization}{58}{subsubsection.3.5.1.1}%
-\contentsline {subsubsection}{\numberline {3.5.1.2}Socio-demographic and Institutional Constraints}{59}{subsubsection.3.5.1.2}%
-\contentsline {subsection}{\numberline {3.5.2}Training and Validation Architecture}{60}{subsection.3.5.2}%
-\contentsline {paragraph}{Phase 1: Empirical Initialization and Baseline Calibration}{60}{section*.40}%
-\contentsline {paragraph}{Phase 2: Multi-Core Vectorized Environments}{60}{section*.41}%
-\contentsline {paragraph}{Phase 3: Hyperparameter Optimization and Trajectory Rollouts}{61}{section*.42}%
-\contentsline {subsection}{\numberline {3.5.3}Hyperparameter Configuration and Network Architecture}{62}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}Data Extraction and Visualization Architecture}{63}{subsection.3.5.4}%
-\contentsline {paragraph}{Part 1: Real-Time Spatial Visualization (The Interactive Server)}{63}{section*.44}%
-\contentsline {paragraph}{Part 2: Headless Execution and Deterministic Telemetry}{65}{section*.46}%
-\contentsline {paragraph}{Part 3: DRL Training Logs and Sensitivity Outputs}{65}{section*.47}%
-\contentsline {subsection}{\numberline {3.5.5}Evaluation}{65}{subsection.3.5.5}%
-\contentsline {subsection}{\numberline {3.5.6}Model Validation and Verification}{66}{subsection.3.5.6}%
-\contentsline {subsection}{\numberline {3.5.7}Structural Robustness and Sensitivty Evaluation}{67}{subsection.3.5.7}%
-\contentsline {subsection}{\numberline {3.5.8}Computational Setup and Multiprocessing}{68}{subsection.3.5.8}%
-\contentsline {section}{\numberline {3.6}Ethical Considerations and Limitations}{68}{section.3.6}%
-\contentsline {chapter}{\chapternumberline {4}Results and Discussion}{70}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Empirical Data Extraction and System Initialization}{70}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Empirical Parameterization of the State Space}{70}{subsection.4.1.1}%
-\contentsline {paragraph}{Macro-Level Legislative and Financial Bounds:}{70}{section*.49}%
-\contentsline {paragraph}{Meso-Level Spatial and Demographic Initialization}{71}{section*.50}%
-\contentsline {paragraph}{Micro-Level Behavioral Matrices and the Intention-Action Gap:}{72}{section*.52}%
-\contentsline {subsection}{\numberline {4.1.2}Baseline Calibration and Stochastic Seeding}{73}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}The ``Act vs. Reality'' Gap and the Danger of Algorithmic Bias}{74}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Global Sensitivity Analysis and Systemic Constraints}{75}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}The ``Convenience Barrier'' and the Absolute Dominance of Physical Friction}{78}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}The ``Value-Action Gap'' and the Intention-Action Trap}{78}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Sensitivity Analysis of Social Tipping Points}{78}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Non-Linear Interactivity and Habit Decay}{79}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Limitations and the Informal Economy}{79}{subsection.4.2.5}%
-\contentsline {section}{\numberline {4.3}Algorithmic Challenges and DRL Refinement}{80}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Overcoming the Sparse Reward Problem via Action Masking}{80}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Comparative Convergence and Algorithmic Robustness}{81}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Ablation Study: Isolating the Effect of PPO}{82}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Heuristic Reward Design and Population Density Bias}{85}{subsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.3.5}Addressing Behavioral Volatility via the Social Norm Shield}{85}{subsection.4.3.5}%
-\contentsline {section}{\numberline {4.4}Comparative Policy Optimization}{86}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Comparative Policy Optimization}{86}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Baseline: The Status Quo}{87}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Pure Enforcement: The Draconian Trap and Political Collapse}{88}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}Pure Incentives: The Transactional Trap and Budget Exhaustion}{89}{subsection.4.4.4}%
-\contentsline {subsection}{\numberline {4.4.5}The HuDRL Mayor Agent: Sequential Saturation and Stabilization}{91}{subsection.4.4.5}%
-\contentsline {subsection}{\numberline {4.4.6}The Dilution Effect and the Failure of the Status Quo}{94}{subsection.4.4.6}%
-\contentsline {subsection}{\numberline {4.4.7}The Plateau of Single-Instrument Regimes}{94}{subsection.4.4.7}%
-\contentsline {subsection}{\numberline {4.4.8}Sequential Saturation: The HuDRL Advantage}{94}{subsection.4.4.8}%
-\contentsline {subsection}{\numberline {4.4.9}Synthesis of Policy Trajectories and Systemic Stability}{95}{subsection.4.4.9}%
-\contentsline {subsection}{\numberline {4.4.10}Final Policy Implications for the Local Government Unit}{96}{subsection.4.4.10}%
-\contentsline {section}{\numberline {4.5}Synthesis of Findings}{97}{section.4.5}%
-\contentsline {paragraph}{RQ1: Impact of Behavioral Parameters.}{97}{section*.66}%
-\contentsline {paragraph}{RQ2: Optimal Resource Allocation Ratio.}{97}{section*.67}%
-\contentsline {paragraph}{RQ3: The Superior Dynamic Strategy.}{97}{section*.68}%
-\contentsline {section}{\numberline {4.6}Policy Implications}{99}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Algorithmic Resource Targeting (Sequential Saturation)}{99}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}Friction Reduction and Infrastructure}{101}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Pillar III: Pulsed Enforcement, the Graduation Rule, and the Transactional Trap of Incentives}{102}{subsection.4.6.3}%
-\contentsline {subsection}{\numberline {4.6.4}Pillar IV: Predictive Policy Prototyping}{103}{subsection.4.6.4}%
-\contentsline {subsection}{\numberline {4.6.5}Synthesis: From Simulation to Governance Reality}{103}{subsection.4.6.5}%
-\contentsline {chapter}{\chapternumberline {5}Conclusions}{104}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Achieved Objectives}{105}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Policy Brief}{105}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Critique and Limitations}{109}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Future Work}{110}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Final Remarks}{111}{section.5.5}%
-\contentsline {appendix}{\chapternumberline {A}Ordinances}{112}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Municipal Ordinances}{112}{section.A.1}%
-\contentsline {subsection}{\numberline {A.1.1}Municipal Ordinance No. 2018-05}{113}{subsection.A.1.1}%
-\contentsline {subsection}{\numberline {A.1.2}Municipal Appropriation Ordinance No. 2024-01}{125}{subsection.A.1.2}%
-\contentsline {section}{\numberline {A.2}Barangay Appropriation Ordinances for CY 2025}{130}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Barangay Babalaya Appropriation Ordinance No. 02 Series of 2024}{130}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Barangay Binuni Resolution No. 06 S-2025}{132}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Barangay Esperanza Appropriation Ordinance No. 01 Series of 2025}{134}{subsection.A.2.3}%
-\contentsline {subsection}{\numberline {A.2.4}Barangay Demologan Appropriation Resolution No. 1 S.2025}{137}{subsection.A.2.4}%
-\contentsline {subsection}{\numberline {A.2.5}Barangay Liangan East Appropriation Ordinance No. 01-2024}{138}{subsection.A.2.5}%
-\contentsline {subsection}{\numberline {A.2.6}Barangay Mati Appropriation Resolution No. 12-2024}{140}{subsection.A.2.6}%
-\contentsline {subsection}{\numberline {A.2.7}Barangay Poblacion Appropriation Resolution No. 07-2024}{142}{subsection.A.2.7}%
-\contentsline {appendix}{\chapternumberline {B}Interview Transcriptions}{143}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Municipal Environment and Natural Resources Officer (MENRO)}{143}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Barangay Babalaya}{147}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Barangay Binuni}{149}{section.B.3}%
-\contentsline {section}{\numberline {B.4}Barangay Demologan}{151}{section.B.4}%
-\contentsline {section}{\numberline {B.5}Barangay Esperanza}{153}{section.B.5}%
-\contentsline {section}{\numberline {B.6}Barangay Liangan East}{155}{section.B.6}%
-\contentsline {section}{\numberline {B.7}Barangay Mati}{158}{section.B.7}%
-\contentsline {section}{\numberline {B.8}Barangay Poblacion}{160}{section.B.8}%
-\contentsline {appendix}{\chapternumberline {C}Tables of Result}{162}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Financial and Compliance Data for Baseline in 3-Year Term}{163}{section.C.1}%
-\contentsline {subsection}{\numberline {C.1.1}Brgy Babalaya}{163}{subsection.C.1.1}%
-\contentsline {subsection}{\numberline {C.1.2}Brgy Binuni}{164}{subsection.C.1.2}%
-\contentsline {subsection}{\numberline {C.1.3}Brgy Demologan}{165}{subsection.C.1.3}%
-\contentsline {subsection}{\numberline {C.1.4}Brgy Esperanza}{166}{subsection.C.1.4}%
-\contentsline {subsection}{\numberline {C.1.5}Brgy Liangan East}{167}{subsection.C.1.5}%
-\contentsline {subsection}{\numberline {C.1.6}Brgy Mati}{168}{subsection.C.1.6}%
-\contentsline {subsection}{\numberline {C.1.7}Brgy Poblacion}{169}{subsection.C.1.7}%
-\contentsline {section}{\numberline {C.2}Financial and Compliance Data for Pure Enforcement in 3-Year Term}{170}{section.C.2}%
-\contentsline {subsection}{\numberline {C.2.1}Brgy Liangan East}{170}{subsection.C.2.1}%
-\contentsline {subsection}{\numberline {C.2.2}Brgy Esperanza}{171}{subsection.C.2.2}%
-\contentsline {subsection}{\numberline {C.2.3}Brgy Poblacion}{172}{subsection.C.2.3}%
-\contentsline {subsection}{\numberline {C.2.4}Brgy Binuni}{173}{subsection.C.2.4}%
-\contentsline {subsection}{\numberline {C.2.5}Brgy Demologan}{174}{subsection.C.2.5}%
-\contentsline {subsection}{\numberline {C.2.6}Brgy Mati}{175}{subsection.C.2.6}%
-\contentsline {subsection}{\numberline {C.2.7}Brgy Babalaya}{176}{subsection.C.2.7}%
-\contentsline {section}{\numberline {C.3}Financial and Compliance Data for Pure Incentives in 3-Year Term}{177}{section.C.3}%
-\contentsline {subsection}{\numberline {C.3.1}Brgy Babalaya}{177}{subsection.C.3.1}%
-\contentsline {subsection}{\numberline {C.3.2}Brgy Binuni}{178}{subsection.C.3.2}%
-\contentsline {subsection}{\numberline {C.3.3}Brgy Demologan}{179}{subsection.C.3.3}%
-\contentsline {subsection}{\numberline {C.3.4}Brgy Esperanza}{180}{subsection.C.3.4}%
-\contentsline {subsection}{\numberline {C.3.5}Brgy Liangan East}{181}{subsection.C.3.5}%
-\contentsline {subsection}{\numberline {C.3.6}Brgy Mati}{182}{subsection.C.3.6}%
-\contentsline {subsection}{\numberline {C.3.7}Brgy Poblacion}{183}{subsection.C.3.7}%
-\contentsline {section}{\numberline {C.4}Financial and Compliance Data for HuDRL in 3-Year Term}{184}{section.C.4}%
-\contentsline {subsection}{\numberline {C.4.1}Brgy Babalaya}{184}{subsection.C.4.1}%
-\contentsline {subsection}{\numberline {C.4.2}Brgy Liangan East}{185}{subsection.C.4.2}%
-\contentsline {subsection}{\numberline {C.4.3}Brgy Esperanza}{186}{subsection.C.4.3}%
-\contentsline {subsection}{\numberline {C.4.4}Brgy Poblacion}{187}{subsection.C.4.4}%
-\contentsline {subsection}{\numberline {C.4.5}Brgy Binuni}{188}{subsection.C.4.5}%
-\contentsline {subsection}{\numberline {C.4.6}Brgy Demologan}{189}{subsection.C.4.6}%
-\contentsline {subsection}{\numberline {C.4.7}Brgy Mati}{190}{subsection.C.4.7}%
-\contentsline {chapter}{References}{191}{appendix*.79}%
+\contentsline {subsection}{\numberline {3.4.4}Multi-Objective Reward Shaping}{54}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Running the Simulation}{59}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Inputs and Parameterization}{59}{subsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.1.1}Behavioral and Socio-Economic Initialization}{59}{subsubsection.3.5.1.1}%
+\contentsline {subsubsection}{\numberline {3.5.1.2}Socio-demographic and Institutional Constraints}{60}{subsubsection.3.5.1.2}%
+\contentsline {subsection}{\numberline {3.5.2}Training and Validation Architecture}{61}{subsection.3.5.2}%
+\contentsline {paragraph}{Phase 1: Empirical Initialization and Baseline Calibration}{61}{section*.42}%
+\contentsline {paragraph}{Phase 2: Multi-Core Vectorized Environments}{61}{section*.43}%
+\contentsline {paragraph}{Phase 3: Hyperparameter Optimization and Trajectory Rollouts}{62}{section*.44}%
+\contentsline {subsection}{\numberline {3.5.3}Hyperparameter Configuration and Network Architecture}{63}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Data Extraction and Visualization Architecture}{64}{subsection.3.5.4}%
+\contentsline {paragraph}{Part 1: Real-Time Spatial Visualization (The Interactive Server)}{64}{section*.46}%
+\contentsline {paragraph}{Part 2: Headless Execution and Deterministic Telemetry}{66}{section*.48}%
+\contentsline {paragraph}{Part 3: DRL Training Logs and Sensitivity Outputs}{66}{section*.49}%
+\contentsline {subsection}{\numberline {3.5.5}Evaluation}{66}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Model Validation and Verification}{67}{subsection.3.5.6}%
+\contentsline {subsection}{\numberline {3.5.7}Structural Robustness and Sensitivty Evaluation}{68}{subsection.3.5.7}%
+\contentsline {subsection}{\numberline {3.5.8}Computational Setup and Multiprocessing}{69}{subsection.3.5.8}%
+\contentsline {section}{\numberline {3.6}Ethical Considerations and Limitations}{69}{section.3.6}%
+\contentsline {chapter}{\chapternumberline {4}Results and Discussion}{71}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Empirical Data Extraction and System Initialization}{71}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Empirical Parameterization of the State Space}{71}{subsection.4.1.1}%
+\contentsline {paragraph}{Macro-Level Legislative and Financial Bounds:}{71}{section*.51}%
+\contentsline {paragraph}{Meso-Level Spatial and Demographic Initialization}{72}{section*.52}%
+\contentsline {paragraph}{Micro-Level Behavioral Matrices and the Intention-Action Gap:}{73}{section*.54}%
+\contentsline {subsection}{\numberline {4.1.2}Baseline Calibration and Stochastic Seeding}{74}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}The ``Act vs. Reality'' Gap and the Danger of Algorithmic Bias}{75}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Global Sensitivity Analysis and Systemic Constraints}{76}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}The ``Convenience Barrier'' and the Absolute Dominance of Physical Friction}{79}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}The ``Value-Action Gap'' and the Intention-Action Trap}{79}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Sensitivity Analysis of Social Tipping Points}{79}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Non-Linear Interactivity and Habit Decay}{80}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Limitations and the Informal Economy}{80}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Algorithmic Challenges and DRL Refinement}{81}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Overcoming the Sparse Reward Problem via Action Masking}{81}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Comparative Convergence and Algorithmic Robustness}{82}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Ablation Study: Isolating the Effect of PPO}{83}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Heuristic Reward Design and Population Density Bias}{86}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}Addressing Behavioral Volatility via the Social Norm Shield}{87}{subsection.4.3.5}%
+\contentsline {section}{\numberline {4.4}Comparative Policy Optimization}{87}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Comparative Policy Optimization}{88}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Baseline: The Status Quo}{88}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Pure Enforcement: The Draconian Trap and Political Collapse}{89}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Pure Incentives: The Transactional Trap and Budget Exhaustion}{91}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}The HuDRL Mayor Agent: Sequential Saturation and Stabilization}{92}{subsection.4.4.5}%
+\contentsline {subsection}{\numberline {4.4.6}The Dilution Effect and the Failure of the Status Quo}{95}{subsection.4.4.6}%
+\contentsline {subsection}{\numberline {4.4.7}The Plateau of Single-Instrument Regimes}{95}{subsection.4.4.7}%
+\contentsline {subsection}{\numberline {4.4.8}Sequential Saturation: The HuDRL Advantage}{96}{subsection.4.4.8}%
+\contentsline {subsection}{\numberline {4.4.9}Synthesis of Policy Trajectories and Systemic Stability}{96}{subsection.4.4.9}%
+\contentsline {subsection}{\numberline {4.4.10}Final Policy Implications for the Local Government Unit}{98}{subsection.4.4.10}%
+\contentsline {section}{\numberline {4.5}Synthesis of Findings}{98}{section.4.5}%
+\contentsline {paragraph}{RQ1: Impact of Behavioral Parameters.}{98}{section*.68}%
+\contentsline {paragraph}{RQ2: Optimal Resource Allocation Ratio.}{99}{section*.69}%
+\contentsline {paragraph}{RQ3: The Superior Dynamic Strategy.}{99}{section*.70}%
+\contentsline {section}{\numberline {4.6}Policy Implications}{100}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Algorithmic Resource Targeting (Sequential Saturation)}{101}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Friction Reduction and Infrastructure}{103}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Pillar III: Pulsed Enforcement, the Graduation Rule, and the Transactional Trap of Incentives}{104}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Pillar IV: Predictive Policy Prototyping}{104}{subsection.4.6.4}%
+\contentsline {subsection}{\numberline {4.6.5}Synthesis: From Simulation to Governance Reality}{105}{subsection.4.6.5}%
+\contentsline {chapter}{\chapternumberline {5}Conclusions}{106}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Achieved Objectives}{107}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Policy Brief}{107}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Critique and Limitations}{111}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Future Work}{112}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Final Remarks}{113}{section.5.5}%
+\contentsline {appendix}{\chapternumberline {A}Personal Vitae}{114}{appendix.A}%
+\contentsline {appendix}{\chapternumberline {B}Ordinances}{115}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Municipal Ordinances}{115}{section.B.1}%
+\contentsline {subsection}{\numberline {B.1.1}Municipal Ordinance No. 2018-05}{116}{subsection.B.1.1}%
+\contentsline {subsection}{\numberline {B.1.2}Municipal Appropriation Ordinance No. 2024-01}{128}{subsection.B.1.2}%
+\contentsline {section}{\numberline {B.2}Barangay Appropriation Ordinances for CY 2025}{133}{section.B.2}%
+\contentsline {subsection}{\numberline {B.2.1}Barangay Babalaya Appropriation Ordinance No. 02 Series of 2024}{133}{subsection.B.2.1}%
+\contentsline {subsection}{\numberline {B.2.2}Barangay Binuni Resolution No. 06 S-2025}{135}{subsection.B.2.2}%
+\contentsline {subsection}{\numberline {B.2.3}Barangay Esperanza Appropriation Ordinance No. 01 Series of 2025}{137}{subsection.B.2.3}%
+\contentsline {subsection}{\numberline {B.2.4}Barangay Demologan Appropriation Resolution No. 1 S.2025}{140}{subsection.B.2.4}%
+\contentsline {subsection}{\numberline {B.2.5}Barangay Liangan East Appropriation Ordinance No. 01-2024}{141}{subsection.B.2.5}%
+\contentsline {subsection}{\numberline {B.2.6}Barangay Mati Appropriation Resolution No. 12-2024}{143}{subsection.B.2.6}%
+\contentsline {subsection}{\numberline {B.2.7}Barangay Poblacion Appropriation Resolution No. 07-2024}{145}{subsection.B.2.7}%
+\contentsline {appendix}{\chapternumberline {C}Interview Transcriptions}{146}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Municipal Environment and Natural Resources Officer (MENRO)}{146}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Barangay Babalaya}{149}{section.C.2}%
+\contentsline {section}{\numberline {C.3}Barangay Binuni}{151}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Barangay Demologan}{153}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Barangay Esperanza}{155}{section.C.5}%
+\contentsline {section}{\numberline {C.6}Barangay Liangan East}{157}{section.C.6}%
+\contentsline {section}{\numberline {C.7}Barangay Mati}{160}{section.C.7}%
+\contentsline {section}{\numberline {C.8}Barangay Poblacion}{162}{section.C.8}%
+\contentsline {appendix}{\chapternumberline {D}Tables of Result}{164}{appendix.D}%
+\contentsline {section}{\numberline {D.1}Financial and Compliance Data for Baseline in 3-Year Term}{165}{section.D.1}%
+\contentsline {subsection}{\numberline {D.1.1}Brgy Babalaya}{165}{subsection.D.1.1}%
+\contentsline {subsection}{\numberline {D.1.2}Brgy Binuni}{166}{subsection.D.1.2}%
+\contentsline {subsection}{\numberline {D.1.3}Brgy Demologan}{167}{subsection.D.1.3}%
+\contentsline {subsection}{\numberline {D.1.4}Brgy Esperanza}{168}{subsection.D.1.4}%
+\contentsline {subsection}{\numberline {D.1.5}Brgy Liangan East}{169}{subsection.D.1.5}%
+\contentsline {subsection}{\numberline {D.1.6}Brgy Mati}{170}{subsection.D.1.6}%
+\contentsline {subsection}{\numberline {D.1.7}Brgy Poblacion}{171}{subsection.D.1.7}%
+\contentsline {section}{\numberline {D.2}Financial and Compliance Data for Pure Enforcement in 3-Year Term}{172}{section.D.2}%
+\contentsline {subsection}{\numberline {D.2.1}Brgy Liangan East}{172}{subsection.D.2.1}%
+\contentsline {subsection}{\numberline {D.2.2}Brgy Esperanza}{173}{subsection.D.2.2}%
+\contentsline {subsection}{\numberline {D.2.3}Brgy Poblacion}{174}{subsection.D.2.3}%
+\contentsline {subsection}{\numberline {D.2.4}Brgy Binuni}{175}{subsection.D.2.4}%
+\contentsline {subsection}{\numberline {D.2.5}Brgy Demologan}{176}{subsection.D.2.5}%
+\contentsline {subsection}{\numberline {D.2.6}Brgy Mati}{177}{subsection.D.2.6}%
+\contentsline {subsection}{\numberline {D.2.7}Brgy Babalaya}{178}{subsection.D.2.7}%
+\contentsline {section}{\numberline {D.3}Financial and Compliance Data for Pure Incentives in 3-Year Term}{179}{section.D.3}%
+\contentsline {subsection}{\numberline {D.3.1}Brgy Babalaya}{179}{subsection.D.3.1}%
+\contentsline {subsection}{\numberline {D.3.2}Brgy Binuni}{180}{subsection.D.3.2}%
+\contentsline {subsection}{\numberline {D.3.3}Brgy Demologan}{181}{subsection.D.3.3}%
+\contentsline {subsection}{\numberline {D.3.4}Brgy Esperanza}{182}{subsection.D.3.4}%
+\contentsline {subsection}{\numberline {D.3.5}Brgy Liangan East}{183}{subsection.D.3.5}%
+\contentsline {subsection}{\numberline {D.3.6}Brgy Mati}{184}{subsection.D.3.6}%
+\contentsline {subsection}{\numberline {D.3.7}Brgy Poblacion}{185}{subsection.D.3.7}%
+\contentsline {section}{\numberline {D.4}Financial and Compliance Data for HuDRL in 3-Year Term}{186}{section.D.4}%
+\contentsline {subsection}{\numberline {D.4.1}Brgy Babalaya}{186}{subsection.D.4.1}%
+\contentsline {subsection}{\numberline {D.4.2}Brgy Liangan East}{187}{subsection.D.4.2}%
+\contentsline {subsection}{\numberline {D.4.3}Brgy Esperanza}{188}{subsection.D.4.3}%
+\contentsline {subsection}{\numberline {D.4.4}Brgy Poblacion}{189}{subsection.D.4.4}%
+\contentsline {subsection}{\numberline {D.4.5}Brgy Binuni}{190}{subsection.D.4.5}%
+\contentsline {subsection}{\numberline {D.4.6}Brgy Demologan}{191}{subsection.D.4.6}%
+\contentsline {subsection}{\numberline {D.4.7}Brgy Mati}{192}{subsection.D.4.7}%
+\contentsline {chapter}{References}{193}{chapter*.84}%

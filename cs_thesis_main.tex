@@ -15,7 +15,8 @@
 \usepackage{ragged2e}    
 \usepackage{tabularx}    
 \usepackage{makecell}    
-\usepackage{microtype}   
+% FIXED: Disabled font expansion to prevent fatal "auto expansion is only possible with scalable fonts" error
+\usepackage[expansion=false]{microtype}   
 \usepackage{amssymb}     
 \usepackage{xcolor}      
 \usepackage{amsmath}
@@ -34,7 +35,7 @@
 % Define the Peso symbol command (since it is undefined in your logs)
 \providecommand{\textpeso}{\text{₱}}
 
-% --- ADDED FOR BOLD CAPTIONS ---A
+% --- ADDED FOR BOLD CAPTIONS ---
 \usepackage{caption}
 \captionsetup[table]{
     labelfont=bf,      % Makes "Table 2.1" bold
@@ -48,6 +49,11 @@
     justification=centering, % Centers the caption
 }
 % -------------------------------
+
+% --- ADDED TO REDUCE TOP CHAPTER GAP ---
+% Adjust this negative value to your preference
+\setlength{\beforechapskip}{-50pt} 
+% ---------------------------------------
 
 %% --- CUSTOM DEFINITIONS ---
 \newcommand{\cmark}{\textcolor{green!60!black}{\checkmark}}
@@ -75,7 +81,7 @@
 % ---------------------------------------------------
 
 %% --- APA CITATION FORMATTING ---
-\bibpunct{(}{)}{;}{a}{,}{,} 
+\bibpunct{(}{)}{;}{a}{,}{,}% chktex 9
 \setlength{\bibsep}{1em}            
 \renewcommand{\bibname}{References}
 
@@ -92,7 +98,7 @@
 \author{Hussam M. Bansao\\
         Jemar John J. Lumingkit}
         
-\supervisor{Assoc. Prof. Dante D. Dinawanao, M.Sc.}
+\supervisor{Assoc.\ Prof.\ Dante D. Dinawanao, M.Sc.}
 
 \department{Department of Computer Science}     
 \faculty{College of Computer Studies}        
@@ -108,65 +114,67 @@
 \parskip 7.2pt
 
 \makeatletter
-\begin{document} % The document starts here
+\begin{document}% The document starts here
 
-\frontmatter 
+\frontmatter{} 
 
     \maketitle
 
     \input{frontmatter/copyright}          
     
-    \cleardoublepage 
+    \cleardoublepage{} 
     % Removed addcontentsline so Dedication is NOT in the list
     \input{frontmatter/dedication}         
     
-    \cleardoublepage
+    \cleardoublepage{}
     % Removed addcontentsline so Acknowledgements is NOT in the list
     \input{frontmatter/acknowledgements}
+    \input{frontmatter/AI_use}
         
-    \cleardoublepage
-    \phantomsection
+    \cleardoublepage{}
+    \phantomsection{}
     \addcontentsline{toc}{chapter}{Abstract}
     \input{frontmatter/abstract}
     
-    \cleardoublepage
-    \phantomsection
+    \cleardoublepage{}
+    \phantomsection{}
     \addcontentsline{toc}{chapter}{\contentsname}
-    \tableofcontents* \cleardoublepage
+    \tableofcontents*{} \cleardoublepage{}
 
     % --- NEW: Hide Lists from PDF Bookmarks Sidebar ---
-    \hypersetup{bookmarksdepth=-2} % Turns OFF sidebar bookmark generation
+    \hypersetup{bookmarksdepth=-2}% Turns OFF sidebar bookmark generation
     
-    \cleardoublepage
-    \listoftables
+    \cleardoublepage{}
+    \listoftables{}
     
-    \cleardoublepage
-    \listoffigures
+    \cleardoublepage{}
+    \listoffigures{}
 
-    \cleardoublepage
-    \listofequations
+    \cleardoublepage{}
+    \listofequations{}
     
-    \cleardoublepage
-    \listofalgorithms
+    \cleardoublepage{}
+    \listofalgorithms{}
     
-    \cleardoublepage
-    \hypersetup{bookmarksdepth=3} % Turns sidebar bookmark generation back ON
+    \cleardoublepage{}
+    \hypersetup{bookmarksdepth=3}% Turns sidebar bookmark generation back ON
     % ---------------------------------------------------
     
     % The abbreviations file is included without being added to the TOC
     \input{frontmatter/abbreviations} 
 
-\mainmatter
+\mainmatter{}
 \makeatother
 
 \pagestyle{umpage}
-\mainmatter 
+\mainmatter{} 
     \input{chap1/introduction_main} 
     \input{chap2/rrl_main}
     \input{chap3/methodology_main}
     \input{chap4/results_main}
     \input{chap5/conclusions_main}
-    \appendix
+    \appendix{}
+        \input{appA/personalVitae}
         \input{appA/appendix_a_main}     
         \input{appB/appendix_b_main}   
         \input{appC/tabular_results}
